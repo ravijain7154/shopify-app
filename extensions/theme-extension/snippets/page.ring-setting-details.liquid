@@ -1,0 +1,472 @@
+{{ 'ring-details.css' | asset_url | stylesheet_tag }}
+<!-- Add these lines to include Slick CSS and JS files -->
+
+ 
+  
+<!-- Include jQuery -->
+
+<!-- Include Slick library -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+
+
+
+<div id="ProductSection" class="product-section" data-section-id="{{ section_id }}" data-section-type="product">
+    <div class="page-content page-content--product page-content--full">
+      <div class="page-width">
+    <div class="product-grid__container product--images grid" >
+      <div class="grid__item medium-up--three-fifths product-single__sticky">
+         <div class="image-wrap slider-for" id="product-images-container">
+         </div>
+        <div class="img_thumbnails_container">
+         <div class="image-wrap slider-nav" id="product-images-container-nav">
+         </div>
+          <div class="button_div">
+        <button class="left-button"></button>
+        <button class="right-button"></button></div></div>
+      </div>
+      <div class="product-grid__content product--description product-single__sticky grid__item medium-up--two-fifths">
+  
+            <div class="product-single__meta" id="product-details-container">
+              <!-- <div class="button"> <button id ="backButton">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                      <line x1="19" y1="12" x2="5" y2="12"></line>
+                      <polyline points="12 19 5 12 12 5"></polyline>
+                  </svg>
+                Back
+              </button></div> -->
+              <div class="product-block product-block--header product-single__header small--hide" >
+                <h1 class="h2 product-single__title" id="title"></h1>
+                 <div class="product-single__vendor-sku" id="sku"></div>
+              </div>
+
+             
+               
+  
+              <div data-product-blocks="">
+                <div class="product-block">    <div id="product-price"></div></div>
+                <div class="product-block" data-dynamic-variants-enabled="">
+                  <div id="product-variants-container" class="product-variants">
+                    
+                  </div>
+                </div>
+                  <button class="btn add-cart_btn" id="selectedButton">Select Setting</button>
+              </div>
+              <div class="product-block"> 
+                  <div id="product-desc"></div>
+                </div>
+  
+            </div>
+        
+          </div>
+    </div>
+        
+    </div>
+      </div>
+    </div>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<script>
+function handleBackButtonClick() {
+    window.history.back(); // Go back to the previous page
+}
+
+// Add event listener to the back button element
+const backButton = document.getElementById('backButton'); // Replace 'backButton' with the ID of your back button element
+if (backButton) {
+    backButton.addEventListener('click', handleBackButtonClick);
+}
+  
+function updateProductImages(productData, productImagesContainer, productImagesContainernav, selectedVariant) {
+    productImagesContainer.innerHTML = '';
+    productImagesContainernav.innerHTML = '';
+  
+    const allVariantsNullImage = productData.product.variants.every(variant => variant.image_id === null);
+
+    if (allVariantsNullImage) {
+        const defaultImg = productData.product.images[0];
+        productImagesContainer.innerHTML += `<img src="${defaultImg.src}" alt="${defaultImg.alt}" class="photoswipe__image defaultimg active" data-id="${defaultImg.id}" data-index="${defaultImg.index}">`;
+        productImagesContainernav.innerHTML += `<img src="${defaultImg.src}" alt="${defaultImg.alt}" class="photoswipe__thumbnail defaultimg active" data-id="${defaultImg.id}" data-index="${defaultImg.index}">`;
+    } else {
+        productData.product.images.forEach(image => {
+            const isActive = image.id === selectedVariant.image_id ? 'active' : '';
+            productImagesContainer.innerHTML += `<img src="${image.src}" alt="${image.alt}" class="photoswipe__image ${isActive}" data-id="${image.id}" data-index="${image.index}">`;
+            productImagesContainernav.innerHTML += `<img src="${image.src}" alt="${image.alt}" class="photoswipe__thumbnail ${isActive}" data-id="${image.id}" data-index="${image.index}">`;
+        });
+    }
+
+    const allImages = productImagesContainer.querySelectorAll('.photoswipe__image');
+    const allThumbnails = productImagesContainernav.querySelectorAll('.photoswipe__thumbnail');
+  
+    allImages.forEach(img => img.classList.remove('active'));
+    allThumbnails.forEach(thumbnail => thumbnail.classList.remove('active'));
+
+    allThumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+            const imageId = thumbnail.getAttribute('data-id');
+            const selectedImage = productImagesContainer.querySelector(`[data-id="${imageId}"]`);
+            
+            if (selectedImage) {
+                allImages.forEach(img => img.classList.remove('active'));
+                allThumbnails.forEach(tnail => tnail.classList.remove('active'));
+              
+                selectedImage.classList.add('active');
+                thumbnail.classList.add('active');
+               // productImagesContainernav.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Find the selected image and thumbnail and add the 'active' class to them
+    const selectedImage = productImagesContainer.querySelector(`[data-id="${selectedVariant.image_id}"]`);
+    const selectedThumbnail = productImagesContainernav.querySelector(`[data-id="${selectedVariant.image_id}"]`);
+
+    if (selectedImage && selectedThumbnail) {
+        selectedImage.classList.add('active');
+        selectedThumbnail.classList.add('active');
+    }
+
+    // Scroll the thumbnail container to make the active thumbnail visible
+    if (selectedThumbnail) {
+        const containerWidth = productImagesContainernav.offsetWidth;
+        const thumbnailWidth = selectedThumbnail.offsetWidth;
+        const scrollLeft = selectedThumbnail.offsetLeft - (containerWidth - thumbnailWidth) / 2;
+        productImagesContainernav.scrollTo({ top: scrollLeft, behavior: 'smooth' });
+    }
+  // Left and right buttons for scrolling through thumbnails
+
+      const leftButton = document.querySelector('.left-button');
+    const rightButton = document.querySelector('.right-button');
+      leftButton.textContent = '←';
+      leftButton.classList.add('scroll-button');
+    leftButton.addEventListener('click', () => {
+          productImagesContainernav.scrollBy({ top: -200, behavior: 'smooth' });
+    });
+
+    rightButton.textContent = '→';
+    rightButton.classList.add('scroll-button');
+    rightButton.addEventListener('click', () => {
+        productImagesContainernav.scrollBy({ top: 200, behavior: 'smooth' });
+    });
+
+}
+  
+
+
+
+function formatMoney(amount, currency = '$', decimal = '.', thousands = ',') {
+              const negative = amount < 0 ? '-' : '';
+              const fixedAmount = Math.abs(parseFloat(amount) || 0).toFixed(2);
+              const parts = fixedAmount.split('.');
+              const integerPart = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, `$1${thousands}`);
+              const decimalPart = parts[1] ? `${decimal}${parts[1]}` : '';
+              return `${negative}${currency}${integerPart}${decimalPart}`;
+}
+function updateProductPrices(productPriceContainer, selectedVariant) {
+             const formattedPrice = formatMoney(selectedVariant.price); // Example usage: format $25.99
+                   productPriceContainer.innerHTML = `<label class="variant__label">Price:</label><span class="product__price"> ${formattedPrice}</span>`;
+}
+function updateProductSku(productSku, selectedVariant){
+         const Sku = selectedVariant.sku ;
+
+        productSku.innerHTML = `<span data-sku="" class="product-single__sku">SKU: <span data-sku-id="">${Sku}</span></span>`;
+}
+  
+
+function desc(productData, productDescContainer){
+      
+      productDescContainer.innerHTML = '';  
+
+
+           
+            const data = `${productData.product.body_html}`;
+            const cleanedData = data.replace(/"/g, "");
+         
+            productDescContainer.innerHTML = `<b>Product Description<br></b> ${cleanedData}`;
+            console.log("Modified data:", cleanedData);
+  
+           //  const columns =  data.split(/<br\s*data-mce-fragment=['"]?1['"]?>/);
+           //        console.log("Columns after split:", columns);
+           //  const selectedColumns = {};
+           //  columns.forEach(column => {
+           //      const [columnName, columnValue] = column.split(' : ');
+           //      const selectedColumnNames = ['Stock No', 'Availability', 'Shape', 'Weight', 'Color', 'Clarity', 'Cut', 'Measurements', 'Lab'];
+           //  if (selectedColumnNames.includes(columnName.trim())) {
+           //       selectedColumns[columnName.trim()] = columnValue.trim();
+           //      }
+           //  });
+           // let html = '';
+           //  for (const columnName in selectedColumns) {
+           //      html += `<p><strong>${columnName}:</strong> ${selectedColumns[columnName]}</p>`;
+           //  }
+            // productDescContainer.innerHTML = html;
+            // console.log(selectedColumns);
+        }
+      
+function updateURL(filterName, value) {
+  
+    var url = window.location.href.split('?')[0];
+    var urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete(filterName);
+    if (value !== undefined) {
+        urlParams.set(filterName, encodeURIComponent(value));
+    } else if (value !== undefined) {
+        urlParams.set(filterName, encodeURIComponent(value));
+    } 
+    var newURL = url + '?' + urlParams.toString();
+        newURL = newURL.replace(/%3B/g, ';');
+        window.history.pushState({}, '', newURL);
+    var filterValues = {
+        value: value
+    };
+    localStorage.setItem(filterName, JSON.stringify(filterValues));
+}
+  
+document.addEventListener("DOMContentLoaded", function() {
+              // Extract product ID from URL parameters
+              const urlParams = new URLSearchParams(window.location.search);
+              const productId = urlParams.get('product_id');
+  
+              // Fetch product details using AJAX or Liquid
+              fetch(`/admin/api/2024-01/products/${productId}.json`, {
+                  headers: {
+                      'X-Shopify-Access-Token': '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',
+                  }
+              })
+              .then(response => response.json())
+              .then(productData => {
+                  console.log(productData);  
+                  const productTitle = document.getElementById('title');
+                  const productSku = document.getElementById('sku');
+                
+                  const productDescContainer = document.getElementById('product-desc');
+                
+                  const productImagesContainer = document.getElementById('product-images-container');
+                  const productImagesContainernav = document.getElementById('product-images-container-nav');
+                  const productVariantsContainer = document.getElementById('product-variants-container');
+                  const productPriceContainer = document.getElementById('product-price');
+                  const addToCartForm = document.getElementById('AddToCartForm');
+                  const selectedVariant = productData.product.variants[0];
+                  const selectedButton = document.getElementById('selectedButton');    
+                        productTitle.innerHTML = `${productData.product.title}`;
+                        updateProductImages(productData, productImagesContainer, productImagesContainernav, selectedVariant);
+                        updateProductSku(productSku, selectedVariant);
+                        updateProductPrices(productPriceContainer, selectedVariant);
+                        selectedButton.addEventListener('click', function() {
+                           const selectedVariantId = selectedVariant.id; 
+                           const selectedRingId = selectedVariant.product_id;
+                                 selectedButton.innerHTML = '<span class="loader"></span> Adding ...';
+                                 localStorage.setItem('selectedVariantId', selectedVariantId);
+                                 localStorage.setItem('selectedRingId', selectedRingId);
+                                 setTimeout(function() {            
+                                    window.location.href = 'https://ring-premier-one.myshopify.com/pages/choose-diamond'; 
+                                 }, 1450); 
+                               });
+                        
+                 if (productData.product.options[0].name !== "Title" && productData.product.options[0].values[0] !== "Default Title") {          
+                  let optionIndex = 0;
+                  productData.product.options.forEach(option => {
+                      const variantWrapper = document.createElement('div');
+                            variantWrapper.classList.add('variant-wrapper', 'js');
+                            variantWrapper.setAttribute('data-type', 'button');
+                            variantWrapper.setAttribute('data-option-index', `${optionIndex}`);
+                      if (option.name.toLowerCase() === 'abc'){
+                                   const variantLabel = document.createElement('label');
+                                         variantLabel.classList.add('variant__label');
+                                         variantLabel.setAttribute('for', `option-${optionIndex}`);
+                                         variantLabel.innerHTML = `${option.name} :<span id="color_name" data-variant-color-label data-index="${optionIndex}">${option.values[0]}</span>`;
+                                         variantWrapper.appendChild(variantLabel);
+                                   const fieldset = document.createElement('fieldset');
+                                          fieldset.classList.add('variant-input-wrap');
+                                          fieldset.setAttribute('name', option.name);
+                                          fieldset.setAttribute('data-handle', option.name);
+                                          fieldset.setAttribute('id', `option-${optionIndex}`);
+                                  const legend = document.createElement('legend');
+                                          legend.classList.add('hide');
+                                          legend.textContent = option.name;
+                                          fieldset.appendChild(legend);
+                          option.values.forEach(value => {        
+                          const variantInput = document.createElement('div');
+                                variantInput.classList.add('variant-input');
+                                variantInput.setAttribute('data-value', value);
+                          const input = document.createElement('input');
+                                input.setAttribute('type', 'radio');
+                                input.setAttribute('form', 'AddToCartForm');
+                                input.setAttribute('value', value);
+                                input.setAttribute('name', option.name);
+                                input.setAttribute('data-index', option.name);
+                                input.setAttribute('data-variant-input', '');
+                                input.id = `ProductSelect-${productId}-${option.name}-option-${value.replace(/ /g, '-')}`;
+                          const label = document.createElement('label');
+                                label.setAttribute('for', `ProductSelect-${productId}-${option.name}-option-${value.replace(/ /g, '-')}`);
+                                label.classList.add('variant__button-label');
+                                label.textContent = value;
+                             
+                              variantInput.appendChild(input);
+                              variantInput.appendChild(label);
+                              fieldset.appendChild(variantInput);
+                              input.addEventListener('change', () => {
+                          var label_check =  $('input[type=radio]:checked').val();
+                          let label_span =    $(input).closest('.variant-wrapper').find('span[data-variant-color-label]');
+                              label_span.text(label_check);
+                              label_span.attr('data-option-index', label_check);
+            
+                          var variants = productData.product.variants; 
+                          var selectedVariant;
+                          for (var i = 0; i < variants.length; i++) {
+                               var variant = variants[i];
+                              
+                          if (variant.option1 === label_check || variant.option2 === label_check || variant.option3 === label_check)  {
+                              const selectedSize = $('input[name="Size"]:checked').val();
+                              const selectedPurity = $('input[name="Purity"]:checked').val();
+                              const selectedDiamondQuality = $('input[name="Diamond Quality"]:checked').val();
+                              const selectedmetal_type = $('input[name="Metal Type"]:checked').val();
+                              const selectedcolor_name = $('input[name="Color"]:checked').val();
+                                    // var color_name = $('select[name="Color"] option:selected').val();
+                                    // var size_name = $('select[name="Size"] option:selected').val();
+                                    // var metal_type = $('select[name="Metal Type"] option:selected').val();
+                                    // var diamond_quality = $('select[name="Diamond Quality"] option:selected').val();
+                                    // var purity = $('select[name="Purity"] option:selected').val();
+
+                              if(selectedcolor_name == variant.option1 || selectedmetal_type == variant.option1 ){
+                                  if(selectedSize == variant.option2){
+                                     if(selectedPurity == variant.option3 || selectedDiamondQuality == variant.option3){
+                                        selectedVariant = variant;
+                                        break;
+                                      }
+                                    }
+                                  if(selectedPurity == variant.option3 || selectedDiamondQuality == variant.option3){
+                                     if(selectedSize == variant.option2 ){
+                                        selectedVariant = variant;
+                                        break;
+                                       }
+                                      }
+                                    }
+                               }
+                            }
+                            if (selectedVariant) {
+                                updateProductImages(productData, productImagesContainer, selectedVariant);
+                                updateProductPrices(productPriceContainer, selectedVariant);
+                                  updateProductSku(productSku, selectedVariant);
+                                updateURL('selectedVariant',selectedVariant.id);
+                            }
+                            
+                          });
+                      });
+                       
+                      variantWrapper.appendChild(fieldset);
+  
+                        } else {
+                    
+                                  const variantLabel = document.createElement('label');
+                                        variantLabel.classList.add('variant__label');
+                                        variantLabel.setAttribute('for', `option-${optionIndex}`);
+                                        variantLabel.innerHTML = `${option.name} : <span id="color_name" data-variant-color-label="" data-index="${optionIndex}" >${option.values[0]}</span>`;
+                                        variantWrapper.appendChild(variantLabel);
+                                  const selectElement = document.createElement('select');
+                                        selectElement.setAttribute('name', option.name);
+                                        selectElement.id = `option-${optionIndex}`;
+                                        selectElement.innerHTML = `${option.values.map(value => `<option value="${value}">${value}</option>`).join('')}`;
+                                        selectElement.addEventListener('change', () => {
+                                  const selectedValue = selectElement.value;                                  
+                                  let selectedIndex = selectElement.selectedIndex;
+                                  let labelSpan = $(selectElement).closest('.variant-wrapper').find('span[data-variant-color-label]');
+                                      labelSpan.text(selectedValue);
+                                      labelSpan.attr('data-option-index', selectedIndex);
+                                      var variants = productData.product.variants;
+                               
+                                    var selectedVariant;
+                                   for (var i = 0; i < variants.length; i++) {
+                                   
+                                   var variant = variants[i];
+                            
+                                      selectElement.querySelectorAll('option').forEach(option => {
+                                        
+                                          if (option.value === selectedValue) {
+                                              option.disabled = true;
+                                          } else {
+                                              option.disabled = false;
+                                          }
+                                      });
+                                     if (variant.option1 === selectedValue || variant.option2 === selectedValue || variant.option3 === selectedValue) {
+                                         var color_name = $('select[name="Color"] option:selected').val();
+                                         var size_name = $('select[name="Size"] option:selected').val();
+                                         var metal_type = $('select[name="Metal Type"] option:selected').val();
+                                         var metal_color = $('select[name="Metal Color"] option:selected').val();
+                                         var diamond_quality = $('select[name="Diamond Quality"] option:selected').val();
+                                         var purity = $('select[name="Purity"] option:selected').val();
+
+                                       
+                                       if(color_name == variant.option1 || metal_type == variant.option1 || metal_color == variant.option1  ){
+                              
+                                         if(size_name == variant.option2 || metal_color == variant.option2 || metal_type == variant.option2 ){
+                                                      console.log(selectedValue);
+                                             if(purity == variant.option3 || diamond_quality == variant.option3 || metal_color == variant.option3 || metal_type == variant.option3){
+                                                  selectedVariant = variant;
+                                                  selectedButton.addEventListener('click', function() {
+                                                   const selectedVariantId = selectedVariant.id; 
+                                                   const selectedRingId = selectedVariant.product_id;    
+                                                         selectedButton.innerHTML = '<span class="loader"></span> Adding ...';
+                                                         localStorage.setItem('selectedVariantId', selectedVariantId);
+                                                         localStorage.setItem('selectedRingId', selectedRingId);
+                                                         setTimeout(function() { window.location.href = 'https://ring-premier-one.myshopify.com/pages/choose-diamond';  }, 1450); 
+                                                    });  
+                                                 break;
+                                               }
+                                             }
+                                         if(purity == variant.option3 || diamond_quality == variant.option3|| metal_color == variant.option3 || metal_type == variant.option3){
+                                           if(size_name == variant.option2 || metal_color == variant.option2 || metal_type == variant.option2 ){
+                                               selectedVariant = variant;
+                                               selectedButton.addEventListener('click', function() {
+                                                      const selectedVariantId = selectedVariant.id; 
+                                                      const selectedRingId = selectedVariant.product_id;    
+                                                            selectedButton.innerHTML = '<span class="loader"></span> Adding ...';
+                                                            localStorage.setItem('selectedVariantId', selectedVariantId);
+                                                            localStorage.setItem('selectedRingId', selectedRingId);
+                                                            setTimeout(function() { window.location.href = 'https://ring-premier-one.myshopify.com/pages/choose-diamond'; }, 1450); 
+                                                    });
+                                                  break;
+                                              }
+                                           }
+                                        }
+                                     }
+                                  }
+                                  
+                            if (selectedVariant) {
+                                  updateProductImages(productData, productImagesContainer,productImagesContainernav, selectedVariant);
+                                  updateProductPrices(productPriceContainer, selectedVariant);
+                                  updateProductSku(productSku, selectedVariant);
+                                  updateURL('selectedVariant',selectedVariant.id);
+                            }
+                      });
+                         variantWrapper.appendChild(selectElement);
+                    
+                    } //else end
+                    
+                    optionIndex++; 
+                      productVariantsContainer.appendChild(variantWrapper);
+                  });
+                 
+                 }
+
+                        desc(productData, productDescContainer);
+             })
+              .catch(error => console.error('Error fetching product details:', error));
+
+  
+          });
+   $('#product-images-container').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            dots: true,
+            prevArrow: '<button type="button" class="slick-prev">Previous</button>',
+            nextArrow: '<button type="button" class="slick-next">Next</button>',
+            infinite: true,
+            adaptiveHeight: true // Adjusts the slider height based on the content
+        });
+</script>
+  </body>
+  </html>

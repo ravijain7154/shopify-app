@@ -1,0 +1,672 @@
+/* Ion.RangeSlider
+// css version 2.0.3
+// © 2013-2014 Denis Ineshin | IonDen.com
+// ===================================================================================================================*/
+
+/* =====================================================================================================================
+// RangeSlider */
+
+.irs {
+    position: relative; display: block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.irs-line {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        outline: none !important;
+    }
+        .irs-line-left, 
+        .irs-line-mid,
+        .irs-line-right {
+            position: absolute; 
+            display: block;
+            top: 0;
+        }
+        .irs-line-left {
+            left: 0;
+            width: 11%;
+        }
+        .irs-line-mid {
+            left: 9%; width: 82%;
+        }
+        .irs-line-right {
+            right: 0; width: 11%;
+        }
+
+    .irs-bar {
+        position: absolute; 
+      display: block;
+      width: 0;
+      height: 6px;
+      top: 5px;
+    background-position: 0 -30px;
+    background: #1a1a24!important;
+}
+        .irs-bar-edge {
+            position: absolute; 
+            display: block;
+            top: 0; left: 0;
+        }
+
+    .irs-shadow {
+        position: absolute; display: none;
+        left: 0; width: 0;
+    }
+
+    .irs-slider {
+        position: absolute; display: block;
+        cursor: default;
+        z-index: 1;
+    }
+        .irs-slider.single {
+
+        }
+        .irs-slider.from {
+
+        }
+        .irs-slider.to {
+
+        }
+        .irs-slider.type_last {
+            z-index: 2;
+        }
+
+    .irs-min {
+        position: absolute;
+        display: block;
+        left: 0;
+        cursor: default;
+    }
+    .irs-max {
+        position: absolute; 
+        display: block;
+        right: 0;
+        cursor: default;
+    }
+
+    .irs-from, 
+    .irs-to, 
+    .irs-single {
+        position: absolute; 
+        display: block;
+        bottom: 0; 
+        left: 0;
+        cursor: default;
+        white-space: nowrap;
+    }
+
+.irs-grid {
+    /* position: absolute;  */
+    display: none;
+    top: 0; 
+    left: 0;
+    width: 100% !important;
+    height: 20px;
+}
+.irs-with-grid .irs-grid {
+    display: block;
+    width: 100% !important;
+}
+
+.irs-grid-pol {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 5px;
+    height: 6px;
+    z-index: 1;
+    background: #fff  !important;
+}
+
+.irs-grid-pol.small {
+        height: 4px;
+        display:none
+}
+
+.irs-grid-text {
+    position: absolute;
+    bottom: 13px;
+    left: 0;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    line-height: 9px;
+    padding: 0 3px;
+    color: #585858 !important;
+}
+
+.irs-disable-mask {
+    position: absolute; display: block;
+    top: 0; left: -1%;
+    width: 102%; height: 100%;
+    cursor: default;
+    background: rgba(0,0,0,0.0);
+    z-index: 2;
+}
+.lt-ie9 .irs-disable-mask {
+    background: #000;
+    filter: alpha(opacity=0);
+    cursor: not-allowed;
+}
+
+.irs-disabled {
+    opacity: 0.4;
+}
+
+
+.irs-hidden-input {
+    position: absolute !important;
+    display: block !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
+    outline: none !important;
+    z-index: -9999 !important;
+    background: none !important;
+    border-style: solid !important;
+    border-color: transparent !important;
+}
+.irs-min, 
+.irs-max,
+.irs-from,
+.irs-to, .irs-single {
+    visibility: hidden!important;
+      display:none !important;
+}
+
+.irs-grid-text:not(last-child), 
+.irs-grid-text:not(first-child) {
+    margin-left: 0 !important;
+    visibility: visible !important;
+}
+
+/* 
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1{
+  left:13% !important;
+}
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2{
+    left: 37% !important;
+}
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-2.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-0,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-0 {
+    display: none !important;
+}
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3{
+    left: 64% !important;
+}
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4{
+  left:86%!important;
+}
+
+
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3::before,
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1::before,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3::before,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1::before,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3::before,
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -40px !important;
+    left: unset !important;
+}
+
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1{
+left:10% !important;
+}
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2{
+  left:30% !important;
+}
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3{
+  left:50% !important;
+}
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4{
+  left:70% !important;
+}
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5{
+  left:90% !important;
+}
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3::before,
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5::before,
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1::before{
+  right: -40px !important;
+    left: unset !important;
+}
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-10{left:95% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9{left:85% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8{left:76% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7{left:67% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6{left:57% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5{left:46% !important; visibility: visible !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4{left:36% !important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3 {left: 22%!important;margin-left: 0 !important;}
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left:15% !important;}
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left:4% !important;}
+
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-10{left:95% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-9{left:84% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-8{left:76% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-7{left:66% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-6{left:56% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-5{left:46% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-4{left:36% !important;}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26% !Important;}
+
+
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-8:before {
+    right: -10px!important;
+    left: unset!important;
+}
+
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-2{
+  left: 14% !Important;
+}
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-1{
+  left: 4% !Important;
+}
+
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-10::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-9::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-3::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-1::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-5::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-6::before,
+span.irs.js-irs-3.irs-with-grid span.irs-grid-text.js-grid-text-7::before{
+    right: -20px !important;
+    left: unset !important;
+}
+
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-10::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9::before,
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1::before{
+    right: -20px !important;
+    left: unset !important;
+}
+
+
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4::before,
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3::before{
+  right:0px ;
+  left: unset !important;
+}
+
+
+@media(max-width: 1200px){
+.irs-grid-text {
+    font-size: 12px;
+}
+
+
+}
+
+@media(min-width:1024px) and (max-width:1200px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1,  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1 {
+    left: 10%!important;
+}
+
+
+  
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 34%!important;
+}
+
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5:before, 
+span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -21px!important;
+    left: unset!important;
+}
+
+
+  span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{
+  left:2%!important;
+}
+  
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 12%!important;
+    margin: auto !important;
+}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {
+    left: 81%!important;
+    margin: auto !important;
+}
+  
+}
+
+@media(min-width:992px) and (max-width:1023px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before,  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -25px!important;
+    left: unset!important;
+}
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -16px!important;
+    left: unset!important;
+}
+
+
+  span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{
+  left:2%!important;
+}
+  
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 12%!important;
+    margin: auto !important;
+}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {
+    left: 81%!important;
+    margin: auto !important;
+}
+
+  
+}
+
+@media(min-width:815px) and (max-width:991px){
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5:before, 
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -76px!important;
+    left: unset!important;
+}
+
+
+
+
+  
+}
+
+
+@media(min-width:675px) and (max-width:814px){
+  span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-4:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-3:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-5:before, span.irs.js-irs-6.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -68px!important;
+    left: unset!important;
+}
+}
+
+@media(min-width:855px) and (max-width:991px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -100px!important;
+    left: unset!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1,  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1 {
+    left: 12%!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 37%!important;
+}
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left: 7%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left: 17%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4 {left: 38%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5 {left: 48%!important;visibility: visible!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6 {left: 58%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7 {left: 69%!important;} 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8 {left: 78%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {left: 86%!important;}
+
+
+  
+ span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3, span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3 {
+    left: 62%!important;
+} 
+}
+@media(min-width:755px) and (max-width:854px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before,
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -82px!important;
+    left: unset!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3 {
+    left: 62%!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1, 
+
+  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1 {
+    left: 12%!important;
+}
+
+
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left: 7%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left: 17%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4 {left: 38%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5 {left: 48%!important;visibility: visible!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6 {left: 58%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7 {left: 69%!important;} 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8 {left: 78%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {left: 86%!important;}
+
+  
+}
+
+
+@media (min-width: 532px) and (max-width:595px){
+
+  
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left: 7%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left: 17%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4 {left: 38%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5 {left: 48%!important;visibility: visible!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6 {left: 58%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7 {left: 69%!important;} 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8 {left: 78%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {left: 86%!important;}
+
+
+
+  
+ span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+ span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+ span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before, span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1:before, span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -58px!important;
+    left: unset!important;
+}
+
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3 {
+    left: 63%!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 38%!important;
+}
+
+}
+@media(min-width:596px) and (max-width:754px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before,  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -65px!important;
+    left: unset!important;
+}
+
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3 {
+    left: 63%!important;
+}
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 38%!important;
+}
+
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left: 7%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left: 17%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4 {left: 38%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5 {left: 48%!important;visibility: visible!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6 {left: 58%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7 {left: 69%!important;} 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8 {left: 78%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {left: 86%!important;}
+
+  
+}
+
+@media(max-width: 531px){
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1:before,  
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-4:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-3:before, 
+  span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1:before {
+    right: -55px!important;
+    left: unset!important;
+}
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2:before, 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1:before{
+  
+}
+
+  
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-1,
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-1, 
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-1 {
+    left: 10%!important;
+}
+span.irs.js-irs-0.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+span.irs.js-irs-5.irs-with-grid span.irs-grid-text.js-grid-text-2, 
+span.irs.js-irs-7.irs-with-grid span.irs-grid-text.js-grid-text-2 {
+    left: 35%!important;
+}
+
+
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-1{left: 7%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-2{left: 17%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-3{left: 26%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-4 {left: 38%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-5 {left: 48%!important;visibility: visible!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-6 {left: 58%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-7 {left: 69%!important;} 
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-8 {left: 78%!important;}
+span.irs.js-irs-4.irs-with-grid span.irs-grid-text.js-grid-text-9 {left: 86%!important;}
+
+  
+} */
+span.irs-grid-pol:last-child,
+.irs-grid-text:last-child {
+    left: 98% !important;
+}
+

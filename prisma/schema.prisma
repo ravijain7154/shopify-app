@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String    @id @db.VarChar(255)
+  shop          String    @db.VarChar(255)
+  state         String    @db.VarChar(255)
+  isOnline      Boolean   @default(false)
+  scope         String?   @db.VarChar(255)
+  expires       DateTime?
+  accessToken   String    @db.VarChar(255)
+  userId        BigInt?
+  firstName     String?   @db.VarChar(255)
+  lastName      String?   @db.VarChar(255)
+  email         String?   @db.VarChar(255)
+  accountOwner  Boolean   @default(false)
+  locale        String?   @db.VarChar(255)
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  price       Float
+  description String
+  category    String
+  image       String
+  rating      Rating?  @relation(fields: [ratingId], references: [id])
+  ratingId    Int?     @unique
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  rate      Float
+  count     Int
+  product   Product? @relation
+  productId Int?    @unique
+}
+
+model Diamond {
+  id                     Int      @id @default(autoincrement())
+  Stock_No               String
+  Availability           String?
+  Shape                  String?
+  Weight                 Float?
+  Color                  String?
+  Clarity                String?
+  Cut_Grade              String?
+  Polish                 String?
+  Symmetry               String?
+  Fluorescence_Intensity String?
+  Fluorescence_Color     String?
+  Measurements           String?
+  Lab                    String?
+  Treatment              String?
+  FancyColor             String?
+  Fancy_Color_Intensity  String?
+  FancyColorOvertone     String?
+  DEPTH_PER              Float?
+  TABLE_PER              Float?
+  Girdle_Min             Float?
+  Girdle_Max             Float?
+  Girdle_Per             Float?
+  Girdle_Condition       String?
+  Culet_Size             String?
+  Culet_Condition        String?
+  Crown_Height           Float?
+  Crown_Angle            Float?
+  Pavilion_Depth         Float?
+  Pavilion_Angle         Float?
+  Cert_Comments          String?
+  Country                String?
+  State                  String?
+  City                   String?
+  Country_Of_Origin      String?
+  Key_To_Symbols         String?
+  Shade                  String?
+  Star_Length            String?
+  Report_Issue_Date      DateTime?
+  Report_Type            String?
+  Milky                  String?
+  Eye_Clean              String?
+  Gemprint_ID            String?
+  BGM                    String?
+  Ratio                  Float?
+  Diamond_Type           String?
+  Member_Comments        String?
+  Time_to_Location       String?
+  LsMatchedPairSeparable String?
+  Pair_Stock             String?
+  Allow_Raplink_Feed     String?
+  Parcel_Stones          String?
+  Center_Inclusion       String?
+  Black_Inclusion        String?
+  Lab_Location           String?
+  Brand                  String?
+  Sarine_Name            String?
+  Internal_Clarity_Desc_Code String?
+  Clarity_Description    String?
+  Modified_Rate          Float?
+  wire_discount_price    Float?
+  ImageLink              String?
+  VideoLink              String?
+  Video_HTML             String?
+  CertificateLink        String?
+  Rap_Price              Float?
+  Memo_Price             Float?
+  Memo_Discount_PER      Float?
+  Buy_Price              Float?
+  Buy_Price_Discount_PER Float?
+  COD_Buy_Price          Float?
+  COD_Buy_Price_Discount_PER Float?
+  Certificate            String?
+}
+

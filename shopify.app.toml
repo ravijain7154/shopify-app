@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "8e6c56fe2f8e5b066c837a301d311caa"
+name = "filter-test"
+handle = "filter-test-5"
+application_url = "https://shopify-app-pndl.onrender.com/"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "quickstart-fad8588b.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = ""
+
+[auth]
+redirect_urls = [
+  "https://shopify-app-pndl.onrender.com/auth/callback",
+  "https://shopify-app-pndl.onrender.com/auth/shopify/callback",
+  "https://shopify-app-pndl.onrender.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "https://directions-displays-listprice-reads.trycloudflare.com/webhooks"
+
+[pos]
+embedded = false

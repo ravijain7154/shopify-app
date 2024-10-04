@@ -1,0 +1,115 @@
+import { ReactNode } from 'react';
+import type { ShopifyGlobal } from '@shopify/app-bridge-types';
+import type { UIModalAttributes } from '@shopify/app-bridge-types';
+import type { UINavMenuAttributes } from '@shopify/app-bridge-types';
+import type { UISaveBarAttributes } from '@shopify/app-bridge-types';
+import type { UITitleBarAttributes } from '@shopify/app-bridge-types';
+
+/**
+ * This component is a wrapper around the App Bridge `ui-modal` element.
+ * It is used to display an overlay that prevents interaction with the
+ * rest of the app until dismissed.
+ *
+ * @see {@link https://shopify.dev/docs/api/app-bridge-library/react-components/modal}
+ */
+export declare const Modal: React.ForwardRefExoticComponent<ModalProps & React.RefAttributes<UIModalElement>>;
+
+export declare interface ModalProps extends Omit<UIModalAttributes, 'children'> {
+    /**
+     * Whether the modal is open or not
+     *
+     * @defaultValue false
+     */
+    open?: boolean;
+    /**
+     * Callback that is called when the modal is opened
+     */
+    onShow?(): void;
+    /**
+     * Callback that is called when the modal is closed
+     */
+    onHide?(): void;
+    children?: ReactNode;
+}
+
+/**
+ * This component is a wrapper around the App Bridge `ui-nav-menu` element.
+ * It is used to create a navigation menu for your app.
+ *
+ * @see {@link https://shopify.dev/docs/api/app-bridge-library/react-components/navmenu}
+ */
+export declare const NavMenu: React.ComponentType<NavMenuProps>;
+
+export declare interface NavMenuProps extends Omit<UINavMenuAttributes, 'children'> {
+    children?: ReactNode;
+}
+
+/**
+ * This component is a wrapper around the App Bridge `ui-save-bar` element.
+ * It is used to display a contextual save bar to signal dirty state in the app.
+ *
+ * @see {@link https://shopify.dev/docs/api/app-bridge-library/react-components/save-bar}
+ */
+export declare const SaveBar: React.ForwardRefExoticComponent<SaveBarProps & React.RefAttributes<UISaveBarElement>>;
+
+export declare interface SaveBarProps extends Omit<UISaveBarAttributes, 'children'> {
+    /**
+     * Whether the saveBar is open or not
+     *
+     * @defaultValue false
+     */
+    open?: boolean;
+    /**
+     * Callback that is called when the saveBar is opened
+     */
+    onShow?(): void;
+    /**
+     * Callback that is called when the saveBar is closed
+     */
+    onHide?(): void;
+    children?: ReactNode;
+}
+
+/**
+ * This component is a wrapper around the App Bridge `ui-title-bar` element.
+ * It is used to to populate the app title bar with button actions or the
+ * modal header and footer when used within the Modal component.
+ *
+ * @see {@link https://shopify.dev/docs/api/app-bridge-library/react-components/titlebar}
+ */
+export declare const TitleBar: React.ComponentType<TitleBarProps>;
+
+export declare interface TitleBarProps extends Omit<UITitleBarAttributes, 'children'> {
+    children?: ReactNode;
+}
+
+/**
+ *
+ * This hook returns the `shopify` global variable to use
+ * App Bridge APIs such as `toast` and `resourcePicker`.
+ *
+ * @see {@link https://shopify.dev/docs/api/app-bridge-library/react-hooks/useappbridge}
+ *
+ * @example
+ * ```jsx
+ * import {useAppBridge} from '@shopify/app-bridge-react';
+ * function GenerateBlogPostButton() {
+ *   const shopify = useAppBridge();
+ *
+ *   function generateBlogPost() {
+ *     // Handle generating
+ *     shopify.toast.show('Blog post template generated');
+ *   }
+ *
+ *   return <button onClick={generateBlogPost}>Generate Blog Post</button>;
+ * }
+ * ```
+ *
+ * @returns `shopify` variable or a Proxy that throws when incorrectly accessed when not in a browser context
+ */
+export declare function useAppBridge(): ShopifyGlobal;
+
+
+export * from "@shopify/app-bridge-types";
+
+export { }
