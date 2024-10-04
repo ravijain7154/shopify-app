@@ -1,6 +1,6 @@
 {
     "builds": [{
-        "src": "build/server/index.js",
+        "src": "build/server/root.js",
         "use": "@vercel/node"
     }],
     "routes": [{
