@@ -3,7 +3,7 @@
 client_id = "8e6c56fe2f8e5b066c837a301d311caa"
 name = "filter-test"
 handle = "filter-test-5"
-application_url = "https://shopify-app-pndl.onrender.com/"
+application_url = "https://ranger-improved-northwest-may.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://shopify-app-pndl.onrender.com/auth/callback",
-  "https://shopify-app-pndl.onrender.com/auth/shopify/callback",
-  "https://shopify-app-pndl.onrender.com/api/auth/callback"
+  "https://ranger-improved-northwest-may.trycloudflare.com/auth/callback",
+  "https://ranger-improved-northwest-may.trycloudflare.com/auth/shopify/callback",
+  "https://ranger-improved-northwest-may.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
