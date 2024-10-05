@@ -9,7 +9,7 @@ const PORT = 4000; // Port for your API server
 
 // Use the CORS middleware with the correct configuration
 app.use(cors({
-    origin: 'https://abcdfdgsse.myshopify.com', // Replace with your specific Shopify domain
+    origin: 'https://quickstart-fad8588b.myshopify.com', // Replace with your specific Shopify domain
     methods: ['GET', 'POST'], // Allow only specific methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Adjust headers as needed
     credentials: true // If your app uses credentials (like cookies)

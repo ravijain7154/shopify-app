@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://localhost:3457/api/products')
+    fetch('http://localhost:4000/api/products')
       .then(response => response.json())
       .then(data => {
         if (Array.isArray(data) && data.length) {

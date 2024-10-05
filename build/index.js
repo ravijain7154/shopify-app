@@ -115,7 +115,7 @@ function Products$3() {
   let { products } = useLoaderData$1();
   return Array.isArray(products) ? /* @__PURE__ */ jsxs("div", {
     children: [
-      /* @__PURE__ */ jsx("h1", { children: "Products from serevr index 3" }),
+      /* @__PURE__ */ jsx("h1", { children: "Products from serevr index 3 jai"  }),
       /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
     ]
   }) : /* @__PURE__ */ jsx("div", { children: "Error: Products data is not in the expected format." });
