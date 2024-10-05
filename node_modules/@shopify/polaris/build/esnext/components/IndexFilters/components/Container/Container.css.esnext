@@ -1,7 +1,0 @@
-import './Container.out.css';
-
-var styles = {
-  "Container": "Polaris-IndexFilters-Container_13mbo"
-};
-
-export { styles as default };

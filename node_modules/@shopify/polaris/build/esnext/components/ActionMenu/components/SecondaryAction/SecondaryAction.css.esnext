@@ -1,8 +1,0 @@
-import './SecondaryAction.out.css';
-
-var styles = {
-  "SecondaryAction": "Polaris-ActionMenu-SecondaryAction_1dl4i",
-  "critical": "Polaris-ActionMenu-SecondaryAction--critical_uivil"
-};
-
-export { styles as default };

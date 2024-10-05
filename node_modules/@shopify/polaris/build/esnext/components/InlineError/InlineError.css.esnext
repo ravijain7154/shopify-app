@@ -1,8 +1,0 @@
-import './InlineError.out.css';
-
-var styles = {
-  "InlineError": "Polaris-InlineError_1g623",
-  "Icon": "Polaris-InlineError__Icon_yj27d"
-};
-
-export { styles as default };

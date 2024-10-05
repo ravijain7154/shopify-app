@@ -1,9 +1,0 @@
-import './RangeSlider.out.css';
-
-var sharedStyles = {
-  "RangeSlider": "Polaris-RangeSlider_9f1ur",
-  "Track--dashed-after": "Polaris-RangeSlider--trackDashedAfter_8kgtv",
-  "Track--dashed": "Polaris-RangeSlider--trackDashed_8xr5k"
-};
-
-export { sharedStyles as default };

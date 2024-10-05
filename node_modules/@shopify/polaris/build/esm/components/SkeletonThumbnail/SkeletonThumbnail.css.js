@@ -1,9 +1,0 @@
-var styles = {
-  "SkeletonThumbnail": "Polaris-SkeletonThumbnail",
-  "sizeExtraSmall": "Polaris-SkeletonThumbnail--sizeExtraSmall",
-  "sizeSmall": "Polaris-SkeletonThumbnail--sizeSmall",
-  "sizeMedium": "Polaris-SkeletonThumbnail--sizeMedium",
-  "sizeLarge": "Polaris-SkeletonThumbnail--sizeLarge"
-};
-
-export { styles as default };

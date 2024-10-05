@@ -1,7 +1,0 @@
-import './RollupActions.out.css';
-
-var styles = {
-  "RollupActivator": "Polaris-ActionMenu-RollupActions__RollupActivator_88nso"
-};
-
-export { styles as default };
