@@ -3,7 +3,7 @@
 client_id = "8e6c56fe2f8e5b066c837a301d311caa"
 name = "filter-test"
 handle = "filter-test-5"
-application_url = "https://ranger-improved-northwest-may.trycloudflare.com"
+application_url = "https://regression-ultra-tough-surfaces.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://ranger-improved-northwest-may.trycloudflare.com/auth/callback",
-  "https://ranger-improved-northwest-may.trycloudflare.com/auth/shopify/callback",
-  "https://ranger-improved-northwest-may.trycloudflare.com/api/auth/callback"
+  "https://regression-ultra-tough-surfaces.trycloudflare.com/auth/callback",
+  "https://regression-ultra-tough-surfaces.trycloudflare.com/auth/shopify/callback",
+  "https://regression-ultra-tough-surfaces.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
