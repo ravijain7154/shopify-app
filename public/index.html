@@ -1,0 +1,26 @@
+<!-- app/public/diamonds.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Filters</title>
+    <link rel="stylesheet" href="assets/styles.css"> <!-- Add any CSS here -->
+</head>
+<body>
+    <h1>Diamond Products</h1>
+    <div>
+        <label for="filter">Filter by:</label>
+        <select id="filter">
+            <option value="">Select a filter</option>
+            <option value="clarity">Clarity</option>
+            <option value="cut">Cut</option>
+            <option value="carat">Carat</option>
+            <option value="color">Color</option>
+        </select>
+    </div>
+    <ul id="product-list"></ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
