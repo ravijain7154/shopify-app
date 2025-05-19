@@ -1,0 +1,59 @@
+/* src/styles.css */
+.container {
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+.cardbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 16px;
+  flex: 0 24%;
+  background-color: var(--card-bg-color);
+}
+.card img {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  padding: 10px;
+  height: 150px;
+  width: 150px;
+  margin: auto;
+}
+  
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 5px 0px;
+    padding: 0px 10px;
+}
+  
+  .card-text {
+    margin-bottom: 8px;
+    padding: 0px 10px;
+  }
+  
+  .admin_dash {
+    box-shadow: 0px 0px 35px 5px #cccc;
+    padding: 30px;
+}
+.admin_dash .title {
+  font-size: 28px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  letter-spacing: 1.5px;
+}
+.admin_dash .text {
+  font-size: 14px;
+  text-transform: capitalize;
+  margin-bottom: 5px;
+}
