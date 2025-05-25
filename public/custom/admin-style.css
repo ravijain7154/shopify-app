@@ -15,9 +15,10 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  /* padding: 16px; */
   margin-bottom: 16px;
   flex: 0 24%;
-  background-color: var(--card-bg-color);
+  background-color: #fff;
 }
 .card img {
   max-width: 100%;

@@ -14,7 +14,12 @@ const prisma = new PrismaClient();
 const PORT = 4000; // Port for your API server
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(process.cwd(), 'public')));
+// app.get('/diamond-filter', (req, res) => {
+//     res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+// });
+
+app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
+
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
@@ -31,14 +36,12 @@ app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), 
 }));
 
 
-app.get('/diamond-filter', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
-});
+
 
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
+const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://shopify-app-pndl.onrender.com, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
 // Use the CORS middleware with the correct configuration
 app.use(cors({
     // origin: ['http://localhost:3000', 'https://quickstart-fad8588b.myshopify.com', 'http://192.168.1.136:3000'], // Replace with your specific Shopify domain

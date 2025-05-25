@@ -24,4 +24,3 @@
 # .shopify.lock
 .vercel
 node_modules
-.shopify

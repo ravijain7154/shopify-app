@@ -3,11 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"  // or "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-
 
 model colorsetting {
   id        Int      @id @default(autoincrement())

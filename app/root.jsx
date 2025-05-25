@@ -23,106 +23,109 @@ const options = {
 };
 
 export const loader = async () => {
+  let fetchDiamonds = [];
+  let insertedCount = 0;
+  let updatedCount = 0;
+  let fallbackUsed = false;
+
   try {
     const response = await fetch(url, options);
+
+    if (!response.ok) throw new Error(`API responded with status ${response.status}`);
+
     const data = await response.json();
     const responseData = data.data || [];
-    
+
     if (!Array.isArray(responseData)) {
       console.error("Data is not in expected array format:", responseData);
-      return json({
-        products: [],
-        message: "Data is not in the expected array format."
-      });
+      throw new Error("Data is not in the expected array format.");
     }
 
-    // await prisma.diamond_api.deleteMany();
+    const insertedDiamonds = await Promise.all(
+      responseData.map(async (item) => {
+        return prisma.diamond_api.upsert({
+          where: { certificateNumber: item.CertificateNumber || '' },
+          update: {
+            shape: item.Shape || '',
+            weight: parseFloat(item.Weight) || 0,
+            color: item.Color || '',
+            clarity: item.Clarity || '',
+            cutGrade: item.CutGrade || '',
+            polish: item.Polish || '',
+            symmetry: item.Symmetry || '',
+            fluoIntensity: item.FluoIntensity || '',
+            fluoColor: item.FluoColor || '',
+            rapDiscount: parseFloat(item.RapDiscount) || 0,
+            depthPercent: parseFloat(item.DepthPercent) || 0,
+            tablePercent: parseFloat(item.TablePercent) || 0,
+            measLength: parseFloat(item.MeasLength) || 0,
+            measWidth: parseFloat(item.MeasWidth) || 0,
+            measDepth: parseFloat(item.MeasDepth) || 0,
+            girdleSizeMin: parseFloat(item.girdleSizeMin) || 0,
+            location: item.Location || '',
+            girdleSizeMax: parseFloat(item.girdleSizeMax) || 0,
+            finalPrice: parseFloat(item.FinalPrice) || 0,
+            culetSize: item.CuletSize || '',
+            culetCondition: item.CuletCondition || '',
+            imageUrl: item.image_url || '',
+          },
+          create: {
+            certificateNumber: item.CertificateNumber || '',
+            shape: item.Shape || '',
+            weight: parseFloat(item.Weight) || 0,
+            color: item.Color || '',
+            clarity: item.Clarity || '',
+            cutGrade: item.CutGrade || '',
+            polish: item.Polish || '',
+            symmetry: item.Symmetry || '',
+            fluoIntensity: item.FluoIntensity || '',
+            fluoColor: item.FluoColor || '',
+            rapDiscount: parseFloat(item.RapDiscount) || 0,
+            depthPercent: parseFloat(item.DepthPercent) || 0,
+            tablePercent: parseFloat(item.TablePercent) || 0,
+            measLength: parseFloat(item.MeasLength) || 0,
+            measWidth: parseFloat(item.MeasWidth) || 0,
+            measDepth: parseFloat(item.MeasDepth) || 0,
+            girdleSizeMin: parseFloat(item.girdleSizeMin) || 0,
+            location: item.Location || '',
+            girdleSizeMax: parseFloat(item.girdleSizeMax) || 0,
+            finalPrice: parseFloat(item.FinalPrice) || 0,
+            culetSize: item.CuletSize || '',
+            culetCondition: item.CuletCondition || '',
+            imageUrl: item.image_url || '',
+          }
+        });
+      })
+    );
 
-    const insertedDiamonds = await Promise.all(data.data.map(async (item) => {
-      return prisma.diamond_api.upsert({
-        where: { certificateNumber: item.CertificateNumber || '' },
-        update: {
-          shape: item.Shape || '',
-          weight: parseFloat(item.Weight) || 0,
-          color: item.Color || '',
-          clarity: item.Clarity || '',
-          cutGrade: item.CutGrade || '',
-          polish: item.Polish || '',
-          symmetry: item.Symmetry || '',
-          fluoIntensity: item.FluoIntensity || '',
-          fluoColor: item.FluoColor || '',
-          rapDiscount: parseFloat(item.RapDiscount) || 0,
-          depthPercent: parseFloat(item.DepthPercent) || 0,
-          tablePercent: parseFloat(item.TablePercent) || 0,
-          measLength: parseFloat(item.MeasLength) || 0,
-          measWidth: parseFloat(item.MeasWidth) || 0,
-          measDepth: parseFloat(item.MeasDepth) || 0,
-          girdleSizeMin: parseFloat(item.girdleSizeMin) || 0,
-          location: item.Location || '',
-          girdleSizeMax: parseFloat(item.girdleSizeMax) || 0,
-          finalPrice: parseFloat(item.FinalPrice) || 0,
-          culetSize: item.CuletSize || '',
-          culetCondition: item.CuletCondition || '',
-          imageUrl: item.image_url || '',
-        },
-        create: {
-          certificateNumber: item.CertificateNumber || '',
-          shape: item.Shape || '',
-          weight: parseFloat(item.Weight) || 0,
-          color: item.Color || '',
-          clarity: item.Clarity || '',
-          cutGrade: item.CutGrade || '',
-          polish: item.Polish || '',
-          symmetry: item.Symmetry || '',
-          fluoIntensity: item.FluoIntensity || '',
-          fluoColor: item.FluoColor || '',
-          rapDiscount: parseFloat(item.RapDiscount) || 0,
-          depthPercent: parseFloat(item.DepthPercent) || 0,
-          tablePercent: parseFloat(item.TablePercent) || 0,
-          measLength: parseFloat(item.MeasLength) || 0,
-          measWidth: parseFloat(item.MeasWidth) || 0,
-          measDepth: parseFloat(item.MeasDepth) || 0,
-          girdleSizeMin: parseFloat(item.girdleSizeMin) || 0,
-          location: item.Location || '',
-          girdleSizeMax: parseFloat(item.girdleSizeMax) || 0,
-          finalPrice: parseFloat(item.FinalPrice) || 0,
-          culetSize: item.CuletSize || '',
-          culetCondition: item.CuletCondition || '',
-          imageUrl: item.image_url || '',
-        }
-      });
-    }));
-
-    const updatedCount = insertedDiamonds.filter(d => d.createdAt !== d.updatedAt).length;
-    const insertedCount = insertedDiamonds.filter(d => d.createdAt === d.updatedAt).length;
-
-    console.log(`Total inserted: ${insertedCount}`);
-    console.log(`Total updated: ${updatedCount}`);
-
-    const fetchDiamonds = await prisma.diamond_api.findMany();
-    
-    // Get or create color setting
-    let colorSetting = await prisma.colorsetting.findFirst();
-    if (!colorSetting) {
-      colorSetting = await prisma.colorsetting.create({
-        data: { color: '#ffffff' }
-      });
-    }
-    
-    return json({ 
-      products: fetchDiamonds,
-      message: `diamonds inserted into the database (${insertedCount})`,
-      message_update: `diamonds updated into the database (${updatedCount})`,
-      color: colorSetting.color 
-    });
+    // updatedCount = insertedDiamonds.filter(d => d.createdAt !== d.updatedAt).length;
+    // insertedCount = insertedDiamonds.filter(d => d.createdAt === d.updatedAt).length;
   } catch (error) {
-    console.error('Failed to fetch data:', error);
-    return json({ 
-      products: [], 
-      color: '#ffffff',
-      error: "Failed to load data"
+    console.error('API fetch failed. Falling back to existing database data:', error);
+    fallbackUsed = true;
+  }
+
+  // Always fetch data from DB to serve it
+  const fetchDiamondsFromDB = await prisma.diamond_api.findMany();
+
+  // Get or create color setting
+  let colorSetting = await prisma.colorsetting.findFirst();
+  if (!colorSetting) {
+    colorSetting = await prisma.colorsetting.create({
+      data: { color: '#ffffff' }
     });
   }
+
+  return json({
+    products: fetchDiamondsFromDB,
+    color: colorSetting.color,
+    message: fallbackUsed
+      ? `Fetched from database. API not reachable.`
+      : `Diamonds inserted into the database (${insertedCount})`,
+    message_update: fallbackUsed
+      ? null
+      : `Diamonds updated into the database (${updatedCount})`
+  });
 };
 
 export default function App() {

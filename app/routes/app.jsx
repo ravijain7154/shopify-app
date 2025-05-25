@@ -53,7 +53,7 @@ export default function AppRoute() {
       <h2>Customize Appearance</h2>
       <Form method="post">
         <div>
-          <label htmlFor="color">Select Color</label>
+          <label htmlFor="color">Select Color: </label>
           <input
             type="color"
             name="color"

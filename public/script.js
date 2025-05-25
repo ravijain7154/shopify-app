@@ -5,8 +5,6 @@ let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
 
-
-
 (function() {
     if (window.location.pathname.includes('/pages/diamond')) {
       const container = document.createElement('div');
@@ -30,7 +28,7 @@ async function fetchAndApplyBackgroundColor() {
         }
         const data = await response.json();
         const cardBgColor = data.color || '#ffffff';
-        
+        console.log(cardBgColor);
         document.documentElement.style.setProperty('--card-bg-color', cardBgColor);
     } catch (error) {
         console.error('Error applying background color:', error);
@@ -369,16 +367,16 @@ function renderTableView(diamonds) {
         stockCell.textContent = diamond.certificateNumber;
 
         const shapeCell = document.createElement('td');
-        shapeCell.textContent = diamond.shape || '-';
+        shapeCell.textContent = diamond.shape || '';
 
         const caratCell = document.createElement('td');
-        caratCell.textContent = diamond.weight || '-';
+        caratCell.textContent = diamond.weight || '';
 
         const colorCell = document.createElement('td');
-        colorCell.textContent = diamond.color || '-';
+        colorCell.textContent = diamond.color || '';
 
         const clarityCell = document.createElement('td');
-        clarityCell.textContent = diamond.clarity || '-';
+        clarityCell.textContent = diamond.clarity || '';
 
         const cutCell = document.createElement('td');
         // let cutGradeAbbr = diamond.cutGrade;
@@ -396,10 +394,10 @@ function renderTableView(diamonds) {
 
         // cutCell.textContent = cutGradeAbbr || '';  // Use the abbreviated cutGrade or fallback to an empty string
 
-        cutCell.textContent = diamond.cutGrade || '-';
+        cutCell.textContent = diamond.cutGrade || '';
 
         const priceCell = document.createElement('td');
-        priceCell.textContent = `$${diamond.finalPrice || '-'}`;
+        priceCell.textContent = `$${diamond.finalPrice || ''}`;
 
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
