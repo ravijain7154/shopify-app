@@ -6,6 +6,8 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
+import { createRequestHandler } from '@remix-run/express';
+
 
 const { PrismaClient } = pkg;
 const app = express();
@@ -20,6 +22,15 @@ app.use(bodyParser.json());
 
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
+// Remix Admin UI routes (everything else)
+app.all(
+  '*',
+  createRequestHandler({
+    getLoadContext() {
+      return { prisma };
+    },
+  })
+);
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
