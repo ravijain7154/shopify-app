@@ -24,9 +24,3 @@
 # .shopify.lock
 .vercel
 node_modules
-/public/build/
-dist/
-logs/
-*.log
-prisma/migrations/
-prisma/migration_lock.toml

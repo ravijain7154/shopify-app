@@ -2,7 +2,7 @@
     "name": "shopify-app",
     "private": true,
     "scripts": {
-        "build": "npx prisma generate && remix build",
+        "build": "remix build",
         "vercel-build": "remix build",
         "config:link": "shopify app config link",
         "generate": "shopify app generate",

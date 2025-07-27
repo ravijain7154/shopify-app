@@ -1,0 +1,177 @@
+-- CreateTable
+CREATE TABLE "colorsetting" (
+    "id" SERIAL NOT NULL,
+    "color" TEXT NOT NULL DEFAULT '#000000',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "colorsetting_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "diamond" (
+    "id" SERIAL NOT NULL,
+    "Stock_No" TEXT NOT NULL,
+    "Availability" TEXT,
+    "Shape" TEXT,
+    "Weight" DOUBLE PRECISION,
+    "Color" TEXT,
+    "Clarity" TEXT,
+    "Cut_Grade" TEXT,
+    "Polish" TEXT,
+    "Symmetry" TEXT,
+    "Fluorescence_Intensity" TEXT,
+    "Fluorescence_Color" TEXT,
+    "Measurements" TEXT,
+    "Lab" TEXT,
+    "Treatment" TEXT,
+    "FancyColor" TEXT,
+    "Fancy_Color_Intensity" TEXT,
+    "FancyColorOvertone" TEXT,
+    "DEPTH_PER" DOUBLE PRECISION,
+    "TABLE_PER" DOUBLE PRECISION,
+    "Girdle_Min" DOUBLE PRECISION,
+    "Girdle_Max" DOUBLE PRECISION,
+    "Girdle_Per" DOUBLE PRECISION,
+    "Girdle_Condition" TEXT,
+    "Culet_Size" TEXT,
+    "Culet_Condition" TEXT,
+    "Crown_Height" DOUBLE PRECISION,
+    "Crown_Angle" DOUBLE PRECISION,
+    "Pavilion_Depth" DOUBLE PRECISION,
+    "Pavilion_Angle" DOUBLE PRECISION,
+    "Cert_Comments" TEXT,
+    "Country" TEXT,
+    "State" TEXT,
+    "City" TEXT,
+    "Country_Of_Origin" TEXT,
+    "Key_To_Symbols" TEXT,
+    "Shade" TEXT,
+    "Star_Length" TEXT,
+    "Report_Issue_Date" TIMESTAMP(3),
+    "Report_Type" TEXT,
+    "Milky" TEXT,
+    "Eye_Clean" TEXT,
+    "Gemprint_ID" TEXT,
+    "BGM" TEXT,
+    "Ratio" DOUBLE PRECISION,
+    "Diamond_Type" TEXT,
+    "Member_Comments" TEXT,
+    "Time_to_Location" TEXT,
+    "LsMatchedPairSeparable" TEXT,
+    "Pair_Stock" TEXT,
+    "Allow_Raplink_Feed" TEXT,
+    "Parcel_Stones" TEXT,
+    "Center_Inclusion" TEXT,
+    "Black_Inclusion" TEXT,
+    "Lab_Location" TEXT,
+    "Brand" TEXT,
+    "Sarine_Name" TEXT,
+    "Internal_Clarity_Desc_Code" TEXT,
+    "Clarity_Description" TEXT,
+    "Modified_Rate" DOUBLE PRECISION,
+    "wire_discount_price" DOUBLE PRECISION,
+    "ImageLink" TEXT,
+    "VideoLink" TEXT,
+    "Video_HTML" TEXT,
+    "CertificateLink" TEXT,
+    "Rap_Price" DOUBLE PRECISION,
+    "Memo_Price" DOUBLE PRECISION,
+    "Memo_Discount_PER" DOUBLE PRECISION,
+    "Buy_Price" DOUBLE PRECISION,
+    "Buy_Price_Discount_PER" DOUBLE PRECISION,
+    "COD_Buy_Price" DOUBLE PRECISION,
+    "COD_Buy_Price_Discount_PER" DOUBLE PRECISION,
+    "Certificate" TEXT,
+
+    CONSTRAINT "diamond_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "diamond_api" (
+    "id" SERIAL NOT NULL,
+    "certificateNumber" TEXT NOT NULL,
+    "shape" TEXT NOT NULL,
+    "weight" DOUBLE PRECISION NOT NULL,
+    "color" TEXT NOT NULL,
+    "clarity" TEXT NOT NULL,
+    "cutGrade" TEXT NOT NULL,
+    "polish" TEXT NOT NULL,
+    "symmetry" TEXT NOT NULL,
+    "fluoIntensity" TEXT NOT NULL,
+    "fluoColor" TEXT NOT NULL,
+    "rapDiscount" DOUBLE PRECISION NOT NULL,
+    "depthPercent" DOUBLE PRECISION NOT NULL,
+    "tablePercent" DOUBLE PRECISION NOT NULL,
+    "measLength" DOUBLE PRECISION NOT NULL,
+    "measWidth" DOUBLE PRECISION NOT NULL,
+    "measDepth" DOUBLE PRECISION NOT NULL,
+    "girdleSizeMin" DOUBLE PRECISION NOT NULL,
+    "location" TEXT NOT NULL,
+    "girdleSizeMax" DOUBLE PRECISION NOT NULL,
+    "finalPrice" DOUBLE PRECISION NOT NULL,
+    "culetSize" TEXT NOT NULL,
+    "culetCondition" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+
+    CONSTRAINT "diamond_api_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "product" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "description" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "ratingId" INTEGER,
+
+    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "rating" (
+    "id" SERIAL NOT NULL,
+    "rate" DOUBLE PRECISION NOT NULL,
+    "count" INTEGER NOT NULL,
+    "productId" INTEGER,
+
+    CONSTRAINT "rating_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "session" (
+    "id" VARCHAR(255) NOT NULL,
+    "shop" VARCHAR(255) NOT NULL,
+    "state" VARCHAR(255) NOT NULL,
+    "isOnline" BOOLEAN NOT NULL DEFAULT false,
+    "scope" VARCHAR(255),
+    "expires" TIMESTAMP(3),
+    "accessToken" VARCHAR(255) NOT NULL,
+    "userId" BIGINT,
+    "firstName" VARCHAR(255),
+    "lastName" VARCHAR(255),
+    "email" VARCHAR(255),
+    "accountOwner" BOOLEAN NOT NULL DEFAULT false,
+    "locale" VARCHAR(255),
+    "collaborator" BOOLEAN DEFAULT false,
+    "emailVerified" BOOLEAN DEFAULT false,
+
+    CONSTRAINT "session_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Diamond_Stock_No_key" ON "diamond"("Stock_No");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Diamond_api_certificateNumber_key" ON "diamond_api"("certificateNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_ratingId_key" ON "product"("ratingId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Rating_productId_key" ON "rating"("productId");
+
+-- AddForeignKey
+ALTER TABLE "product" ADD CONSTRAINT "Product_ratingId_fkey" FOREIGN KEY ("ratingId") REFERENCES "rating"("id") ON DELETE SET NULL ON UPDATE CASCADE;
