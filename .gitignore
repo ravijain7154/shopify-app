@@ -1,7 +1,7 @@
  node_modules
 
 /.cache
-build
+/build
 # /app/build
 # /public/build/
 # /public/_dev
@@ -23,7 +23,7 @@ build
 # .shopify/*
 # .shopify.lock
 .vercel
-# node_modules
+node_modules
 /public/build/
 dist/
 logs/
