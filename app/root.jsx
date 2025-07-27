@@ -16,13 +16,14 @@ export const links = () => [
   { rel: "stylesheet", href: './custom/admin-style.css' }
 ];
 
-const url = 'https://belgiumdia.com/api/DeveloperAPI';
-const options = {
-  method: 'GET',
-  headers: {
-    APIKEY: '134981956a7be967bf4a198e5bfccf4059085cf9dd4d'
-  }
-};
+// const url = 'https://belgiumdia.com/api/DeveloperAPI';
+// const options = {
+//   method: 'GET',
+//   headers: {
+//     APIKEY: '134981956a7be967bf4a198e5bfccf4059085cf9dd4d'
+//   }
+// };
+    const url = await fetch('https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d');
 
 export const loader = async () => {
   let fetchDiamonds = [];
@@ -31,7 +32,8 @@ export const loader = async () => {
   let fallbackUsed = false;
 
   try {
-    const response = await fetch(url, options);
+    // const response = await fetch(url, options);
+    const response = await fetch(url);
 
     if (!response.ok) throw new Error(`API responded with status ${response.status}`);
 
