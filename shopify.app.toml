@@ -3,7 +3,7 @@
 client_id = "8e6c56fe2f8e5b066c837a301d311caa"
 name = "filter-test"
 handle = "filter-test-5"
-application_url = "https://heater-solar-blast-est.trycloudflare.com"
+application_url = "https://za-seminars-mem-parental.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://heater-solar-blast-est.trycloudflare.com/auth/callback",
-  "https://heater-solar-blast-est.trycloudflare.com/auth/shopify/callback",
-  "https://heater-solar-blast-est.trycloudflare.com/api/auth/callback"
+  "https://za-seminars-mem-parental.trycloudflare.com/auth/callback",
+  "https://za-seminars-mem-parental.trycloudflare.com/auth/shopify/callback",
+  "https://za-seminars-mem-parental.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

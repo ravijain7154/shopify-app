@@ -8,12 +8,13 @@ import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import { createRequestHandler } from '@remix-run/express';
 
+import dotenv from 'dotenv';
 
 const { PrismaClient } = pkg;
 const app = express();
 const prisma = new PrismaClient();
 
-const PORT = 4000; // Port for your API server
+const PORT = process.env.PORT || 3000; // Port for your API server
 app.use(bodyParser.json());
 
 // app.get('/diamond-filter', (req, res) => {
@@ -22,15 +23,14 @@ app.use(bodyParser.json());
 
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
-// Remix Admin UI routes (everything else)
-app.all(
-  '*',
-  createRequestHandler({
-    getLoadContext() {
-      return { prisma };
-    },
-  })
-);
+import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
+
+app.all("/app*", createRemixHandler({
+  getLoadContext(req, res) {
+    return { prisma };
+  },
+}));
+
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
@@ -55,9 +55,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://shopify-app-pndl.onrender.com, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
 // Use the CORS middleware with the correct configuration
 app.use(cors({
-    // origin: ['http://localhost:3000', 'https://quickstart-fad8588b.myshopify.com', 'http://192.168.1.136:3000'], // Replace with your specific Shopify domain
     origin: allowedOrigins.split(','),
-    //origin: 'https://quickstart-fad8588b.myshopify.com', // Replace with your specific Shopify domain
     methods: ['GET', 'POST'], // Allow only specific methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Adjust headers as needed
     credentials: true // If your app uses credentials (like cookies)

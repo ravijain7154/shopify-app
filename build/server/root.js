@@ -14,7 +14,7 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 
 // Set up Remix request handler
 app.all(
-    '*',
+    '*', 
     createRequestHandler({
         getLoadContext({ req }) {
             // Create and return the context object

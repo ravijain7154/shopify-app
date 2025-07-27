@@ -1,7 +1,7 @@
  node_modules
 
 /.cache
-# /build
+/build
 # /app/build
 # /public/build/
 # /public/_dev
@@ -24,3 +24,9 @@
 # .shopify.lock
 .vercel
 node_modules
+/public/build/
+dist/
+logs/
+*.log
+prisma/migrations/
+prisma/migration_lock.toml
