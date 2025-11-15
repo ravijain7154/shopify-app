@@ -4,8 +4,8 @@ services:
     env: node
     region: oregon
     branch: main
-    buildCommand: npm ci --legacy-peer-deps && npm run build
-    preDeployCommand: npm run setup
+    buildCommand: npm install --legacy-peer-deps && npm run setup && npm run build
+    preDeployCommand: ""
     startCommand: npm run start
     plan: free
     envVars:
