@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: shopify-app
+    env: node
+    region: oregon
+    branch: main
+    buildCommand: npm ci --legacy-peer-deps && npm run build
+    preDeployCommand: npm run setup
+    startCommand: npm run start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+# Optional: If you want a separate background service for the standalone API process,
+# uncomment and customize the following block and push it as well.
+#  - type: service
+#    name: shopify-app-api
+#    env: node
+#    region: oregon
+#    branch: main
+#    buildCommand: npm ci --legacy-peer-deps
+#    startCommand: npm run start:api
+#    plan: free
