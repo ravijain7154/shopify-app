@@ -4,7 +4,11 @@ import db from "../db.server";
 export const action = async ({ request }) => {
   const { topic, shop, session, admin } = await authenticate.webhook(request);
 
-  if (!admin && topic !== "SHOP_REDACT") {
+  // Normalize topic strings to handle both formats returned by different tooling
+  // e.g. "app/uninstalled" -> "APP_UNINSTALLED" and keep existing uppercase names
+  const normalizedTopic = topic ? topic.replace(/\//g, "_").toUpperCase() : topic;
+
+  if (!admin && normalizedTopic !== "SHOP_REDACT") {
     // The admin context isn't returned if the webhook fired after a shop was uninstalled.
     // The SHOP_REDACT webhook will be fired up to 48 hours after a shop uninstalls the app.
     // Because of this, no admin context is available.
@@ -13,7 +17,7 @@ export const action = async ({ request }) => {
 
   // The topics handled here should be declared in the shopify.app.toml.
   // More info: https://shopify.dev/docs/apps/build/cli-for-apps/app-configuration
-  switch (topic) {
+  switch (normalizedTopic) {
     case "APP_UNINSTALLED":
       if (session) {
         await db.session.deleteMany({ where: { shop } });
