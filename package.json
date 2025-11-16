@@ -70,6 +70,6 @@
 
     ,
     "scripts": {
-        "postinstall": "node ./scripts/patch-shopify-app-remix.js || true"
+        "postinstall": "node ./scripts/patch-shopify-app-remix.cjs || true"
     }
 }
