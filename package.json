@@ -67,4 +67,9 @@
         "@remix-run/serve": "^2.16.5",
         "prisma": "5.22.0"
     }
+
+    ,
+    "scripts": {
+        "postinstall": "node ./scripts/patch-shopify-app-remix.js || true"
+    }
 }
