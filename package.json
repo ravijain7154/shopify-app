@@ -2,6 +2,7 @@
     "name": "shopify-app",
     "private": true,
     "scripts": {
+        "postinstall": "node ./scripts/patch-shopify-app-remix.cjs || true",
         "build": "remix build",
         "vercel-build": "remix build",
         "config:link": "shopify app config link",
@@ -67,9 +68,5 @@
         "@remix-run/serve": "^2.16.5",
         "prisma": "5.22.0"
     }
-
-    ,
-    "scripts": {
-        "postinstall": "node ./scripts/patch-shopify-app-remix.cjs || true"
-    }
+    
 }
