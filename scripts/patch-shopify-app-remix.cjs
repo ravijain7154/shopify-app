@@ -16,14 +16,30 @@ function patchFile(filePath) {
   return false;
 }
 
+function walkDir(dir, callback) {
+  if (!fs.existsSync(dir)) return;
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      walkDir(filePath, callback);
+    } else if (file.endsWith('.mjs') || file.endsWith('.js')) {
+      callback(filePath);
+    }
+  }
+}
+
 const targets = [
-  path.join('node_modules', '@shopify', 'shopify-app-remix', 'dist', 'esm', 'react', 'components', 'AppProvider', 'AppProvider.mjs')
+  path.join('node_modules', '@shopify', 'shopify-app-remix', 'dist')
 ];
 
 let patchedAny = false;
-for (const t of targets) {
+for (const targetDir of targets) {
   try {
-    if (patchFile(t)) patchedAny = true;
+    walkDir(targetDir, (filePath) => {
+      if (patchFile(filePath)) patchedAny = true;
+    });
   } catch (e) {
     // ignore
   }
