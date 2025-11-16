@@ -18,7 +18,7 @@
         "prisma": "prisma",
         "graphql-codegen": "graphql-codegen",
         "start:api": "node api-server.js",
-        "dev": "shopify app dev"
+        "dev": "node ./scripts/patch-shopify-app-remix.cjs && shopify app dev"
     },
     "type": "module",
     "engines": {
