@@ -15,7 +15,7 @@ export default {
   appDirectory: "app",
 
   // MUST BE CJS FOR SHOPIFY + RENDER
-  serverModuleFormat: "cjs",
+  serverModuleFormat: "esm",
   serverBuildTarget: "node-cjs",
 
   // Let Remix build its own server
