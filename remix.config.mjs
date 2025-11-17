@@ -35,6 +35,11 @@ export default {
     serverBuildTarget: "node-cjs", // Ensure this matches your build target
     // server: "./build/server/index.js",
     server: "./build/server/root.js",
+    serverDependenciesToBundle: [
+    "@shopify/shopify-app-remix",
+    "@shopify/polaris",
+    "@shopify/polaris/locales/en.json",
+  ],
     routes(defineRoutes) {
         return defineRoutes(route => {
             route("/api/products", "routes/api/products.js");
