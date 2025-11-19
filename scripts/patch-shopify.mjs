@@ -5,20 +5,20 @@ const file = path.resolve(
   "node_modules/@shopify/shopify-app-remix/dist/esm/react/components/AppProvider/AppProvider.mjs"
 );
 
-let content = fs.readFileSync(file, "utf8");
+let code = fs.readFileSync(file, "utf8");
 
-// Remove broken JSON import
-content = content.replace(
-  /import .*?locales\/en\.json.*?;/,
+// Remove the “with { type: 'json' }”
+code = code.replace(
+  /import englishI18n(.*)with\s*\{\s*type:\s*'json'\s*\}\s*;/,
   `import englishI18n from "@shopify/polaris/locales/en.json";`
 );
 
-// Remove duplicate createRequire imports
-content = content.replace(/import { createRequire }.*?;/g, "");
+// OR force require()
+code = code.replace(
+  `import englishI18n from "@shopify/polaris/locales/en.json";`,
+  `const englishI18n = require("@shopify/polaris/locales/en.json");`
+);
 
-// Remove "const require = ..." if found
-content = content.replace(/const require = createRequire\(.*?\);/g, "");
+fs.writeFileSync(file, code, "utf8");
 
-fs.writeFileSync(file, content, "utf8");
-
-console.log("✅ Shopify AppProvider.mjs patched successfully.");
+console.log("✅ Shopify AppProvider patched!");
