@@ -19,7 +19,7 @@ export default {
    * Shopify + Render require CommonJS format
    */
   serverModuleFormat: "mjs",
-  serverBuildTarget: "node-mjs",
+  serverBuildTarget: "node-cjs",
 
   /** Let Remix use its default server build */
   server: undefined,
