@@ -14,21 +14,19 @@ export default {
 
   appDirectory: "app",
 
-  /** 
-   * IMPORTANT:
-   * Shopify + Render require CommonJS format
-   */
-  serverModuleFormat: "cjs",
+  // MUST BE CJS FOR SHOPIFY + RENDER
+  serverModuleFormat: "esm",
   serverBuildTarget: "node-cjs",
 
-  /** Let Remix use its default server build */
+  // Let Remix build its own server
   server: undefined,
 
-  /** 
-   * DO NOT add custom routes here — it breaks Shopify OAuth
-   * Create API routes inside /app/routes/api/*.jsx
-   */
-  routes: undefined,
+  // OPTIONAL: your custom API routes
+  routes(defineRoutes) {
+    return defineRoutes((route) => {
+      route("/api/products", "routes/api/products.js");
+    });
+  },
 
   future: {
     v3_singleFetch: true,
@@ -37,10 +35,11 @@ export default {
     v3_fetcherPersist: true,
     v3_lazyRouteDiscovery: true,
 
-    /** Allow JSON imports */
+    // JSON import fix
     unstable_jsonModules: true,
   },
 
+  // Fix for "module" polyfill error
   browserNodeBuiltinsPolyfill: {
     modules: {
       module: true,
