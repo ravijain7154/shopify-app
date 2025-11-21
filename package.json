@@ -4,6 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
+        "postinstall": "node ./scripts/remove-json-assertions.mjs",
         "migrate": "npx prisma migrate deploy",
         "vercel-build": "remix build",
         "config:link": "shopify app config link",
