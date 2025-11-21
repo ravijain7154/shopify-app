@@ -28,7 +28,8 @@
         "node": "^18.20 || ^20.10 || >=21.0.0"
     },
     "dependencies": {
-        "@prisma/client": "^7.0.0",
+        "@prisma/client": "^5.22.0",
+        "prisma": "^5.22.0",
         "@prisma/extension-accelerate": "^2.0.2",
         "@remix-run/express": "^2.15.1",
         "@remix-run/node": "^2.15.1",
