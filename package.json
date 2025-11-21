@@ -20,7 +20,6 @@
         "start:api": "node api-server.js",
         "dev": "shopify app dev"
     },
-    "type": "module",
     "engines": {
         "node": "^18.20 || ^20.10 || >=21.0.0"
     },
