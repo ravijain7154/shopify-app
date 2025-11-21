@@ -1,71 +1,44 @@
 {
-    "name": "shopify-app",
-    "private": true,
-    "scripts": {
-        "migrate": "npx prisma migrate deploy",
-        "build": "remix build",
-        "vercel-build": "remix build",
-        "config:link": "shopify app config link",
-        "generate": "shopify app generate",
-        "deploy": "shopify app deploy",
-        "config:use": "shopify app config use",
-        "env": "shopify app env",
-        "start": "remix-serve ./build/server/index.js",
-        "docker-start": "npm run setup && npm run start",
-        "setup": "npx prisma generate && npx prisma migrate deploy",
-        "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-        "shopify": "shopify",
-        "prisma": "prisma",
-        "graphql-codegen": "graphql-codegen",
-        "start:api": "node api-server.js",
-        "dev": "shopify app dev"
-    },
-    "engines": {
-        "node": "^18.20 || ^20.10 || >=21.0.0"
-    },
-    "dependencies": {
-        "@prisma/client": "^7.0.0",
-        "@prisma/extension-accelerate": "^2.0.2",
-        "@remix-run/dev": "^2.15.1",
-        "@remix-run/express": "^2.15.1",
-        "@remix-run/node": "^2.15.1",
-        "@remix-run/react": "^2.15.1",
-        "@remix-run/router": "^1.11.0",
-        "@remix-run/vercel": "^1.19.3",
-        "@shopify/app-bridge": "^3.7.10",
-        "@shopify/app-bridge-react": "^4.1.6",
-        "@shopify/polaris": "^13.9.2",
-        "@shopify/shopify-app-remix": "^3.5.1",
-        "@shopify/shopify-app-session-storage-prisma": "^5.2.0",
-        "@vercel/node": "^2.3.0",
-        "@vitejs/plugin-react": "^4.3.4",
-        "axios": "^1.7.9",
-        "body-parser": "^1.20.3",
-        "bootstrap": "^5.3.3",
-        "cors": "^2.8.5",
-        "dotenv": "^16.4.7",
-        "express": "^4.21.2",
-        "isbot": "^5.1.18",
-        "ngrok": "^5.0.0-beta.2",
-        "react": "^18.3.1",
-        "react-bootstrap": "^2.10.7",
-        "react-dom": "^18.3.1",
-        "vite-tsconfig-paths": "^5.1.4"
-    },
-    "trustedDependencies": [
-        "@shopify/plugin-cloudflare"
-    ],
-    "type": "module",
-    "resolutions": {},
-    "overrides": {},
-    "author": "Admin",
-    "version": "1.0.0",
-    "description": "This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using the [Remix](https://remix.run) framework.",
-    "main": ".graphqlrc.js",
-    "keywords": [],
-    "license": "ISC",
-    "devDependencies": {
-        "@remix-run/serve": "^2.16.5",
-        "prisma": "^5.22.0"
-    }
+  "name": "shopify-app",
+  "private": true,
+  "scripts": {
+    "migrate": "npx prisma migrate deploy",
+    "prisma:fix": "chmod +x node_modules/.bin/prisma || true",
+    "remix:fix": "chmod +x node_modules/.bin/remix || true",
+    "build": "npm run prisma:fix && npm run remix:fix && remix build",
+    "setup": "npm run prisma:fix && npx prisma generate && npx prisma migrate deploy",
+    "start": "remix-serve ./build/server/index.js",
+    "dev": "shopify app dev",
+    "start:api": "node api-server.js"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@remix-run/dev": "^2.15.1",
+    "@remix-run/express": "^2.15.1",
+    "@remix-run/node": "^2.15.1",
+    "@remix-run/react": "^2.15.1",
+    "@shopify/app-bridge": "^3.7.10",
+    "@shopify/app-bridge-react": "^4.1.6",
+    "@shopify/polaris": "^13.9.2",
+    "@shopify/shopify-app-remix": "^3.5.1",
+    "@shopify/shopify-app-session-storage-prisma": "^5.2.0",
+    "body-parser": "^1.20.3",
+    "bootstrap": "^5.3.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "isbot": "^5.1.18",
+    "ngrok": "^5.0.0-beta.2",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.7",
+    "react-dom": "^18.3.1"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@remix-run/serve": "^2.16.5",
+    "prisma": "^5.22.0"
+  }
 }
