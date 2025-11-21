@@ -1,5 +1,8 @@
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
+
+const fs = require("fs");
+const path = require("path");
 
 const file = path.resolve(
   "node_modules/@shopify/shopify-app-remix/dist/esm/react/components/AppProvider/AppProvider.mjs"

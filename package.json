@@ -2,7 +2,7 @@
     "name": "shopify-app",
     "private": true,
     "scripts": {
-        "prebuild": "node ./scripts/patch-shopify.mjs",
+        "prebuild": "node ./scripts/patch-shopify.cjs",
         "build": "remix build",
         "vercel-build": "remix build",
         "config:link": "shopify app config link",
