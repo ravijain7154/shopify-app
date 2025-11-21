@@ -12,7 +12,7 @@
         "env": "shopify app env",
         "start": "remix-serve ./build/server/index.js",
         "docker-start": "npm run setup && npm run start",
-        "setup": "chmod +x node_modules/.bin/prisma && prisma generate && prisma migrate deploy",
+        "setup": "prisma generate && prisma migrate deploy",
         "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
         "shopify": "shopify",
         "prisma": "prisma",
@@ -29,7 +29,7 @@
         "@remix-run/express": "^2.15.1",
         "@remix-run/node": "^2.15.1",
         "@remix-run/react": "^2.15.1",
-         "@remix-run/router": "^1.11.0", 
+        "@remix-run/router": "^1.11.0",
         "@remix-run/vercel": "^1.19.3",
         "@shopify/app-bridge": "^3.7.10",
         "@shopify/app-bridge-react": "^4.1.6",
@@ -55,7 +55,7 @@
         "@shopify/plugin-cloudflare"
     ],
     "resolutions": {},
-     "overrides": {
+    "overrides": {
         "@shopify/shopify-app-remix": {
             "module": "./dist/cjs/index.js"
         }
@@ -68,6 +68,6 @@
     "license": "ISC",
     "devDependencies": {
         "@remix-run/serve": "^2.16.5",
-        "prisma": "5.22.0"
+        "prisma": "^5.22.0"
     }
 }
