@@ -1,5 +1,7 @@
 {
     "name": "shopify-app",
+    
+    "type": "module",
     "private": true,
     "scripts": {
         "migrate": "npx prisma migrate deploy",
@@ -56,7 +58,6 @@
     "trustedDependencies": [
         "@shopify/plugin-cloudflare"
     ],
-    "type": "module",
     "resolutions": {},
     "overrides": {},
     "author": "Admin",
