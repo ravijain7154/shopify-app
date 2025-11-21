@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "migrate": "npx prisma migrate deploy",
-        "prebuild": "node ./scripts/patch-shopify.cjs",
+        "prebuild": "node ./scripts/patch-shopify.mjs",
         "build": "remix build",
         "vercel-build": "remix build",
         "config:link": "shopify app config link",

@@ -31,7 +31,7 @@ const fs = require("fs");
 const path = require("path");
 
 const file = path.resolve(
-  "node_modules/@shopify/shopify-app-remix/dist/cjs/react/components/AppProvider/AppProvider.js"
+  "node_modules/@shopify/shopify-app-remix/dist/esm/react/components/AppProvider/AppProvider.mjs"
 );
 
 let code = fs.readFileSync(file, "utf8");
