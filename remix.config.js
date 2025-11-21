@@ -14,24 +14,10 @@ export default {
 
   appDirectory: "app",
 
-  /** 
-   * IMPORTANT:
-   * Shopify + Render require CommonJS format
-   */
-  // serverModuleFormat: "mjs",
-  // serverBuildTarget: "node-cjs",
+  serverModuleFormat: "esm",
+  serverBuildTarget: undefined,
 
-  serverModuleFormat: "cjs",
-serverBuildTarget: "node-cjs",
-
-
-  /** Let Remix use its default server build */
   server: undefined,
-
-  /** 
-   * DO NOT add custom routes here — it breaks Shopify OAuth
-   * Create API routes inside /app/routes/api/*.jsx
-   */
   routes: undefined,
 
   future: {
@@ -40,8 +26,6 @@ serverBuildTarget: "node-cjs",
     v3_relativeSplatPath: true,
     v3_fetcherPersist: true,
     v3_lazyRouteDiscovery: true,
-
-    /** Allow JSON imports */
     unstable_jsonModules: true,
   },
 
@@ -51,3 +35,4 @@ serverBuildTarget: "node-cjs",
     },
   },
 };
+

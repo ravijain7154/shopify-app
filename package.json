@@ -54,12 +54,9 @@
     "trustedDependencies": [
         "@shopify/plugin-cloudflare"
     ],
+    "type": "module",
     "resolutions": {},
-    "overrides": {
-        "@shopify/shopify-app-remix": {
-            "module": "./dist/cjs/index.js"
-        }
-    },
+    "overrides": {},
     "author": "Admin",
     "version": "1.0.0",
     "description": "This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using the [Remix](https://remix.run) framework.",
