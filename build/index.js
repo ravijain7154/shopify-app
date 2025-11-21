@@ -99,7 +99,7 @@ import { useLoaderData, useRouteError, Links, Meta, Outlet, Scripts, ScrollResto
 import { boundary } from "@shopify/shopify-app-remix/server";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
-import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
+// import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { PrismaClient as PrismaClient2 } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { jsx as jsx2, jsxs } from "react/jsx-runtime";
@@ -593,7 +593,7 @@ import {
   TextField
 } from "@shopify/polaris";
 import polarisTranslations from "@shopify/polaris/locales/en.json";
-import polarisStyles2 from "@shopify/polaris/build/esm/styles.css?url";
+// import polarisStyles2 from "@shopify/polaris/build/esm/styles.css?url";
 
 // app/routes/auth.login/error.server.jsx
 import { LoginErrorType } from "@shopify/shopify-app-remix/server";
