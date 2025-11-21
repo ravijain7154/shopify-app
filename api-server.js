@@ -29,7 +29,7 @@ app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
 
 app.all("*", createRemixHandler({
-     build: await import("./build/server/index.js"), // <-- REQUIRED
+     build: await import("./build/index.js"), // <-- REQUIRED
     mode: process.env.NODE_ENV,
   getLoadContext(req, res) {
     return { prisma };
