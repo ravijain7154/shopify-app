@@ -19,7 +19,7 @@
         "start:api": "node api-server.js",
         "dev": "shopify app dev",
         "remix:fix": "chmod +x node_modules/.bin/remix || true",
-        "build": "npm run remix:fix && remix build"
+        "build": "remix build"
 
     },
     "engines": {
