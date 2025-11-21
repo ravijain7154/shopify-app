@@ -9,19 +9,29 @@ if (
 }
 
 /** @type {import('@remix-run/dev').AppConfig} */
-module.exports = {
+export default {
   ignoredRouteFiles: ["**/.*"],
 
   appDirectory: "app",
 
-  // IMPORTANT for Shopify + Render
-  serverModuleFormat: "cjs",
-  serverBuildTarget: "node-cjs",
+  /** 
+   * IMPORTANT:
+   * Shopify + Render require CommonJS format
+   */
+  // serverModuleFormat: "mjs",
+  // serverBuildTarget: "node-cjs",
 
-  // Let Remix build server
+  serverModuleFormat: "cjs",
+serverBuildTarget: "node-cjs",
+
+
+  /** Let Remix use its default server build */
   server: undefined,
 
-  // Don't override routes (Shopify OAuth will break)
+  /** 
+   * DO NOT add custom routes here — it breaks Shopify OAuth
+   * Create API routes inside /app/routes/api/*.jsx
+   */
   routes: undefined,
 
   future: {
@@ -31,6 +41,7 @@ module.exports = {
     v3_fetcherPersist: true,
     v3_lazyRouteDiscovery: true,
 
+    /** Allow JSON imports */
     unstable_jsonModules: true,
   },
 
