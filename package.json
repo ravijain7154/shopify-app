@@ -13,7 +13,7 @@
         "env": "shopify app env",
         "start": "remix-serve ./build/index.js",
         "docker-start": "npm run setup && npm run start",
-         "setup": "npx prisma generate && npx prisma migrate deploy",
+        "setup": "npx prisma generate && npx prisma migrate deploy",
         "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
         "shopify": "shopify",
         "prisma": "prisma",
@@ -22,14 +22,12 @@
         "dev": "shopify app dev",
         "remix:fix": "chmod +x node_modules/.bin/remix || true",
         "build": "remix build"
-
     },
     "engines": {
         "node": "^18.20 || ^20.10 || >=21.0.0"
     },
     "dependencies": {
         "@prisma/client": "^5.22.0",
-        "prisma": "^5.22.0",
         "@prisma/extension-accelerate": "^2.0.2",
         "@remix-run/express": "^2.15.1",
         "@remix-run/node": "^2.15.1",
@@ -49,8 +47,10 @@
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
+        "ignore-styles": "^5.0.1",
         "isbot": "^5.1.18",
         "ngrok": "^5.0.0-beta.2",
+        "prisma": "^5.22.0",
         "react": "^18.3.1",
         "react-bootstrap": "^2.10.7",
         "react-dom": "^18.3.1",
