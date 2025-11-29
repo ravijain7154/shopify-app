@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 
 const prisma = new PrismaClient();
 
-export const links = () => [
+export const links = () => [ 
   { rel: "stylesheet", href: polarisStyles }, 
   { rel: "stylesheet", href: './custom/admin-style.css' }
 ];

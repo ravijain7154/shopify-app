@@ -9,6 +9,14 @@ import ignoreStyles from "ignore-styles";
 import bodyParser from "body-parser";
 import pkg from "@prisma/client";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const englishI18n = await import("@shopify/polaris/locales/en.json", {
+  assert: { type: "json" },
+}).then((m) => m.default);
+
+
 // ----------------------------------------------
 // FIX 1 — ignore CSS imports BEFORE Remix loads
 // ----------------------------------------------

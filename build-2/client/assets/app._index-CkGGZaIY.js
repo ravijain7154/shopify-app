@@ -1,0 +1,1 @@
+import{j as r}from"./jsx-runtime-BZty_edN.js";function d(){const{products:s}=useLoaderData();return r.jsxs("div",{children:[r.jsx("h1",{children:"Products from Belgium"}),r.jsx("ul",{children:s.map((e,t)=>r.jsx("li",{children:e.name},t))})]})}export{d as default};

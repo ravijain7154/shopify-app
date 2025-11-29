@@ -1,4 +1,4 @@
-// build/server/index.js
+var _a;
 import { jsx, jsxs } from "react/jsx-runtime";
 import { PassThrough } from "stream";
 import { renderToPipeableStream } from "react-dom/server";
@@ -14,7 +14,13 @@ import "@shopify/shopify-app-remix/react";
 import { Page, Layout, Card, BlockStack, Text, Link, List, Box, AppProvider, FormLayout, TextField, Button } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useState } from "react";
-var _a, prisma = global.prisma || new PrismaClient(), shopify = shopifyApp({
+const prisma = global.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== "production") {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+}
+const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
   apiVersion: ApiVersion.July24,
@@ -25,22 +31,24 @@ var _a, prisma = global.prisma || new PrismaClient(), shopify = shopifyApp({
   distribution: AppDistribution.AppStore,
   restResources,
   future: {
-    unstable_newEmbeddedAuthStrategy: !0
+    unstable_newEmbeddedAuthStrategy: true
   },
   ...process.env.SHOP_CUSTOM_DOMAIN ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] } : {}
 });
 ApiVersion.July24;
-var addDocumentResponseHeaders = shopify.addDocumentResponseHeaders, authenticate = shopify.authenticate;
+const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
+const authenticate = shopify.authenticate;
 shopify.unauthenticated;
-var login = shopify.login;
+const login = shopify.login;
 shopify.registerWebhooks;
 shopify.sessionStorage;
-var ABORT_DELAY = 5e3;
+const ABORT_DELAY = 5e3;
 async function handleRequest(request, responseStatusCode, responseHeaders, remixContext) {
   addDocumentResponseHeaders(request, responseHeaders);
-  let userAgent = request.headers.get("user-agent"), callbackName = isbot(userAgent ? "onAllReady" : "onShellReady");
+  const userAgent = request.headers.get("user-agent");
+  const callbackName = isbot(userAgent ?? "") ? "onAllReady" : "onShellReady";
   return new Promise((resolve, reject) => {
-    let { pipe, abort } = renderToPipeableStream(
+    const { pipe, abort } = renderToPipeableStream(
       /* @__PURE__ */ jsx(
         RemixServer,
         {
@@ -51,63 +59,64 @@ async function handleRequest(request, responseStatusCode, responseHeaders, remix
       ),
       {
         [callbackName]: () => {
-          let body = new PassThrough(), stream = createReadableStreamFromReadable(body);
-          responseHeaders.set("Content-Type", "text/html"), resolve(
+          const body = new PassThrough();
+          const stream = createReadableStreamFromReadable(body);
+          responseHeaders.set("Content-Type", "text/html");
+          resolve(
             new Response(stream, {
               headers: responseHeaders,
               status: responseStatusCode
             })
-          ), pipe(body);
+          );
+          pipe(body);
         },
         onShellError(error) {
           reject(error);
         },
         onError(error) {
-          responseStatusCode = 500, console.error(error);
+          responseStatusCode = 500;
+          console.error(error);
         }
       }
     );
     setTimeout(abort, ABORT_DELAY);
   });
 }
-var entryServer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const entryServer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: handleRequest
-}, Symbol.toStringTag, { value: "Module" })), polarisStyles = "/assets/styles-DT9i95_b.css", links$2 = () => [{ rel: "stylesheet", href: polarisStyles }], loader$6 = async () => {
+}, Symbol.toStringTag, { value: "Module" }));
+const polarisStyles = "/assets/styles-DT9i95_b.css";
+const links$2 = () => [{ rel: "stylesheet", href: polarisStyles }];
+const loader$6 = async () => {
   try {
-    let data = await (await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d&limit=5")).json();
-    if (console.log(data), Array.isArray(data)) {
-      await prisma.diamond.deleteMany();
-      for (let product of data)
-        await prisma.diamond.create({
-          data: {
-            title: diamond.title,
-            price: diamond.price,
-            description: diamond.description,
-            category: diamond.category,
-            image: diamond.image
-          }
-        });
-      return { message: "Data successfully inserted into the database." };
-    } else
-      return console.error("Unexpected data format:", data), { error: "Products data is not in the expected format." };
+    // const response = await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d");
+    const response = await fetch("https://fakestoreapi.com/products?limit=5");
+    const data = await response.json();
+    console.log(data);
+    return { products: Array.isArray(data.products) ? data.products : [] };
   } catch (error) {
-    return console.error("Failed to fetch products:", error), { products: [] };
+    console.error("Failed to fetch products:", error);
+    return { products: [] };
   }
 };
 function Products$3() {
-  let { products } = useLoaderData$1();
-  return Array.isArray(products) ? /* @__PURE__ */ jsxs("div", {
-    children: [
-      /* @__PURE__ */ jsx("h1", { children: "Products from serevr index 3 ravi" }),
-      /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
-    ]
-  }) : /* @__PURE__ */ jsx("div", { children: "Error: Products data is not in the expected format." });
+  const { products } = useLoaderData$1();
+  if (!Array.isArray(products)) {
+    return /* @__PURE__ */ jsx("div", { children: "Error: Products data is not in the expected format." });
+  }
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h1", { children: "Products from serevr index 3" }),
+    /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
+  ] });
 }
 function ErrorBoundary$1() {
   return boundary.error(useRouteError());
 }
-var headers$1 = (headersArgs) => boundary.headers(headersArgs), route0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const headers$1 = (headersArgs) => {
+  return boundary.headers(headersArgs);
+};
+const route0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   ErrorBoundary: ErrorBoundary$1,
   default: Products$3,
@@ -116,79 +125,48 @@ var headers$1 = (headersArgs) => boundary.headers(headersArgs), route0 = /* @__P
   loader: loader$6
 }, Symbol.toStringTag, { value: "Module" }));
 function AdditionalPage() {
-  return /* @__PURE__ */ jsxs(Page, {
-    children: [
-      /* @__PURE__ */ jsx(TitleBar, { title: "Additional page" }),
-      /* @__PURE__ */ jsxs(Layout, {
-        children: [
-          /* @__PURE__ */ jsx(Layout.Section, {
-            children: /* @__PURE__ */ jsx(Card, {
-              children: /* @__PURE__ */ jsxs(BlockStack, {
-                gap: "300",
-                children: [
-                  /* @__PURE__ */ jsxs(Text, {
-                    as: "p",
-                    variant: "bodyMd",
-                    children: [
-                      "The app template comes with an additional page which demonstrates how to create multiple pages within app navigation using",
-                      " ",
-                      /* @__PURE__ */ jsx(
-                        Link,
-                        {
-                          url: "https://shopify.dev/docs/apps/tools/app-bridge",
-                          target: "_blank",
-                          removeUnderline: !0,
-                          children: "App Bridge"
-                        }
-                      ),
-                      "."
-                    ]
-                  }),
-                  /* @__PURE__ */ jsxs(Text, {
-                    as: "p",
-                    variant: "bodyMd",
-                    children: [
-                      "To create your own page and have it show up in the app navigation, add a page inside ",
-                      /* @__PURE__ */ jsx(Code, { children: "app/routes" }),
-                      ", and a link to it in the ",
-                      /* @__PURE__ */ jsx(Code, { children: "<NavMenu>" }),
-                      " component found in ",
-                      /* @__PURE__ */ jsx(Code, { children: "app/routes/app.jsx" }),
-                      "."
-                    ]
-                  })
-                ]
-              })
-            })
-          }),
-          /* @__PURE__ */ jsx(Layout.Section, {
-            variant: "oneThird",
-            children: /* @__PURE__ */ jsx(Card, {
-              children: /* @__PURE__ */ jsxs(BlockStack, {
-                gap: "200",
-                children: [
-                  /* @__PURE__ */ jsx(Text, { as: "h2", variant: "headingMd", children: "Resources" }),
-                  /* @__PURE__ */ jsx(List, {
-                    children: /* @__PURE__ */ jsx(List.Item, {
-                      children: /* @__PURE__ */ jsx(
-                        Link,
-                        {
-                          url: "https://shopify.dev/docs/apps/design-guidelines/navigation#app-nav",
-                          target: "_blank",
-                          removeUnderline: !0,
-                          children: "App nav best practices"
-                        }
-                      )
-                    })
-                  })
-                ]
-              })
-            })
-          })
-        ]
-      })
-    ]
-  });
+  return /* @__PURE__ */ jsxs(Page, { children: [
+    /* @__PURE__ */ jsx(TitleBar, { title: "Additional page" }),
+    /* @__PURE__ */ jsxs(Layout, { children: [
+      /* @__PURE__ */ jsx(Layout.Section, { children: /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsxs(BlockStack, { gap: "300", children: [
+        /* @__PURE__ */ jsxs(Text, { as: "p", variant: "bodyMd", children: [
+          "The app template comes with an additional page which demonstrates how to create multiple pages within app navigation using",
+          " ",
+          /* @__PURE__ */ jsx(
+            Link,
+            {
+              url: "https://shopify.dev/docs/apps/tools/app-bridge",
+              target: "_blank",
+              removeUnderline: true,
+              children: "App Bridge"
+            }
+          ),
+          "."
+        ] }),
+        /* @__PURE__ */ jsxs(Text, { as: "p", variant: "bodyMd", children: [
+          "To create your own page and have it show up in the app navigation, add a page inside ",
+          /* @__PURE__ */ jsx(Code, { children: "app/routes" }),
+          ", and a link to it in the ",
+          /* @__PURE__ */ jsx(Code, { children: "<NavMenu>" }),
+          " component found in ",
+          /* @__PURE__ */ jsx(Code, { children: "app/routes/app.jsx" }),
+          "."
+        ] })
+      ] }) }) }),
+      /* @__PURE__ */ jsx(Layout.Section, { variant: "oneThird", children: /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsxs(BlockStack, { gap: "200", children: [
+        /* @__PURE__ */ jsx(Text, { as: "h2", variant: "headingMd", children: "Resources" }),
+        /* @__PURE__ */ jsx(List, { children: /* @__PURE__ */ jsx(List.Item, { children: /* @__PURE__ */ jsx(
+          Link,
+          {
+            url: "https://shopify.dev/docs/apps/design-guidelines/navigation#app-nav",
+            target: "_blank",
+            removeUnderline: true,
+            children: "App nav best practices"
+          }
+        ) }) })
+      ] }) }) })
+    ] })
+  ] });
 }
 function Code({ children }) {
   return /* @__PURE__ */ jsx(
@@ -206,24 +184,29 @@ function Code({ children }) {
     }
   );
 }
-var route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: AdditionalPage
-}, Symbol.toStringTag, { value: "Module" })), loader$5 = async () => ({ products: await (await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d&limit=5")).json() });
+}, Symbol.toStringTag, { value: "Module" }));
+const loader$5 = async () => {
+  // const response = await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d");
+  const response = await fetch("https://fakestoreapi.com/products?limit=5");
+  const products = await response.json();
+  return { products };
+};
 function Products$2() {
-  let { products } = useLoaderData();
-  return /* @__PURE__ */ jsxs("div", {
-    children: [
-      /* @__PURE__ */ jsx("h1", { children: "Products from server index-2" }),
-      /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
-    ]
-  });
+  const { products } = useLoaderData();
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h1", { children: "Products from server index-2" }),
+    /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
+  ] });
 }
-var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Products$2,
   loader: loader$5
-}, Symbol.toStringTag, { value: "Module" })), Polaris = {
+}, Symbol.toStringTag, { value: "Module" }));
+const Polaris = {
   ActionMenu: {
     Actions: {
       moreActions: "More actions"
@@ -245,7 +228,7 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   Autocomplete: {
     spinnerAccessibilityLabel: "Loading",
-    ellipsis: "{content}\u2026"
+    ellipsis: "{content}…"
   },
   Badge: {
     PROGRESS_LABELS: {
@@ -259,7 +242,7 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
       warning: "Warning",
       critical: "Critical",
       attention: "Attention",
-      new: "New",
+      "new": "New",
       readOnly: "Read-only",
       enabled: "Enabled"
     },
@@ -331,7 +314,7 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   DiscardConfirmationModal: {
     title: "Discard all unsaved changes",
-    message: "If you discard changes, you\u2019ll delete any edits you made since you last saved.",
+    message: "If you discard changes, you’ll delete any edits you made since you last saved.",
     primaryAction: "Discard changes",
     secondaryAction: "Continue editing"
   },
@@ -450,7 +433,7 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     emptySearchTitle: "No {resourceNamePlural} found",
     emptySearchDescription: "Try changing the filters or search term",
     onboardingBadgeText: "New",
-    resourceLoadingAccessibilityLabel: "Loading {resourceNamePlural}\u2026",
+    resourceLoadingAccessibilityLabel: "Loading {resourceNamePlural}…",
     selectAllLabel: "Select all {resourceNamePlural}",
     selected: "{selectedItemsCount} selected",
     undo: "Undo",
@@ -478,8 +461,8 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     pagination: "Pagination"
   },
   ProgressBar: {
-    negativeWarningMessage: "Values passed to the progress prop shouldn\u2019t be negative. Resetting {progress} to 0.",
-    exceedWarningMessage: "Values passed to the progress prop shouldn\u2019t exceed 100. Setting {progress} to 100."
+    negativeWarningMessage: "Values passed to the progress prop shouldn’t be negative. Resetting {progress} to 0.",
+    exceedWarningMessage: "Values passed to the progress prop shouldn’t exceed 100. Setting {progress} to 100."
   },
   ResourceList: {
     sortingLabel: "Sort by",
@@ -522,13 +505,13 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
       duplicate: "Duplicate view",
       edit: "Edit view",
       editColumns: "Edit columns",
-      delete: "Delete view",
+      "delete": "Delete view",
       copy: "Copy of {name}",
       deleteModal: {
         title: "Delete view?",
-        description: "This can\u2019t be undone. {viewName} view will no longer be available in your admin.",
+        description: "This can’t be undone. {viewName} view will no longer be available in your admin.",
         cancel: "Cancel",
-        delete: "Delete view"
+        "delete": "Delete view"
       }
     },
     RenameModal: {
@@ -582,7 +565,7 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   VideoThumbnail: {
     playButtonA11yLabel: {
-      default: "Play video",
+      "default": "Play video",
       defaultWithDuration: "Play video of length {duration}",
       duration: {
         hours: {
@@ -628,84 +611,88 @@ var route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
       }
     }
   }
-}, polarisTranslations = {
+};
+const polarisTranslations = {
   Polaris
 };
 function loginErrorMessage(loginErrors) {
-  return loginErrors?.shop === LoginErrorType.MissingShop ? { shop: "Please enter your shop domain to log in" } : loginErrors?.shop === LoginErrorType.InvalidShop ? { shop: "Please enter a valid shop domain to log in" } : {};
+  if ((loginErrors == null ? void 0 : loginErrors.shop) === LoginErrorType.MissingShop) {
+    return { shop: "Please enter your shop domain to log in" };
+  } else if ((loginErrors == null ? void 0 : loginErrors.shop) === LoginErrorType.InvalidShop) {
+    return { shop: "Please enter a valid shop domain to log in" };
+  }
+  return {};
 }
-var links$1 = () => [{ rel: "stylesheet", href: polarisStyles }], loader$4 = async ({ request }) => {
-  let errors = loginErrorMessage(await login(request));
+const links$1 = () => [{ rel: "stylesheet", href: polarisStyles }];
+const loader$4 = async ({ request }) => {
+  const errors = loginErrorMessage(await login(request));
   return json({ errors, polarisTranslations });
-}, action$1 = async ({ request }) => {
-  let errors = loginErrorMessage(await login(request));
+};
+const action$1 = async ({ request }) => {
+  const errors = loginErrorMessage(await login(request));
   return json({
     errors
   });
 };
 function Auth() {
-  let loaderData = useLoaderData$1(), actionData = useActionData(), [shop, setShop] = useState(""), { errors } = actionData || loaderData;
-  return /* @__PURE__ */ jsx(AppProvider, {
-    i18n: loaderData.polarisTranslations,
-    children: /* @__PURE__ */ jsx(Page, {
-      children: /* @__PURE__ */ jsx(Card, {
-        children: /* @__PURE__ */ jsx(Form, {
-          method: "post",
-          children: /* @__PURE__ */ jsxs(FormLayout, {
-            children: [
-              /* @__PURE__ */ jsx(Text, { variant: "headingMd", as: "h2", children: "Log in" }),
-              /* @__PURE__ */ jsx(
-                TextField,
-                {
-                  type: "text",
-                  name: "shop",
-                  label: "Shop domain",
-                  helpText: "example.myshopify.com",
-                  value: shop,
-                  onChange: setShop,
-                  autoComplete: "on",
-                  error: errors.shop
-                }
-              ),
-              /* @__PURE__ */ jsx(Button, { submit: !0, children: "Log in" })
-            ]
-          })
-        })
-      })
-    })
-  });
+  const loaderData = useLoaderData$1();
+  const actionData = useActionData();
+  const [shop, setShop] = useState("");
+  const { errors } = actionData || loaderData;
+  return /* @__PURE__ */ jsx(AppProvider, { i18n: loaderData.polarisTranslations, children: /* @__PURE__ */ jsx(Page, { children: /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsx(Form, { method: "post", children: /* @__PURE__ */ jsxs(FormLayout, { children: [
+    /* @__PURE__ */ jsx(Text, { variant: "headingMd", as: "h2", children: "Log in" }),
+    /* @__PURE__ */ jsx(
+      TextField,
+      {
+        type: "text",
+        name: "shop",
+        label: "Shop domain",
+        helpText: "example.myshopify.com",
+        value: shop,
+        onChange: setShop,
+        autoComplete: "on",
+        error: errors.shop
+      }
+    ),
+    /* @__PURE__ */ jsx(Button, { submit: true, children: "Log in" })
+  ] }) }) }) }) });
 }
-var route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   action: action$1,
   default: Auth,
   links: links$1,
   loader: loader$4
-}, Symbol.toStringTag, { value: "Module" })), loader$3 = async ({ request }) => {
+}, Symbol.toStringTag, { value: "Module" }));
+const loader$3 = async ({ request }) => {
   await authenticate.admin(request);
-  let products = await (await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d&limit=5")).json();
+  // const response = await fetch("https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d");
+  const response = await fetch("https://fakestoreapi.com/products?limit=5");
+  const products = await response.json();
   return json({ products });
 };
 function Products$1() {
-  let { products } = useLoaderData$1();
-  return /* @__PURE__ */ jsxs("div", {
-    children: [
-      /* @__PURE__ */ jsx("h1", { children: "Products from server index" }),
-      /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
-    ]
-  });
+  const { products } = useLoaderData$1();
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h1", { children: "Products from server index" }),
+    /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
+  ] });
 }
-var route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Products$1,
   loader: loader$3
-}, Symbol.toStringTag, { value: "Module" })), action = async ({ request }) => {
-  let { topic, shop, session, admin } = await authenticate.webhook(request);
-  if (!admin && topic !== "SHOP_REDACT")
+}, Symbol.toStringTag, { value: "Module" }));
+const action = async ({ request }) => {
+  const { topic, shop, session, admin } = await authenticate.webhook(request);
+  if (!admin && topic !== "SHOP_REDACT") {
     throw new Response();
+  }
   switch (topic) {
     case "APP_UNINSTALLED":
-      session && await prisma.session.deleteMany({ where: { shop } });
+      if (session) {
+        await prisma.session.deleteMany({ where: { shop } });
+      }
       break;
     case "CUSTOMERS_DATA_REQUEST":
     case "CUSTOMERS_REDACT":
@@ -714,13 +701,29 @@ var route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
       throw new Response("Unhandled webhook topic", { status: 404 });
   }
   throw new Response();
-}, route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+};
+const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   action
-}, Symbol.toStringTag, { value: "Module" })), loader$2 = async ({ request }) => (await authenticate.admin(request), null), route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Symbol.toStringTag, { value: "Module" }));
+const loader$2 = async ({ request }) => {
+  await authenticate.admin(request);
+  return null;
+};
+const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   loader: loader$2
-}, Symbol.toStringTag, { value: "Module" })), index = "_index_1hqgz_1", heading = "_heading_1hqgz_21", text = "_text_1hqgz_23", content = "_content_1hqgz_43", form = "_form_1hqgz_53", label = "_label_1hqgz_69", input = "_input_1hqgz_85", button = "_button_1hqgz_93", list = "_list_1hqgz_101", styles = {
+}, Symbol.toStringTag, { value: "Module" }));
+const index = "_index_1hqgz_1";
+const heading = "_heading_1hqgz_21";
+const text = "_text_1hqgz_23";
+const content = "_content_1hqgz_43";
+const form = "_form_1hqgz_53";
+const label = "_label_1hqgz_69";
+const input = "_input_1hqgz_85";
+const button = "_button_1hqgz_93";
+const list = "_list_1hqgz_101";
+const styles = {
   index,
   heading,
   text,
@@ -730,102 +733,97 @@ var route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   input,
   button,
   list
-}, loader$1 = async ({ request }) => {
-  let url = new URL(request.url);
-  if (url.searchParams.get("shop"))
+};
+const loader$1 = async ({ request }) => {
+  const url = new URL(request.url);
+  if (url.searchParams.get("shop")) {
     throw redirect(`/app?${url.searchParams.toString()}`);
+  }
   return json({ showForm: Boolean(login) });
 };
 function App() {
-  let { showForm } = useLoaderData$1();
-  return /* @__PURE__ */ jsx("div", {
-    className: styles.index,
-    children: /* @__PURE__ */ jsxs("div", {
-      className: styles.content,
-      children: [
-        /* @__PURE__ */ jsx("h1", { className: styles.heading, children: "A short heading about [your app]" }),
-        /* @__PURE__ */ jsx("p", { className: styles.text, children: "A tagline about [your app] that describes your value proposition." }),
-        showForm && /* @__PURE__ */ jsxs(Form, {
-          className: styles.form,
-          method: "post",
-          action: "/auth/login",
-          children: [
-            /* @__PURE__ */ jsxs("label", {
-              className: styles.label,
-              children: [
-                /* @__PURE__ */ jsx("span", { children: "Shop domain" }),
-                /* @__PURE__ */ jsx("input", { className: styles.input, type: "text", name: "shop" }),
-                /* @__PURE__ */ jsx("span", { children: "e.g: my-shop-domain.myshopify.com" })
-              ]
-            }),
-            /* @__PURE__ */ jsx("button", { className: styles.button, type: "submit", children: "Log in" })
-          ]
-        }),
-        /* @__PURE__ */ jsxs("ul", {
-          className: styles.list,
-          children: [
-            /* @__PURE__ */ jsxs("li", {
-              children: [
-                /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
-                ". Some detail about your feature and its benefit to your customer."
-              ]
-            }),
-            /* @__PURE__ */ jsxs("li", {
-              children: [
-                /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
-                ". Some detail about your feature and its benefit to your customer."
-              ]
-            }),
-            /* @__PURE__ */ jsxs("li", {
-              children: [
-                /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
-                ". Some detail about your feature and its benefit to your customer."
-              ]
-            })
-          ]
-        })
-      ]
-    })
-  });
+  const { showForm } = useLoaderData$1();
+  return /* @__PURE__ */ jsx("div", { className: styles.index, children: /* @__PURE__ */ jsxs("div", { className: styles.content, children: [
+    /* @__PURE__ */ jsx("h1", { className: styles.heading, children: "A short heading about [your app]" }),
+    /* @__PURE__ */ jsx("p", { className: styles.text, children: "A tagline about [your app] that describes your value proposition." }),
+    showForm && /* @__PURE__ */ jsxs(Form, { className: styles.form, method: "post", action: "/auth/login", children: [
+      /* @__PURE__ */ jsxs("label", { className: styles.label, children: [
+        /* @__PURE__ */ jsx("span", { children: "Shop domain" }),
+        /* @__PURE__ */ jsx("input", { className: styles.input, type: "text", name: "shop" }),
+        /* @__PURE__ */ jsx("span", { children: "e.g: my-shop-domain.myshopify.com" })
+      ] }),
+      /* @__PURE__ */ jsx("button", { className: styles.button, type: "submit", children: "Log in" })
+    ] }),
+    /* @__PURE__ */ jsxs("ul", { className: styles.list, children: [
+      /* @__PURE__ */ jsxs("li", { children: [
+        /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
+        ". Some detail about your feature and its benefit to your customer."
+      ] }),
+      /* @__PURE__ */ jsxs("li", { children: [
+        /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
+        ". Some detail about your feature and its benefit to your customer."
+      ] }),
+      /* @__PURE__ */ jsxs("li", { children: [
+        /* @__PURE__ */ jsx("strong", { children: "Product feature" }),
+        ". Some detail about your feature and its benefit to your customer."
+      ] })
+    ] })
+  ] }) });
 }
-var route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: App,
   loader: loader$1
-}, Symbol.toStringTag, { value: "Module" })), links = () => [{ rel: "stylesheet", href: polarisStyles }], loader = async () => {
+}, Symbol.toStringTag, { value: "Module" }));
+const links = () => [{ rel: "stylesheet", href: polarisStyles }];
+const loader = async () => {
   try {
-    let data = await (await fetch("https://fakestoreapi.com/products?limit=5")).json();
-    return console.log(data), json({ products: Array.isArray(data.products) ? data.products : [] });
+    const response = await fetch("https://fakestoreapi.com/products?limit=5");
+    const data = await response.json();
+    console.log(data);
+    return json({ products: Array.isArray(data.products) ? data.products : [] });
   } catch (error) {
-    return console.error("Failed to fetch products:", error), json({ products: [] });
+    console.error("Failed to fetch products:", error);
+    return json({ products: [] });
   }
 };
 function Products() {
-  let { products } = useLoaderData$1();
-  return Array.isArray(products) ? /* @__PURE__ */ jsxs("div", {
-    children: [
-      /* @__PURE__ */ jsx("h1", { children: "Products from server index-4" }),
-      /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
-    ]
-  }) : /* @__PURE__ */ jsx("div", { children: "Error: Products data is not in the expected format." });
+  const { products } = useLoaderData$1();
+  if (!Array.isArray(products)) {
+    return /* @__PURE__ */ jsx("div", { children: "Error: Products data is not in the expected format." });
+  }
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h1", { children: "Products from server index-4" }),
+    /* @__PURE__ */ jsx("ul", { children: products.map((product, index2) => /* @__PURE__ */ jsx("li", { children: product.name }, index2)) })
+  ] });
 }
 function ErrorBoundary() {
-  return /* @__PURE__ */ jsxs("div", {
-    children: [
-      "Error occurred: ",
-      useRouteError().message
-    ]
-  });
+  return /* @__PURE__ */ jsxs("div", { children: [
+    "Error occurred: ",
+    useRouteError().message
+  ] });
 }
-var headers = (headersArgs) => headersArgs, route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const headers = (headersArgs) => {
+  return headersArgs;
+};
+const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   ErrorBoundary,
   default: Products,
   headers,
   links,
   loader
-}, Symbol.toStringTag, { value: "Module" })), serverManifest = { entry: { module: "/assets/entry.client-DYHAYLbI.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], css: [] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0, module: "/assets/root-CPeSjM0S.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js", "/assets/styles-BPtKC6Q9.js"], css: [] }, "routes/app.additional": { id: "routes/app.additional", parentId: "routes/app", path: "additional", index: void 0, caseSensitive: void 0, hasAction: !1, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/app.additional-BXwnsEkm.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/Page-B9N0nQa-.js"], css: [] }, "routes/app._index": { id: "routes/app._index", parentId: "routes/app", path: void 0, index: !0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/app._index-CkGGZaIY.js", imports: ["/assets/jsx-runtime-BZty_edN.js"], css: [] }, "routes/auth.login": { id: "routes/auth.login", parentId: "root", path: "auth/login", index: void 0, caseSensitive: void 0, hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/route-D0dbcD-s.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/styles-BPtKC6Q9.js", "/assets/components-Ch1g0XRg.js", "/assets/Page-B9N0nQa-.js"], css: [] }, "routes/products": { id: "routes/products", parentId: "root", path: "products", index: void 0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/products-ZjQYmAXX.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], css: [] }, "routes/webhooks": { id: "routes/webhooks", parentId: "root", path: "webhooks", index: void 0, caseSensitive: void 0, hasAction: !0, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/webhooks-l0sNRNKZ.js", imports: [], css: [] }, "routes/auth.$": { id: "routes/auth.$", parentId: "root", path: "auth/*", index: void 0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/auth._-l0sNRNKZ.js", imports: [], css: [] }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1, module: "/assets/route-BgPf7wGu.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], css: ["/assets/route-Qq2qOeDq.css"] }, "routes/app": { id: "routes/app", parentId: "root", path: "app", index: void 0, caseSensitive: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0, module: "/assets/app-B2qfkz_L.js", imports: ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/styles-BPtKC6Q9.js", "/assets/components-Ch1g0XRg.js"], css: [] } }, url: "/assets/manifest-153d5334.js", version: "153d5334" }, mode = "production", assetsBuildDirectory = "build\\client", basename = "/", future = { v3_fetcherPersist: !1, v3_relativeSplatPath: !1, v3_throwAbortReason: !1, unstable_singleFetch: !1, unstable_lazyRouteDiscovery: !1 }, isSpaMode = !1, publicPath = "/", entry = { module: entryServer }, routes = {
-  root: {
+}, Symbol.toStringTag, { value: "Module" }));
+const serverManifest = { "entry": { "module": "/assets/entry.client-DYHAYLbI.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": true, "module": "/assets/root-CPeSjM0S.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js", "/assets/styles-BPtKC6Q9.js"], "css": [] }, "routes/app.additional": { "id": "routes/app.additional", "parentId": "routes/app", "path": "additional", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/app.additional-BXwnsEkm.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/Page-B9N0nQa-.js"], "css": [] }, "routes/app._index": { "id": "routes/app._index", "parentId": "routes/app", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/app._index-CkGGZaIY.js", "imports": ["/assets/jsx-runtime-BZty_edN.js"], "css": [] }, "routes/auth.login": { "id": "routes/auth.login", "parentId": "root", "path": "auth/login", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/route-D0dbcD-s.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/styles-BPtKC6Q9.js", "/assets/components-Ch1g0XRg.js", "/assets/Page-B9N0nQa-.js"], "css": [] }, "routes/products": { "id": "routes/products", "parentId": "root", "path": "products", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/products-ZjQYmAXX.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], "css": [] }, "routes/webhooks": { "id": "routes/webhooks", "parentId": "root", "path": "webhooks", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/webhooks-l0sNRNKZ.js", "imports": [], "css": [] }, "routes/auth.$": { "id": "routes/auth.$", "parentId": "root", "path": "auth/*", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/auth._-l0sNRNKZ.js", "imports": [], "css": [] }, "routes/_index": { "id": "routes/_index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/route-BgPf7wGu.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/components-Ch1g0XRg.js"], "css": ["/assets/route-Qq2qOeDq.css"] }, "routes/app": { "id": "routes/app", "parentId": "root", "path": "app", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": true, "module": "/assets/app-B2qfkz_L.js", "imports": ["/assets/jsx-runtime-BZty_edN.js", "/assets/index-N2MpLrGy.js", "/assets/styles-BPtKC6Q9.js", "/assets/components-Ch1g0XRg.js"], "css": [] } }, "url": "/assets/manifest-153d5334.js", "version": "153d5334" };
+const mode = "production";
+const assetsBuildDirectory = "build\\client";
+const basename = "/";
+const future = { "v3_fetcherPersist": false, "v3_relativeSplatPath": false, "v3_throwAbortReason": false, "unstable_singleFetch": false, "unstable_lazyRouteDiscovery": false };
+const isSpaMode = false;
+const publicPath = "/";
+const entry = { module: entryServer };
+const routes = {
+  "root": {
     id: "root",
     parentId: void 0,
     path: "",
@@ -845,7 +843,7 @@ var headers = (headersArgs) => headersArgs, route8 = /* @__PURE__ */ Object.free
     id: "routes/app._index",
     parentId: "routes/app",
     path: void 0,
-    index: !0,
+    index: true,
     caseSensitive: void 0,
     module: route2
   },
@@ -885,7 +883,7 @@ var headers = (headersArgs) => headersArgs, route8 = /* @__PURE__ */ Object.free
     id: "routes/_index",
     parentId: "root",
     path: void 0,
-    index: !0,
+    index: true,
     caseSensitive: void 0,
     module: route7
   },

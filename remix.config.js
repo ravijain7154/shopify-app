@@ -28,7 +28,12 @@ export default {
     v3_lazyRouteDiscovery: true,
     unstable_jsonModules: true,
   },
-
+  serverDependenciesToBundle: [
+  "@shopify/polaris",
+  "@shopify/polaris/**",
+  "@shopify/shopify-app-remix",
+  "@shopify/shopify-app-remix/**",
+],
   browserNodeBuiltinsPolyfill: {
     modules: {
       module: true,
