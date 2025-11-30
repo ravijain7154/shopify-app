@@ -7,6 +7,7 @@ import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import { createRequestHandler } from '@remix-run/express';
+import * as build from "./build"; // make sure this path is correct
 
 import dotenv from 'dotenv';
 
