@@ -38,7 +38,8 @@ export default function Auth() {
   const { errors } = actionData || loaderData;
 
   return (
-    <PolarisAppProvider i18n={loaderData.polarisTranslations}>
+    // <PolarisAppProvider i18n={loaderData.polarisTranslations}>
+    <PolarisAppProvider>
       <Page>
         <Card>
           <Form method="post">
