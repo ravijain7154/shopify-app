@@ -7,7 +7,7 @@ import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import { createRequestHandler } from '@remix-run/express';
-import * as build from "./build/index.js"; // 👈 correct
+
 
 import dotenv from 'dotenv';
 
@@ -25,9 +25,10 @@ app.use(bodyParser.json());
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
 import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
+import * as build from "./build/index.js"; // 👈 correct
 
 app.all("/app*", createRemixHandler({
-      build,
+build,
   getLoadContext(req, res) {
     return { prisma };
   },

@@ -5,6 +5,7 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import { AppProvider } from "@shopify/shopify-app-remix/react"; 
 import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
+
 import { PrismaClient } from "@prisma/client";
 import React, { useState, useEffect } from 'react';
 
