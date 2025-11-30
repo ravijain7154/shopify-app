@@ -202,7 +202,7 @@ import { fileURLToPath } from "url";
 import { installGlobals } from "@remix-run/node";
 import pkg from "@prisma/client";
 
-// Install Remix globals
+// Install Remix fetch/Headers globals
 installGlobals();
 
 const { PrismaClient } = pkg;
@@ -214,12 +214,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ----------------------------------------------
+// MIDDLEWARE
+// ----------------------------------------------
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-// Static Files
+// ----------------------------------------------
+// STATIC STOREFRONT FILES (Your public frontend)
+// ----------------------------------------------
 app.use("/diamond-filter", express.static(path.join(__dirname, "public")));
 
 app.use(
@@ -233,11 +237,118 @@ app.use(
   })
 );
 
-// --- API ROUTES (same as your logic) ---
+// ----------------------------------------------
+// API ROUTES (BACKEND)
+// ----------------------------------------------
 
-// ... keep your existing /api/products, /api/save-color, /api/get-color routes ...
+// GET PRODUCTS
+app.get("/api/products", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 25;
 
-// Remix Handler MUST be last
+    const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(",") : [];
+    const priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
+    const priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
+    const caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
+    const caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
+    const colorMin = req.query.color_min || undefined;
+    const colorMax = req.query.color_max || undefined;
+    const clarityMin = req.query.clarity_min || undefined;
+    const clarityMax = req.query.clarity_max || undefined;
+    const cutMin = req.query.cut_min ? decodeURIComponent(req.query.cut_min) : undefined;
+    const cutMax = req.query.cut_max ? decodeURIComponent(req.query.cut_max) : undefined;
+
+    const skip = (page - 1) * perPage;
+    const take = perPage;
+
+    const filter = {};
+
+    if (shapes.length > 0) filter.shape = { in: shapes };
+
+    if (priceMin || priceMax)
+      filter.finalPrice = {
+        ...(priceMin && { gte: priceMin }),
+        ...(priceMax && { lte: priceMax }),
+      };
+
+    if (caratMin || caratMax)
+      filter.weight = {
+        ...(caratMin && { gte: caratMin }),
+        ...(caratMax && { lte: caratMax }),
+      };
+
+    if (colorMin || colorMax)
+      filter.color = {
+        ...(colorMin && { gte: colorMin }),
+        ...(colorMax && { lte: colorMax }),
+      };
+
+    if (clarityMin || clarityMax)
+      filter.clarity = {
+        ...(clarityMin && { gte: clarityMin }),
+        ...(clarityMax && { lte: clarityMax }),
+      };
+
+    if (cutMin || cutMax)
+      filter.cutGrade = {
+        ...(cutMin && { gte: cutMin }),
+        ...(cutMax && { lte: cutMax }),
+      };
+
+    const products = await prisma.diamond_api.findMany({
+      where: filter,
+      skip,
+      take,
+    });
+
+    const totalCount = await prisma.diamond_api.count({ where: filter });
+
+    res.json({
+      products,
+      pagination: {
+        currentPage: page,
+        perPage,
+        totalPages: Math.ceil(totalCount / perPage),
+        totalCount,
+      },
+    });
+  } catch (err) {
+    console.log("Error:", err);
+    res.status(500).json({ error: "Error fetching products" });
+  }
+});
+
+// GET COLOR
+app.get("/api/get-color", async (req, res) => {
+  try {
+    const setting = await prisma.colorsetting.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({ color: setting?.color || "#ffffff" });
+  } catch {
+    res.status(500).json({ error: "Failed to get color" });
+  }
+});
+
+// SAVE COLOR
+app.post("/api/save-color", async (req, res) => {
+  try {
+    const { color } = req.body;
+    if (!color) return res.status(400).json({ error: "Color required" });
+
+    await prisma.colorsetting.create({ data: { color } });
+
+    res.json({ message: "Color saved" });
+  } catch {
+    res.status(500).json({ error: "Save error" });
+  }
+});
+
+// ----------------------------------------------
+// REMIX ADMIN APP HANDLER — MUST BE LAST
+// ----------------------------------------------
 import * as remixBuild from "./build/index.js";
 import { createRequestHandler } from "@remix-run/express";
 
@@ -250,6 +361,7 @@ app.all(
   })
 );
 
+// ----------------------------------------------
 app.listen(PORT, () => {
-  console.log(`Running on http://localhost:${PORT}`);
+  console.log(`✔ API + ADMIN + STOREFRONT running on port ${PORT}`);
 });
