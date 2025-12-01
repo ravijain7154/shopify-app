@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
 import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
-import * as build from "./build/index.js"; // 👈 correct
+// import * as build from "./build/index.js"; // 👈 correct
 
 app.all("/app*", createRemixHandler({
   getLoadContext(req, res) {
