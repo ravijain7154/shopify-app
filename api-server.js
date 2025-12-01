@@ -33,6 +33,14 @@ app.all("/app*", createRemixHandler({
   },
 }));
 
+const build = await import(“./build/index.js”)
+app.use(shopify.cspHeaders());
+app.use(shopify.auth.begin());
+app.use(shopify.auth.callback());
+app.use(shopify.ensureInstalledOnShop());
+
+app.all("*", Shopify.ensureInstalledOnShop(),
+createRequestHandler({build}));
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
