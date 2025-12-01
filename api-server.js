@@ -28,7 +28,6 @@ import { createRequestHandler as createRemixHandler } from "@remix-run/express";
 import * as build from "./build/index.js"; // 👈 correct
 
 app.all("/app*", createRemixHandler({
-build,
   getLoadContext(req, res) {
     return { prisma };
   },
