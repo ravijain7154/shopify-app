@@ -39,6 +39,9 @@ app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), 
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
+// Check presence of Remix build at startup for easier debugging on Render
+const buildPath = path.join(process.cwd(), 'build', 'index.js');
+console.log('Remix build path:', buildPath, 'exists:', fs.existsSync(buildPath));
 const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://shopify-app-pndl.onrender.com, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
 // Use the CORS middleware with the correct configuration
 app.use(cors({
@@ -215,12 +218,14 @@ app.post('/api/save-color', async (req, res) => {
 try {
     const { createRequestHandler } = await import("@remix-run/express");
     const build = await import("./build/index.js");
-    
+
+    console.log('Remix build imported successfully. Registering Remix request handler.');
+
     // Remix catch-all handler - must be last
     app.all("*", createRequestHandler({ build }));
 } catch (error) {
-    console.warn("Remix build not available, skipping Remix handler:", error.message);
-    
+    console.error("Remix build import failed — full error:", error);
+
     // Fallback for requests not handled by API endpoints
     app.all("*", (req, res) => {
         res.status(404).json({ message: "Not Found" });
