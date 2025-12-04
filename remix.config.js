@@ -29,15 +29,17 @@ export default {
     unstable_jsonModules: true,
   },
   serverDependenciesToBundle: [
-  "@shopify/polaris",
-  "@shopify/polaris/**",
-  "@shopify/shopify-app-remix",
-  "@shopify/shopify-app-remix/**",
-],
+    "@shopify/polaris",
+    "@shopify/polaris/**",
+    "@shopify/shopify-app-remix",
+    "@shopify/shopify-app-remix/**",
+  ],
   browserNodeBuiltinsPolyfill: {
     modules: {
       module: true,
     },
   },
+  // Prevent CSS imports in server bundle
+  ssr: true,
 };
 

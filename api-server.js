@@ -6,9 +6,6 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
-import { createRequestHandler } from '@remix-run/express';
-
-
 import dotenv from 'dotenv';
 
 const { PrismaClient } = pkg;
@@ -18,29 +15,8 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000; // Port for your API server
 app.use(bodyParser.json());
 
-// app.get('/diamond-filter', (req, res) => {
-//     res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
-// });
-
+// Static files for diamond filter UI
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
-
-import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
-// import * as build from "./build/index.js"; // 👈 correct
-
-// app.all("*", createRemixHandler({
-// build,
-//   getLoadContext(req, res) {
-//     return { prisma };
-//   },
-// }));
-const build = await import("./build/index.js")
-app.use(shopify.cspHeaders());
-app.use(shopify.auth.begin());
-app.use(shopify.auth.callback());
-app.use(shopify.ensureInstalledOnShop());
-
-app.all("*", shopify.ensureInstalledOnShop(),
-createRequestHandler({build}));
 
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
@@ -234,7 +210,22 @@ app.post('/api/save-color', async (req, res) => {
         res.status(500).json({ error: 'Failed to save color' });
     }
 });
-  // Start the Express server
+
+// Load and setup Remix build handler if available
+try {
+    const { createRequestHandler } = await import("@remix-run/express");
+    const build = await import("./build/index.js");
+    
+    // Remix catch-all handler - must be last
+    app.all("*", createRequestHandler({ build }));
+} catch (error) {
+    console.warn("Remix build not available, skipping Remix handler:", error.message);
+    
+    // Fallback for requests not handled by API endpoints
+    app.all("*", (req, res) => {
+        res.status(404).json({ message: "Not Found" });
+    });
+}
 
 // Start the API server
 app.listen(PORT, () => {
