@@ -1,79 +1,62 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: !0 });
-}, __copyProps = (to, from, except, desc) => {
-  if (from && typeof from == "object" || typeof from == "function")
-    for (let key of __getOwnPropNames(from))
-      !__hasOwnProp.call(to, key) && key !== except && __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: !0 }) : target,
-  mod
-)), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
-
-// <stdin>
-var stdin_exports = {};
-__export(stdin_exports, {
-  assets: () => assets_manifest_default,
-  assetsBuildDirectory: () => assetsBuildDirectory,
-  entry: () => entry,
-  future: () => future,
-  mode: () => mode,
-  publicPath: () => publicPath,
-  routes: () => routes
-});
-module.exports = __toCommonJS(stdin_exports);
 
 // app/entry.server.jsx
 var entry_server_exports = {};
 __export(entry_server_exports, {
   default: () => handleRequest
 });
-var import_stream = require("stream"), import_server2 = require("react-dom/server"), import_react = require("@remix-run/react"), import_node2 = require("@remix-run/node"), import_isbot = require("isbot");
+import { PassThrough } from "stream";
+import { renderToPipeableStream } from "react-dom/server";
+import { RemixServer } from "@remix-run/react";
+import { createReadableStreamFromReadable } from "@remix-run/node";
+import { isbot } from "isbot";
 
 // app/shopify.server.js
-var import_node = require("@shopify/shopify-app-remix/adapters/node"), import_server = require("@shopify/shopify-app-remix/server"), import_shopify_app_session_storage_prisma = require("@shopify/shopify-app-session-storage-prisma"), import__ = require("@shopify/shopify-api/rest/admin/2024-07");
+import "@shopify/shopify-app-remix/adapters/node";
+import {
+  ApiVersion,
+  AppDistribution,
+  shopifyApp
+} from "@shopify/shopify-app-remix/server";
+import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
+import { restResources } from "@shopify/shopify-api/rest/admin/2024-07";
 
 // app/db.server.js
-var import_client = require("@prisma/client"), prisma = global.prisma || new import_client.PrismaClient(), db_server_default = prisma;
+import { PrismaClient } from "@prisma/client";
+var prisma = global.prisma || new PrismaClient(), db_server_default = prisma;
 
 // app/shopify.server.js
-var shopify = (0, import_server.shopifyApp)({
+var shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
-  apiVersion: import_server.ApiVersion.July24,
+  apiVersion: ApiVersion.July24,
   scopes: process.env.SCOPES?.split(","),
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
-  sessionStorage: new import_shopify_app_session_storage_prisma.PrismaSessionStorage(db_server_default),
-  distribution: import_server.AppDistribution.AppStore,
-  restResources: import__.restResources,
+  sessionStorage: new PrismaSessionStorage(db_server_default),
+  distribution: AppDistribution.AppStore,
+  restResources,
   future: {
     unstable_newEmbeddedAuthStrategy: !0
   },
   ...process.env.SHOP_CUSTOM_DOMAIN ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] } : {}
 });
-var apiVersion = import_server.ApiVersion.July24, addDocumentResponseHeaders = shopify.addDocumentResponseHeaders, authenticate = shopify.authenticate, unauthenticated = shopify.unauthenticated, login = shopify.login, registerWebhooks = shopify.registerWebhooks, sessionStorage = shopify.sessionStorage;
+var apiVersion = ApiVersion.July24, addDocumentResponseHeaders = shopify.addDocumentResponseHeaders, authenticate = shopify.authenticate, unauthenticated = shopify.unauthenticated, login = shopify.login, registerWebhooks = shopify.registerWebhooks, sessionStorage = shopify.sessionStorage;
 
 // app/entry.server.jsx
-var import_jsx_runtime = require("react/jsx-runtime"), ABORT_DELAY = 5e3;
+import { jsx } from "react/jsx-runtime";
+var ABORT_DELAY = 5e3;
 async function handleRequest(request, responseStatusCode, responseHeaders, remixContext) {
   addDocumentResponseHeaders(request, responseHeaders);
-  let userAgent = request.headers.get("user-agent"), callbackName = (0, import_isbot.isbot)(userAgent ?? "") ? "onAllReady" : "onShellReady";
+  let userAgent = request.headers.get("user-agent"), callbackName = isbot(userAgent ?? "") ? "onAllReady" : "onShellReady";
   return new Promise((resolve, reject) => {
-    let { pipe, abort } = (0, import_server2.renderToPipeableStream)(
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        import_react.RemixServer,
+    let { pipe, abort } = renderToPipeableStream(
+      /* @__PURE__ */ jsx(
+        RemixServer,
         {
           context: remixContext,
           url: request.url,
@@ -82,7 +65,7 @@ async function handleRequest(request, responseStatusCode, responseHeaders, remix
       ),
       {
         [callbackName]: () => {
-          let body = new import_stream.PassThrough(), stream = (0, import_node2.createReadableStreamFromReadable)(body);
+          let body = new PassThrough(), stream = createReadableStreamFromReadable(body);
           responseHeaders.set("Content-Type", "text/html"), resolve(
             new Response(stream, {
               headers: responseHeaders,
@@ -111,14 +94,23 @@ __export(root_exports, {
   links: () => links,
   loader: () => loader
 });
-var import_node3 = require("@remix-run/node"), import_react2 = require("@remix-run/react"), import_server3 = require("@shopify/shopify-app-remix/server"), import_react3 = require("@shopify/shopify-app-remix/react"), import_polaris = require("@shopify/polaris"), import_styles = __toESM(require("@shopify/polaris/build/esm/styles.css?url"), 1), import_client2 = require("@prisma/client"), import_react4 = require("react"), import_jsx_runtime2 = require("react/jsx-runtime"), prisma2 = new import_client2.PrismaClient(), links = () => [
-  { rel: "stylesheet", href: import_styles.default },
+import { json } from "@remix-run/node";
+import { useLoaderData, useRouteError, Links, Meta, Outlet, Scripts, ScrollRestoration, useFetcher, useRevalidator } from "@remix-run/react";
+import { boundary } from "@shopify/shopify-app-remix/server";
+import { AppProvider } from "@shopify/shopify-app-remix/react";
+import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
+import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
+import { PrismaClient as PrismaClient2 } from "@prisma/client";
+import { useState, useEffect } from "react";
+import { jsx as jsx2, jsxs } from "react/jsx-runtime";
+var prisma2 = new PrismaClient2(), links = () => [
+  { rel: "stylesheet", href: polarisStyles },
   { rel: "stylesheet", href: "./custom/admin-style.css" }
 ], loader = async () => {
   let fetchDiamondsFromDB = await prisma2.diamond.findMany(), colorSetting = await prisma2.colorsetting.findFirst();
   return colorSetting || (colorSetting = await prisma2.colorsetting.create({
     data: { color: "#ffffff" }
-  })), (0, import_node3.json)({
+  })), json({
     products: fetchDiamondsFromDB,
     color: colorSetting.color,
     message: `Total diamonds in database: ${fetchDiamondsFromDB.length}`,
@@ -126,13 +118,13 @@ var import_node3 = require("@remix-run/node"), import_react2 = require("@remix-r
   });
 };
 function App() {
-  let loaderData = (0, import_react2.useLoaderData)(), fetcher = (0, import_react2.useFetcher)(), revalidator = (0, import_react2.useRevalidator)(), [isSyncing, setIsSyncing] = (0, import_react4.useState)(!1), [syncMessage, setSyncMessage] = (0, import_react4.useState)(null), { products, message, color, syncCount } = loaderData || {
+  let loaderData = useLoaderData(), fetcher = useFetcher(), revalidator = useRevalidator(), [isSyncing, setIsSyncing] = useState(!1), [syncMessage, setSyncMessage] = useState(null), { products, message, color, syncCount } = loaderData || {
     products: [],
     message: "Loading...",
     color: "#ffffff",
     syncCount: null
   };
-  (0, import_react4.useEffect)(() => {
+  useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
       setIsSyncing(!1), setSyncMessage(fetcher.data.message), fetcher.data.success && revalidator.revalidate();
       let timer = setTimeout(() => setSyncMessage(null), 5e3);
@@ -145,43 +137,43 @@ function App() {
       { method: "post", action: "/api/sync" }
     );
   };
-  return !products || !Array.isArray(products) ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("html", { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("head", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("meta", { charSet: "utf-8" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Meta, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Links, {})
+  return !products || !Array.isArray(products) ? /* @__PURE__ */ jsxs("html", { children: [
+    /* @__PURE__ */ jsxs("head", { children: [
+      /* @__PURE__ */ jsx2("meta", { charSet: "utf-8" }),
+      /* @__PURE__ */ jsx2("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }),
+      /* @__PURE__ */ jsx2(Meta, {}),
+      /* @__PURE__ */ jsx2(Links, {})
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("body", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { children: "Error: Products data is not available" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Scripts, {})
+    /* @__PURE__ */ jsxs("body", { children: [
+      /* @__PURE__ */ jsx2("div", { children: "Error: Products data is not available" }),
+      /* @__PURE__ */ jsx2(Scripts, {})
     ] })
-  ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("html", { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("head", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("meta", { charSet: "utf-8" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("link", { rel: "preconnect", href: "https://cdn.shopify.com/" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+  ] }) : /* @__PURE__ */ jsxs("html", { children: [
+    /* @__PURE__ */ jsxs("head", { children: [
+      /* @__PURE__ */ jsx2("meta", { charSet: "utf-8" }),
+      /* @__PURE__ */ jsx2("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }),
+      /* @__PURE__ */ jsx2("link", { rel: "preconnect", href: "https://cdn.shopify.com/" }),
+      /* @__PURE__ */ jsx2(
         "link",
         {
           rel: "stylesheet",
           href: "https://cdn.shopify.com/static/fonts/inter/v4/styles.css"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Meta, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Links, {})
+      /* @__PURE__ */ jsx2(Meta, {}),
+      /* @__PURE__ */ jsx2(Links, {})
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("body", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react3.AppProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "container", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "admin_dash", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { className: "title", children: "Diamonds Management" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_polaris.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_polaris.BlockStack, { gap: "300", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_polaris.InlineStack, { align: "space-between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: "Database Status" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "text", children: message }),
-            syncMessage && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_polaris.Text, { as: "p", variant: "bodyMd", color: fetcher.data?.success ? "success" : "critical", children: syncMessage })
+    /* @__PURE__ */ jsxs("body", { children: [
+      /* @__PURE__ */ jsx2(AppProvider, { children: /* @__PURE__ */ jsx2("div", { className: "container", children: /* @__PURE__ */ jsxs("div", { className: "admin_dash", children: [
+        /* @__PURE__ */ jsx2("h1", { className: "title", children: "Diamonds Management" }),
+        /* @__PURE__ */ jsx2(Card, { children: /* @__PURE__ */ jsx2(BlockStack, { gap: "300", children: /* @__PURE__ */ jsxs(InlineStack, { align: "space-between", children: [
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx2("h2", { children: "Database Status" }),
+            /* @__PURE__ */ jsx2("p", { className: "text", children: message }),
+            syncMessage && /* @__PURE__ */ jsx2(Text, { as: "p", variant: "bodyMd", color: fetcher.data?.success ? "success" : "critical", children: syncMessage })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-            import_polaris.Button,
+          /* @__PURE__ */ jsx2(
+            Button,
             {
               onClick: handleSync,
               disabled: isSyncing,
@@ -190,38 +182,49 @@ function App() {
             }
           )
         ] }) }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Outlet, {})
+        /* @__PURE__ */ jsx2(Outlet, {})
       ] }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.ScrollRestoration, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react2.Scripts, {})
+      /* @__PURE__ */ jsx2(ScrollRestoration, {}),
+      /* @__PURE__ */ jsx2(Scripts, {})
     ] })
   ] });
 }
 function ErrorBoundary() {
-  let error = (0, import_react2.useRouteError)();
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: "Something went wrong" }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("pre", { children: error.message })
+  let error = useRouteError();
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx2("h2", { children: "Something went wrong" }),
+    /* @__PURE__ */ jsx2("pre", { children: error.message })
   ] });
 }
-var headers = (headersArgs) => import_server3.boundary.headers(headersArgs);
+var headers = (headersArgs) => boundary.headers(headersArgs);
 
 // app/routes/app.additional.jsx
 var app_additional_exports = {};
 __export(app_additional_exports, {
   default: () => AdditionalPage
 });
-var import_polaris2 = require("@shopify/polaris"), import_app_bridge_react = require("@shopify/app-bridge-react"), import_jsx_runtime3 = require("react/jsx-runtime");
+import {
+  Box,
+  Card as Card2,
+  Layout,
+  Link as Link2,
+  List,
+  Page,
+  Text as Text2,
+  BlockStack as BlockStack2
+} from "@shopify/polaris";
+import { TitleBar } from "@shopify/app-bridge-react";
+import { jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
 function AdditionalPage() {
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.Page, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_app_bridge_react.TitleBar, { title: "Additional page" }),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.Layout, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.Layout.Section, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.BlockStack, { gap: "300", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.Text, { as: "p", variant: "bodyMd", children: [
+  return /* @__PURE__ */ jsxs2(Page, { children: [
+    /* @__PURE__ */ jsx3(TitleBar, { title: "Additional page" }),
+    /* @__PURE__ */ jsxs2(Layout, { children: [
+      /* @__PURE__ */ jsx3(Layout.Section, { children: /* @__PURE__ */ jsx3(Card2, { children: /* @__PURE__ */ jsxs2(BlockStack2, { gap: "300", children: [
+        /* @__PURE__ */ jsxs2(Text2, { as: "p", variant: "bodyMd", children: [
           "The app template comes with an additional page which demonstrates how to create multiple pages within app navigation using",
           " ",
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-            import_polaris2.Link,
+          /* @__PURE__ */ jsx3(
+            Link2,
             {
               url: "https://shopify.dev/docs/apps/tools/app-bridge",
               target: "_blank",
@@ -231,20 +234,20 @@ function AdditionalPage() {
           ),
           "."
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.Text, { as: "p", variant: "bodyMd", children: [
+        /* @__PURE__ */ jsxs2(Text2, { as: "p", variant: "bodyMd", children: [
           "To create your own page and have it show up in the app navigation, add a page inside ",
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Code, { children: "app/routes" }),
+          /* @__PURE__ */ jsx3(Code, { children: "app/routes" }),
           ", and a link to it in the ",
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Code, { children: "<NavMenu>" }),
+          /* @__PURE__ */ jsx3(Code, { children: "<NavMenu>" }),
           " component found in ",
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Code, { children: "app/routes/app.jsx" }),
+          /* @__PURE__ */ jsx3(Code, { children: "app/routes/app.jsx" }),
           "."
         ] })
       ] }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.Layout.Section, { variant: "oneThird", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_polaris2.BlockStack, { gap: "200", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.Text, { as: "h2", variant: "headingMd", children: "Resources" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.List, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_polaris2.List.Item, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          import_polaris2.Link,
+      /* @__PURE__ */ jsx3(Layout.Section, { variant: "oneThird", children: /* @__PURE__ */ jsx3(Card2, { children: /* @__PURE__ */ jsxs2(BlockStack2, { gap: "200", children: [
+        /* @__PURE__ */ jsx3(Text2, { as: "h2", variant: "headingMd", children: "Resources" }),
+        /* @__PURE__ */ jsx3(List, { children: /* @__PURE__ */ jsx3(List.Item, { children: /* @__PURE__ */ jsx3(
+          Link2,
           {
             url: "https://shopify.dev/docs/apps/design-guidelines/navigation#app-nav",
             target: "_blank",
@@ -257,8 +260,8 @@ function AdditionalPage() {
   ] });
 }
 function Code({ children }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-    import_polaris2.Box,
+  return /* @__PURE__ */ jsx3(
+    Box,
     {
       as: "span",
       padding: "025",
@@ -268,7 +271,7 @@ function Code({ children }) {
       borderWidth: "025",
       borderColor: "border",
       borderRadius: "100",
-      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("code", { children })
+      children: /* @__PURE__ */ jsx3("code", { children })
     }
   );
 }
@@ -280,8 +283,24 @@ __export(app_index_exports, {
   default: () => Index,
   loader: () => loader2
 });
-var import_react5 = require("react"), import_node4 = require("@remix-run/node"), import_react6 = require("@remix-run/react"), import_polaris3 = require("@shopify/polaris"), import_app_bridge_react2 = require("@shopify/app-bridge-react");
-var import_jsx_runtime4 = require("react/jsx-runtime"), loader2 = async ({ request }) => (await authenticate.admin(request), null), action = async ({ request }) => {
+import { useEffect as useEffect2 } from "react";
+import { json as json2 } from "@remix-run/node";
+import { useFetcher as useFetcher2 } from "@remix-run/react";
+import {
+  Page as Page2,
+  Layout as Layout2,
+  Text as Text3,
+  Card as Card3,
+  Button as Button2,
+  BlockStack as BlockStack3,
+  Box as Box2,
+  List as List2,
+  Link as Link3,
+  InlineStack as InlineStack2
+} from "@shopify/polaris";
+import { TitleBar as TitleBar2, useAppBridge } from "@shopify/app-bridge-react";
+import { Fragment, jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
+var loader2 = async ({ request }) => (await authenticate.admin(request), null), action = async ({ request }) => {
   let { admin } = await authenticate.admin(request), color = ["Red", "Orange", "Yellow", "Green"][Math.floor(Math.random() * 4)], responseJson = await (await admin.graphql(
     `#graphql
       mutation populateProduct($input: ProductInput!) {
@@ -330,31 +349,31 @@ var import_jsx_runtime4 = require("react/jsx-runtime"), loader2 = async ({ reque
       }
     }
   )).json();
-  return (0, import_node4.json)({
+  return json2({
     product: responseJson.data.productCreate.product,
     variant: variantResponseJson.data.productVariantsBulkUpdate.productVariants
   });
 };
 function Index() {
-  let fetcher = (0, import_react6.useFetcher)(), shopify2 = (0, import_app_bridge_react2.useAppBridge)(), isLoading = ["loading", "submitting"].includes(fetcher.state) && fetcher.formMethod === "POST", productId = fetcher.data?.product?.id.replace(
+  let fetcher = useFetcher2(), shopify2 = useAppBridge(), isLoading = ["loading", "submitting"].includes(fetcher.state) && fetcher.formMethod === "POST", productId = fetcher.data?.product?.id.replace(
     "gid://shopify/Product/",
     ""
   );
-  (0, import_react5.useEffect)(() => {
+  useEffect2(() => {
     productId && shopify2.toast.show("Product created");
   }, [productId, shopify2]);
   let generateProduct = () => fetcher.submit({}, { method: "POST" });
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Page, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_app_bridge_react2.TitleBar, { title: "Remix app template", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { variant: "primary", onClick: generateProduct, children: "Generate a product" }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.BlockStack, { gap: "500", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Layout, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Layout.Section, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "500", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "200", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "h2", variant: "headingMd", children: "Congrats on creating a new Shopify app \u{1F389}" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Text, { variant: "bodyMd", as: "p", children: [
+  return /* @__PURE__ */ jsxs3(Page2, { children: [
+    /* @__PURE__ */ jsx4(TitleBar2, { title: "Remix app template", children: /* @__PURE__ */ jsx4("button", { variant: "primary", onClick: generateProduct, children: "Generate a product" }) }),
+    /* @__PURE__ */ jsx4(BlockStack3, { gap: "500", children: /* @__PURE__ */ jsxs3(Layout2, { children: [
+      /* @__PURE__ */ jsx4(Layout2.Section, { children: /* @__PURE__ */ jsx4(Card3, { children: /* @__PURE__ */ jsxs3(BlockStack3, { gap: "500", children: [
+        /* @__PURE__ */ jsxs3(BlockStack3, { gap: "200", children: [
+          /* @__PURE__ */ jsx4(Text3, { as: "h2", variant: "headingMd", children: "Congrats on creating a new Shopify app \u{1F389}" }),
+          /* @__PURE__ */ jsxs3(Text3, { variant: "bodyMd", as: "p", children: [
             "This embedded app template uses",
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              import_polaris3.Link,
+            /* @__PURE__ */ jsx4(
+              Link3,
               {
                 url: "https://shopify.dev/docs/apps/tools/app-bridge",
                 target: "_blank",
@@ -365,11 +384,11 @@ function Index() {
             " ",
             "interface examples like an",
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Link, { url: "/app/additional", removeUnderline: !0, children: "additional page in the app nav" }),
+            /* @__PURE__ */ jsx4(Link3, { url: "/app/additional", removeUnderline: !0, children: "additional page in the app nav" }),
             ", as well as an",
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              import_polaris3.Link,
+            /* @__PURE__ */ jsx4(
+              Link3,
               {
                 url: "https://shopify.dev/docs/api/admin-graphql",
                 target: "_blank",
@@ -381,13 +400,13 @@ function Index() {
             "mutation demo, to provide a starting point for app development."
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "200", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "h3", variant: "headingMd", children: "Get started with products" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Text, { as: "p", variant: "bodyMd", children: [
+        /* @__PURE__ */ jsxs3(BlockStack3, { gap: "200", children: [
+          /* @__PURE__ */ jsx4(Text3, { as: "h3", variant: "headingMd", children: "Get started with products" }),
+          /* @__PURE__ */ jsxs3(Text3, { as: "p", variant: "bodyMd", children: [
             "Generate a product with GraphQL and get the JSON output for that product. Learn more about the",
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              import_polaris3.Link,
+            /* @__PURE__ */ jsx4(
+              Link3,
               {
                 url: "https://shopify.dev/docs/api/admin-graphql/latest/mutations/productCreate",
                 target: "_blank",
@@ -399,10 +418,10 @@ function Index() {
             "mutation in our API references."
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.InlineStack, { gap: "300", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Button, { loading: isLoading, onClick: generateProduct, children: "Generate a product" }),
-          fetcher.data?.product && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            import_polaris3.Button,
+        /* @__PURE__ */ jsxs3(InlineStack2, { gap: "300", children: [
+          /* @__PURE__ */ jsx4(Button2, { loading: isLoading, onClick: generateProduct, children: "Generate a product" }),
+          fetcher.data?.product && /* @__PURE__ */ jsx4(
+            Button2,
             {
               url: `shopify:admin/products/${productId}`,
               target: "_blank",
@@ -411,13 +430,13 @@ function Index() {
             }
           )
         ] }),
-        fetcher.data?.product && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Text, { as: "h3", variant: "headingMd", children: [
+        fetcher.data?.product && /* @__PURE__ */ jsxs3(Fragment, { children: [
+          /* @__PURE__ */ jsxs3(Text3, { as: "h3", variant: "headingMd", children: [
             " ",
             "productCreate mutation"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            import_polaris3.Box,
+          /* @__PURE__ */ jsx4(
+            Box2,
             {
               padding: "400",
               background: "bg-surface-active",
@@ -425,15 +444,15 @@ function Index() {
               borderRadius: "200",
               borderColor: "border",
               overflowX: "scroll",
-              children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("pre", { style: { margin: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("code", { children: JSON.stringify(fetcher.data.product, null, 2) }) })
+              children: /* @__PURE__ */ jsx4("pre", { style: { margin: 0 }, children: /* @__PURE__ */ jsx4("code", { children: JSON.stringify(fetcher.data.product, null, 2) }) })
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.Text, { as: "h3", variant: "headingMd", children: [
+          /* @__PURE__ */ jsxs3(Text3, { as: "h3", variant: "headingMd", children: [
             " ",
             "productVariantsBulkUpdate mutation"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            import_polaris3.Box,
+          /* @__PURE__ */ jsx4(
+            Box2,
             {
               padding: "400",
               background: "bg-surface-active",
@@ -441,19 +460,19 @@ function Index() {
               borderRadius: "200",
               borderColor: "border",
               overflowX: "scroll",
-              children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("pre", { style: { margin: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("code", { children: JSON.stringify(fetcher.data.variant, null, 2) }) })
+              children: /* @__PURE__ */ jsx4("pre", { style: { margin: 0 }, children: /* @__PURE__ */ jsx4("code", { children: JSON.stringify(fetcher.data.variant, null, 2) }) })
             }
           )
         ] })
       ] }) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Layout.Section, { variant: "oneThird", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "500", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "200", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "h2", variant: "headingMd", children: "App template specs" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "200", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.InlineStack, { align: "space-between", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "span", variant: "bodyMd", children: "Framework" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                import_polaris3.Link,
+      /* @__PURE__ */ jsx4(Layout2.Section, { variant: "oneThird", children: /* @__PURE__ */ jsxs3(BlockStack3, { gap: "500", children: [
+        /* @__PURE__ */ jsx4(Card3, { children: /* @__PURE__ */ jsxs3(BlockStack3, { gap: "200", children: [
+          /* @__PURE__ */ jsx4(Text3, { as: "h2", variant: "headingMd", children: "App template specs" }),
+          /* @__PURE__ */ jsxs3(BlockStack3, { gap: "200", children: [
+            /* @__PURE__ */ jsxs3(InlineStack2, { align: "space-between", children: [
+              /* @__PURE__ */ jsx4(Text3, { as: "span", variant: "bodyMd", children: "Framework" }),
+              /* @__PURE__ */ jsx4(
+                Link3,
                 {
                   url: "https://remix.run",
                   target: "_blank",
@@ -462,10 +481,10 @@ function Index() {
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.InlineStack, { align: "space-between", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "span", variant: "bodyMd", children: "Database" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                import_polaris3.Link,
+            /* @__PURE__ */ jsxs3(InlineStack2, { align: "space-between", children: [
+              /* @__PURE__ */ jsx4(Text3, { as: "span", variant: "bodyMd", children: "Database" }),
+              /* @__PURE__ */ jsx4(
+                Link3,
                 {
                   url: "https://www.prisma.io/",
                   target: "_blank",
@@ -474,11 +493,11 @@ function Index() {
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.InlineStack, { align: "space-between", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "span", variant: "bodyMd", children: "Interface" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                  import_polaris3.Link,
+            /* @__PURE__ */ jsxs3(InlineStack2, { align: "space-between", children: [
+              /* @__PURE__ */ jsx4(Text3, { as: "span", variant: "bodyMd", children: "Interface" }),
+              /* @__PURE__ */ jsxs3("span", { children: [
+                /* @__PURE__ */ jsx4(
+                  Link3,
                   {
                     url: "https://polaris.shopify.com",
                     target: "_blank",
@@ -487,8 +506,8 @@ function Index() {
                   }
                 ),
                 ", ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                  import_polaris3.Link,
+                /* @__PURE__ */ jsx4(
+                  Link3,
                   {
                     url: "https://shopify.dev/docs/apps/tools/app-bridge",
                     target: "_blank",
@@ -498,10 +517,10 @@ function Index() {
                 )
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.InlineStack, { align: "space-between", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "span", variant: "bodyMd", children: "API" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                import_polaris3.Link,
+            /* @__PURE__ */ jsxs3(InlineStack2, { align: "space-between", children: [
+              /* @__PURE__ */ jsx4(Text3, { as: "span", variant: "bodyMd", children: "API" }),
+              /* @__PURE__ */ jsx4(
+                Link3,
                 {
                   url: "https://shopify.dev/docs/api/admin-graphql",
                   target: "_blank",
@@ -512,14 +531,14 @@ function Index() {
             ] })
           ] })
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.BlockStack, { gap: "200", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(import_polaris3.Text, { as: "h2", variant: "headingMd", children: "Next steps" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.List, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.List.Item, { children: [
+        /* @__PURE__ */ jsx4(Card3, { children: /* @__PURE__ */ jsxs3(BlockStack3, { gap: "200", children: [
+          /* @__PURE__ */ jsx4(Text3, { as: "h2", variant: "headingMd", children: "Next steps" }),
+          /* @__PURE__ */ jsxs3(List2, { children: [
+            /* @__PURE__ */ jsxs3(List2.Item, { children: [
               "Build an",
               " ",
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
-                import_polaris3.Link,
+              /* @__PURE__ */ jsxs3(
+                Link3,
                 {
                   url: "https://shopify.dev/docs/apps/getting-started/build-app-example",
                   target: "_blank",
@@ -533,11 +552,11 @@ function Index() {
               " ",
               "to get started"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_polaris3.List.Item, { children: [
+            /* @__PURE__ */ jsxs3(List2.Item, { children: [
               "Explore Shopify\u2019s API with",
               " ",
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-                import_polaris3.Link,
+              /* @__PURE__ */ jsx4(
+                Link3,
                 {
                   url: "https://shopify.dev/docs/apps/tools/graphiql-admin-api",
                   target: "_blank",
@@ -561,32 +580,45 @@ __export(route_exports, {
   links: () => links2,
   loader: () => loader3
 });
-var import_react7 = require("react"), import_node5 = require("@remix-run/node"), import_react8 = require("@remix-run/react"), import_polaris4 = require("@shopify/polaris"), import_styles2 = __toESM(require("@shopify/polaris/build/esm/styles.css?url"), 1);
+import { useState as useState2 } from "react";
+import { json as json3 } from "@remix-run/node";
+import { Form, useActionData, useLoaderData as useLoaderData2 } from "@remix-run/react";
+import {
+  AppProvider as PolarisAppProvider,
+  Button as Button3,
+  Card as Card4,
+  FormLayout,
+  Page as Page3,
+  Text as Text4,
+  TextField
+} from "@shopify/polaris";
+import polarisStyles2 from "@shopify/polaris/build/esm/styles.css?url";
 
 // app/routes/auth.login/error.server.jsx
-var import_server4 = require("@shopify/shopify-app-remix/server");
+import { LoginErrorType } from "@shopify/shopify-app-remix/server";
 function loginErrorMessage(loginErrors) {
-  return loginErrors?.shop === import_server4.LoginErrorType.MissingShop ? { shop: "Please enter your shop domain to log in" } : loginErrors?.shop === import_server4.LoginErrorType.InvalidShop ? { shop: "Please enter a valid shop domain to log in" } : {};
+  return loginErrors?.shop === LoginErrorType.MissingShop ? { shop: "Please enter your shop domain to log in" } : loginErrors?.shop === LoginErrorType.InvalidShop ? { shop: "Please enter a valid shop domain to log in" } : {};
 }
 
 // app/routes/auth.login/route.jsx
-var import_jsx_runtime5 = require("react/jsx-runtime"), links2 = () => [{ rel: "stylesheet", href: import_styles2.default }], loader3 = async ({ request }) => {
+import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
+var links2 = () => [{ rel: "stylesheet", href: polarisStyles2 }], loader3 = async ({ request }) => {
   let errors = loginErrorMessage(await login(request));
-  return (0, import_node5.json)({ errors });
+  return json3({ errors });
 }, action2 = async ({ request }) => {
   let errors = loginErrorMessage(await login(request));
-  return (0, import_node5.json)({
+  return json3({
     errors
   });
 };
 function Auth() {
-  let loaderData = (0, import_react8.useLoaderData)(), actionData = (0, import_react8.useActionData)(), [shop, setShop] = (0, import_react7.useState)(""), { errors } = actionData || loaderData;
+  let loaderData = useLoaderData2(), actionData = useActionData(), [shop, setShop] = useState2(""), { errors } = actionData || loaderData;
   return (
     // <PolarisAppProvider i18n={loaderData.polarisTranslations}>
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_polaris4.AppProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_polaris4.Page, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_polaris4.Card, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_react8.Form, { method: "post", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_polaris4.FormLayout, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_polaris4.Text, { variant: "headingMd", as: "h2", children: "Log in" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-        import_polaris4.TextField,
+    /* @__PURE__ */ jsx5(PolarisAppProvider, { children: /* @__PURE__ */ jsx5(Page3, { children: /* @__PURE__ */ jsx5(Card4, { children: /* @__PURE__ */ jsx5(Form, { method: "post", children: /* @__PURE__ */ jsxs4(FormLayout, { children: [
+      /* @__PURE__ */ jsx5(Text4, { variant: "headingMd", as: "h2", children: "Log in" }),
+      /* @__PURE__ */ jsx5(
+        TextField,
         {
           type: "text",
           name: "shop",
@@ -598,7 +630,7 @@ function Auth() {
           error: errors.shop
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(import_polaris4.Button, { submit: !0, children: "Log in" })
+      /* @__PURE__ */ jsx5(Button3, { submit: !0, children: "Log in" })
     ] }) }) }) }) })
   );
 }
@@ -638,42 +670,44 @@ __export(route_exports2, {
   default: () => App2,
   loader: () => loader5
 });
-var import_node6 = require("@remix-run/node"), import_react9 = require("@remix-run/react");
+import { json as json4, redirect } from "@remix-run/node";
+import { Form as Form2, useLoaderData as useLoaderData3 } from "@remix-run/react";
 
 // app/routes/_index/styles.module.css
 var styles_module_default = { index: "LQCYp", heading: "bVg-E", text: "_5LEJl", content: "IjJz7", form: "sI1Wg", label: "py2aZ", input: "k8y5b", button: "DcRe8", list: "qyGLW" };
 
 // app/routes/_index/route.jsx
-var import_jsx_runtime6 = require("react/jsx-runtime"), loader5 = async ({ request }) => {
+import { jsx as jsx6, jsxs as jsxs5 } from "react/jsx-runtime";
+var loader5 = async ({ request }) => {
   let url = new URL(request.url);
   if (url.searchParams.get("shop"))
-    throw (0, import_node6.redirect)(`/app?${url.searchParams.toString()}`);
-  return (0, import_node6.json)({ showForm: Boolean(login) });
+    throw redirect(`/app?${url.searchParams.toString()}`);
+  return json4({ showForm: Boolean(login) });
 };
 function App2() {
-  let { showForm } = (0, import_react9.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: styles_module_default.index, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: styles_module_default.content, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: styles_module_default.heading, children: "A short heading about [your app]" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: styles_module_default.text, children: "A tagline about [your app] that describes your value proposition." }),
-    showForm && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_react9.Form, { className: styles_module_default.form, method: "post", action: "/auth/login", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: styles_module_default.label, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "Shop domain" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("input", { className: styles_module_default.input, type: "text", name: "shop" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "e.g: my-shop-domain.myshopify.com" })
+  let { showForm } = useLoaderData3();
+  return /* @__PURE__ */ jsx6("div", { className: styles_module_default.index, children: /* @__PURE__ */ jsxs5("div", { className: styles_module_default.content, children: [
+    /* @__PURE__ */ jsx6("h1", { className: styles_module_default.heading, children: "A short heading about [your app]" }),
+    /* @__PURE__ */ jsx6("p", { className: styles_module_default.text, children: "A tagline about [your app] that describes your value proposition." }),
+    showForm && /* @__PURE__ */ jsxs5(Form2, { className: styles_module_default.form, method: "post", action: "/auth/login", children: [
+      /* @__PURE__ */ jsxs5("label", { className: styles_module_default.label, children: [
+        /* @__PURE__ */ jsx6("span", { children: "Shop domain" }),
+        /* @__PURE__ */ jsx6("input", { className: styles_module_default.input, type: "text", name: "shop" }),
+        /* @__PURE__ */ jsx6("span", { children: "e.g: my-shop-domain.myshopify.com" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: styles_module_default.button, type: "submit", children: "Log in" })
+      /* @__PURE__ */ jsx6("button", { className: styles_module_default.button, type: "submit", children: "Log in" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("ul", { className: styles_module_default.list, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "Product feature" }),
+    /* @__PURE__ */ jsxs5("ul", { className: styles_module_default.list, children: [
+      /* @__PURE__ */ jsxs5("li", { children: [
+        /* @__PURE__ */ jsx6("strong", { children: "Product feature" }),
         ". Some detail about your feature and its benefit to your customer."
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "Product feature" }),
+      /* @__PURE__ */ jsxs5("li", { children: [
+        /* @__PURE__ */ jsx6("strong", { children: "Product feature" }),
         ". Some detail about your feature and its benefit to your customer."
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("li", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "Product feature" }),
+      /* @__PURE__ */ jsxs5("li", { children: [
+        /* @__PURE__ */ jsx6("strong", { children: "Product feature" }),
         ". Some detail about your feature and its benefit to your customer."
       ] })
     ] })
@@ -688,14 +722,19 @@ __export(app_exports, {
   default: () => AppRoute,
   loader: () => loader6
 });
-var import_node7 = require("@remix-run/node"), import_react10 = require("@remix-run/react"), import_client3 = require("@prisma/client"), import_app_bridge_react3 = require("@shopify/app-bridge-react"), import_jsx_runtime7 = require("react/jsx-runtime"), prisma3 = new import_client3.PrismaClient(), loader6 = async () => {
+import { json as json5 } from "@remix-run/node";
+import { Link as Link4, useLoaderData as useLoaderData4, useActionData as useActionData2, Form as Form3 } from "@remix-run/react";
+import { PrismaClient as PrismaClient3 } from "@prisma/client";
+import { NavMenu } from "@shopify/app-bridge-react";
+import { Fragment as Fragment2, jsx as jsx7, jsxs as jsxs6 } from "react/jsx-runtime";
+var prisma3 = new PrismaClient3(), loader6 = async () => {
   try {
     let colorSetting = await prisma3.colorsetting.findFirst();
-    return (0, import_node7.json)({
+    return json5({
       color: colorSetting?.color || "#ffffff"
     });
   } catch (error) {
-    return console.error("Loader error:", error), (0, import_node7.json)({ color: "#ffffff" });
+    return console.error("Loader error:", error), json5({ color: "#ffffff" });
   }
 }, action4 = async ({ request }) => {
   try {
@@ -704,26 +743,26 @@ var import_node7 = require("@remix-run/node"), import_react10 = require("@remix-
       where: { id: 1 },
       update: { color },
       create: { color }
-    }), (0, import_node7.json)({
+    }), json5({
       message: "Color saved successfully!",
       color
     });
   } catch (error) {
-    return console.error("Error saving color:", error), (0, import_node7.json)({ error: "Failed to save color" }, { status: 500 });
+    return console.error("Error saving color:", error), json5({ error: "Failed to save color" }, { status: 500 });
   }
 };
 function AppRoute() {
-  let { color } = (0, import_react10.useLoaderData)(), actionData = (0, import_react10.useActionData)();
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_app_bridge_react3.NavMenu, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_react10.Link, { to: "/app", rel: "home", children: "Home" }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(import_react10.Link, { to: "/app/additional", children: "Additional page" })
+  let { color } = useLoaderData4(), actionData = useActionData2();
+  return /* @__PURE__ */ jsxs6(Fragment2, { children: [
+    /* @__PURE__ */ jsxs6(NavMenu, { children: [
+      /* @__PURE__ */ jsx7(Link4, { to: "/app", rel: "home", children: "Home" }),
+      /* @__PURE__ */ jsx7(Link4, { to: "/app/additional", children: "Additional page" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { children: "Customize Appearance" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_react10.Form, { method: "post", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("label", { htmlFor: "color", children: "Select Color: " }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    /* @__PURE__ */ jsx7("h2", { children: "Customize Appearance" }),
+    /* @__PURE__ */ jsxs6(Form3, { method: "post", children: [
+      /* @__PURE__ */ jsxs6("div", { children: [
+        /* @__PURE__ */ jsx7("label", { htmlFor: "color", children: "Select Color: " }),
+        /* @__PURE__ */ jsx7(
           "input",
           {
             type: "color",
@@ -734,13 +773,13 @@ function AppRoute() {
           }
         )
       ] }),
-      actionData?.error && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { color: "red" }, children: actionData.error }),
-      actionData?.message && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { style: { color: "green" }, children: actionData.message }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { type: "submit", children: "Save Color" })
+      actionData?.error && /* @__PURE__ */ jsx7("div", { style: { color: "red" }, children: actionData.error }),
+      actionData?.message && /* @__PURE__ */ jsx7("div", { style: { color: "green" }, children: actionData.message }),
+      /* @__PURE__ */ jsx7("button", { type: "submit", children: "Save Color" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: "Current Color:" }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+    /* @__PURE__ */ jsxs6("div", { children: [
+      /* @__PURE__ */ jsx7("p", { children: "Current Color:" }),
+      /* @__PURE__ */ jsx7(
         "div",
         {
           style: {
@@ -755,7 +794,7 @@ function AppRoute() {
   ] });
 }
 function ErrorBoundary2() {
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { children: "Something went wrong in the app route!" });
+  return /* @__PURE__ */ jsx7("div", { children: "Something went wrong in the app route!" });
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
@@ -828,13 +867,12 @@ var mode = "production", assetsBuildDirectory = "public\\build", future = { v3_f
     module: app_exports
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  assets,
+export {
+  assets_manifest_default as assets,
   assetsBuildDirectory,
   entry,
   future,
   mode,
   publicPath,
   routes
-});
+};

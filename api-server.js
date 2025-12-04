@@ -39,9 +39,6 @@ app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), 
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-// Check presence of Remix build at startup for easier debugging on Render
-const buildPath = path.join(process.cwd(), 'build', 'index.js');
-console.log('Remix build path:', buildPath, 'exists:', fs.existsSync(buildPath));
 const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://shopify-app-pndl.onrender.com, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
 // Use the CORS middleware with the correct configuration
 app.use(cors({
@@ -214,38 +211,14 @@ app.post('/api/save-color', async (req, res) => {
     }
 });
 
-// Load and setup Remix build handler if available
-try {
-    const { createRequestHandler } = await import("@remix-run/express");
+// NOTE: Remix app is now served separately via the main Remix dev server or build process
+// The API server focuses on backend endpoints and doesn't need to load the Remix build
+// This avoids CSS import issues in ESM mode
 
-    // Try ESM dynamic import first, fall back to CommonJS require when necessary
-    let build;
-    try {
-        build = await import("./build/index.js");
-        console.log('Remix build imported via ESM.');
-    } catch (err) {
-        console.warn('ESM import failed, attempting CommonJS require fallback:', err.message);
-        try {
-            const { createRequire } = await import('module');
-            const require = createRequire(import.meta.url);
-            build = require('./build/index.js');
-            console.log('Remix build loaded via CommonJS require.');
-        } catch (err2) {
-            console.error('Failed to load Remix build via require fallback:', err2);
-            throw err2;
-        }
-    }
-
-    // Remix catch-all handler - must be last
-    app.all("*", createRequestHandler({ build }));
-} catch (error) {
-    console.error("Remix build import failed — full error:", error);
-
-    // Fallback for requests not handled by API endpoints
-    app.all("*", (req, res) => {
-        res.status(404).json({ message: "Not Found" });
-    });
-}
+// Fallback 404 handler for routes not matched by the API endpoints above
+app.all("*", (req, res) => {
+    res.status(404).json({ message: "Not Found" });
+});
 
 // Start the API server
 app.listen(PORT, () => {

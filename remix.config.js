@@ -13,8 +13,9 @@ export default {
   ignoredRouteFiles: ["**/.*"],
 
   appDirectory: "app",
-  serverModuleFormat: "cjs",
-  serverBuildTarget: "node-cjs",
+
+  serverModuleFormat: "esm",
+  serverBuildTarget: undefined,
 
   server: undefined,
   routes: undefined,
