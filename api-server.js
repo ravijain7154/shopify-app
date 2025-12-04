@@ -27,7 +27,6 @@ app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
 // import * as build from "./build/index.js"; // 👈 correct
 
-<<<<<<< HEAD
 // app.all("*", createRemixHandler({
 // build,
 //   getLoadContext(req, res) {
@@ -42,22 +41,7 @@ app.use(shopify.ensureInstalledOnShop());
 
 app.all("*", shopify.ensureInstalledOnShop(),
 createRequestHandler({build}));
-=======
-app.all("/app*", createRemixHandler({
-  getLoadContext(req, res) {
-    return { prisma };
-  },
-}));
->>>>>>> 7020a62d07ef26eedb47aa99f479df87ccb319a1
 
-const build = await import(“./build/index.js”)
-app.use(shopify.cspHeaders());
-app.use(shopify.auth.begin());
-app.use(shopify.auth.callback());
-app.use(shopify.ensureInstalledOnShop());
-
-app.all("*", Shopify.ensureInstalledOnShop(),
-createRequestHandler({build}));
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
