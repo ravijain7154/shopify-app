@@ -15,6 +15,17 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000; // Port for your API server
 app.use(bodyParser.json());
 
+// Logging middleware to debug incoming requests
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
+    next();
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', message: 'API server is running' });
+});
+
 // Static files for diamond filter UI
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
@@ -217,7 +228,19 @@ app.post('/api/save-color', async (req, res) => {
 
 // Fallback 404 handler for routes not matched by the API endpoints above
 app.all("*", (req, res) => {
-    res.status(404).json({ message: "Not Found" });
+    console.warn(`Unhandled route: ${req.method} ${req.path}`);
+    res.status(404).json({ 
+        message: "Not Found",
+        path: req.path,
+        method: req.method,
+        availableEndpoints: [
+            'GET /health',
+            'GET /api/products?page=1&perPage=25',
+            'GET /api/get-color',
+            'POST /api/save-color',
+            'GET /diamond-filter'
+        ]
+    });
 });
 
 // Start the API server
