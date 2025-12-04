@@ -1,16 +1,15 @@
 /**
- * Custom ESM loader to handle CSS and other asset imports
- * Allows Node.js to ignore CSS, images, and other assets at runtime
+ * ESM Loader for handling CSS and asset files
+ * This allows the server to ignore CSS imports at runtime
  */
 
-const ASSET_EXTENSIONS = ['.css', '.png', '.jpg', '.jpeg', '.svg', '.gif', '.webp'];
+const ASSET_EXTENSIONS = ['.css', '.png', '.jpg', '.jpeg', '.svg', '.gif', '.webp', '.ttf', '.woff', '.woff2'];
 
 export async function resolve(specifier, context, nextResolve) {
-  // Check if specifier ends with an asset extension
+  // Skip CSS and asset files - return a dummy module
   if (ASSET_EXTENSIONS.some(ext => specifier.endsWith(ext))) {
-    // Return a data URL that exports an empty object
     return {
-      url: 'data:text/javascript;charset=utf-8,export default {}',
+      url: 'data:text/javascript,export default {};',
       shortCircuit: true,
     };
   }
@@ -19,19 +18,26 @@ export async function resolve(specifier, context, nextResolve) {
 }
 
 export async function getFormat(url, context, nextGetFormat) {
-  // Handle data URLs
   if (url.startsWith('data:')) {
-    return { format: 'module', shortCircuit: true };
+    return {
+      format: 'module',
+      shortCircuit: true,
+    };
   }
+  
   return nextGetFormat(url, context);
 }
 
 export async function getSource(url, context, nextGetSource) {
-  // Handle data URLs
   if (url.startsWith('data:')) {
-    // Extract the source from data URL
-    const source = decodeURIComponent(url.replace('data:text/javascript;charset=utf-8,', ''));
-    return { source, format: 'module', shortCircuit: true };
+    // Extract source from data URL
+    const source = url.replace('data:text/javascript,', '');
+    return {
+      source: source,
+      format: 'module',
+      shortCircuit: true,
+    };
   }
+  
   return nextGetSource(url, context);
 }

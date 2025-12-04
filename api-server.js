@@ -1,4 +1,5 @@
 import express from 'express';
+
 // import { PrismaClient } from '@prisma/client';
 import pkg from '@prisma/client';
 import cors from 'cors'; // Use ES6 import for consistency
@@ -222,23 +223,24 @@ app.post('/api/save-color', async (req, res) => {
     }
 });
 
-// NOTE: Remix app is now served separately via the main Remix dev server or build process
-// The API server focuses on backend endpoints and doesn't need to load the Remix build
-// This avoids CSS import issues in ESM mode
-
-// Fallback 404 handler for routes not matched by the API endpoints above
+// ===== FALLBACK 404 HANDLER =====
+// NOTE: The Remix admin UI needs to be served separately to avoid ESM CSS import issues
+// For production on Render, configure two services:
+// 1. API server (api-server.js) - handles /api/* and /diamond-filter routes
+// 2. Remix server (remix-serve ./build/index.js or npm run start) - handles admin UI routes
 app.all("*", (req, res) => {
-    console.warn(`Unhandled route: ${req.method} ${req.path}`);
+    console.log(`→ Unhandled: ${req.method} ${req.path}`);
     res.status(404).json({ 
-        message: "Not Found",
+        message: "Not Found - API Server Only",
         path: req.path,
         method: req.method,
+        note: "Admin UI is served separately",
         availableEndpoints: [
             'GET /health',
-            'GET /api/products?page=1&perPage=25',
+            'GET /api/products',
             'GET /api/get-color',
             'POST /api/save-color',
-            'GET /diamond-filter'
+            'GET /diamond-filter',
         ]
     });
 });

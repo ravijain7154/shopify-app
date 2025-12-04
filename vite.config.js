@@ -35,6 +35,21 @@ if (host === "localhost") {
     };
 }
 
+// Custom plugin to strip CSS imports from server bundle
+const stripCssPlugin = {
+    name: 'strip-css',
+    resolveId(id) {
+        if (id.endsWith('.css')) {
+            return { id: 'virtual-css-module', external: false };
+        }
+    },
+    load(id) {
+        if (id === 'virtual-css-module') {
+            return 'export default {};';
+        }
+    },
+};
+
 export default defineConfig({
     server: {
         port: Number(process.env.PORT || 3000),
@@ -52,6 +67,7 @@ export default defineConfig({
             ignoredRouteFiles: ["**/.*"],
         }),
         tsconfigPaths(),
+        stripCssPlugin,
     ],
     build: {
         rollupOptions: {
