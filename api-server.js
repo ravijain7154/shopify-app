@@ -217,9 +217,24 @@ app.post('/api/save-color', async (req, res) => {
 // Load and setup Remix build handler if available
 try {
     const { createRequestHandler } = await import("@remix-run/express");
-    const build = await import("./build/index.js");
 
-    console.log('Remix build imported successfully. Registering Remix request handler.');
+    // Try ESM dynamic import first, fall back to CommonJS require when necessary
+    let build;
+    try {
+        build = await import("./build/index.js");
+        console.log('Remix build imported via ESM.');
+    } catch (err) {
+        console.warn('ESM import failed, attempting CommonJS require fallback:', err.message);
+        try {
+            const { createRequire } = await import('module');
+            const require = createRequire(import.meta.url);
+            build = require('./build/index.js');
+            console.log('Remix build loaded via CommonJS require.');
+        } catch (err2) {
+            console.error('Failed to load Remix build via require fallback:', err2);
+            throw err2;
+        }
+    }
 
     // Remix catch-all handler - must be last
     app.all("*", createRequestHandler({ build }));

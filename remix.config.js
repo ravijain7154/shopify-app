@@ -13,9 +13,8 @@ export default {
   ignoredRouteFiles: ["**/.*"],
 
   appDirectory: "app",
-
-  serverModuleFormat: "esm",
-  serverBuildTarget: undefined,
+  serverModuleFormat: "cjs",
+  serverBuildTarget: "node-cjs",
 
   server: undefined,
   routes: undefined,
@@ -29,8 +28,7 @@ export default {
     unstable_jsonModules: true,
   },
   serverDependenciesToBundle: [
-    "@shopify/polaris",
-    "@shopify/polaris/**",
+    // Bundle only server necessities; avoid bundling Polaris (CSS) into server build
     "@shopify/shopify-app-remix",
     "@shopify/shopify-app-remix/**",
   ],
