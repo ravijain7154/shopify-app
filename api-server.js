@@ -25,14 +25,22 @@ app.use(bodyParser.json());
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
 import { createRequestHandler as createRemixHandler } from "@remix-run/express"; // Add this
-import * as build from "./build/index.js"; // 👈 correct
+// import * as build from "./build/index.js"; // 👈 correct
 
-app.all("/app*", createRemixHandler({
-build,
-  getLoadContext(req, res) {
-    return { prisma };
-  },
-}));
+// app.all("*", createRemixHandler({
+// build,
+//   getLoadContext(req, res) {
+//     return { prisma };
+//   },
+// }));
+const build = await import("./build/index.js")
+app.use(shopify.cspHeaders());
+app.use(shopify.auth.begin());
+app.use(shopify.auth.callback());
+app.use(shopify.ensureInstalledOnShop());
+
+app.all("*", shopify.ensureInstalledOnShop(),
+createRequestHandler({build}));
 
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
