@@ -4,10 +4,13 @@ services:
     env: node
     region: oregon
     branch: main
-    # Use npm ci for reproducible installs, ensure local bins are executable,
-    # then run the build using node to avoid Permission denied on wrapper scripts.
-    buildCommand: npm ci --legacy-peer-deps && chmod -R +x node_modules/.bin || true && node ./node_modules/@remix-run/dev/dist/cli.js build && node ./node_modules/prisma/build/index.js generate && node ./node_modules/prisma/build/index.js migrate deploy
-    preDeployCommand: ""
+    # Clean any previous install, run deterministic install, and build via node
+    # This avoids ENOTEMPTY / rename and Permission denied errors caused by
+    # stale node_modules or missing exec bits in CI extract.
+    buildCommand: rm -rf node_modules package-lock.json || true && npm cache clean --force || true && npm ci --legacy-peer-deps --prefer-offline && chmod -R +x node_modules/.bin || true && node ./node_modules/@remix-run/dev/dist/cli.js build
+    # Run migrations separately during pre-deploy so DB migrations don't interfere
+    # with the build step. We run Prisma via its node entrypoint to avoid wrapper issues.
+    preDeployCommand: node ./node_modules/prisma/build/index.js generate && node ./node_modules/prisma/build/index.js migrate deploy
     startCommand: node ./node_modules/@remix-run/serve/dist/cli.js ./build/index.js
     plan: free
     envVars:
