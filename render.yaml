@@ -4,9 +4,11 @@ services:
     env: node
     region: oregon
     branch: main
-    buildCommand: npm install --legacy-peer-deps && npm run setup && npm run build
+    # Use npm ci for reproducible installs, ensure local bins are executable,
+    # then run the build using node to avoid Permission denied on wrapper scripts.
+    buildCommand: npm ci --legacy-peer-deps && chmod -R +x node_modules/.bin || true && node ./node_modules/@remix-run/dev/dist/cli.js build && node ./node_modules/prisma/build/index.js generate && node ./node_modules/prisma/build/index.js migrate deploy
     preDeployCommand: ""
-    startCommand: npm run start
+    startCommand: node ./node_modules/@remix-run/serve/dist/cli.js ./build/index.js
     plan: free
     envVars:
       - key: NODE_ENV
