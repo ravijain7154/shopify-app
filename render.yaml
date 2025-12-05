@@ -4,10 +4,8 @@ services:
     env: node
     region: oregon
     branch: main
-    # Use npm ci for reproducible installs, ensure local bins are executable,
-    # then run the build. Migrations run in the pre-deploy step.
-    buildCommand: npm ci --legacy-peer-deps && chmod -R +x node_modules/.bin || true && npm run build
-    preDeployCommand: npm run setup
+    buildCommand: npm install --legacy-peer-deps && npm run setup && npm run build
+    preDeployCommand: ""
     startCommand: npm run start
     plan: free
     envVars:
