@@ -64,6 +64,8 @@
     "license": "ISC",
     "devDependencies": {
         "@remix-run/serve": "^2.16.5",
+        "patch-package": "^8.0.1",
+        "postinstall-postinstall": "^2.1.0",
         "prisma": "5.22.0"
     }
 }
