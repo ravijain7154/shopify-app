@@ -9,9 +9,7 @@ import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { PrismaClient } from "@prisma/client";
 import React, { useState, useEffect } from 'react';
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-});
+const prisma = new PrismaClient();
 
 export const links = () => [ 
   { rel: "stylesheet", href: polarisStyles }, 
