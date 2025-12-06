@@ -14,6 +14,7 @@
         "setup": "npx prisma generate && npx prisma migrate deploy",
         "shopify": "shopify",
         "prisma": "npx prisma",
+        "postinstall": "patch-package",
         "graphql-codegen": "graphql-codegen",
         "start:api": "node api-server.js",
         "dev": "shopify app dev"
