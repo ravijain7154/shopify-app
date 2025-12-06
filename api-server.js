@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 const { PrismaClient } = pkg;
 const app = express();
 const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
+   datasourceUrl: process.env.DATABASE_URL,
 });
 
 const PORT = process.env.PORT || 3000; // Port for your API server

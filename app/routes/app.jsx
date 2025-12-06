@@ -4,7 +4,9 @@ import { Link, useLoaderData, useActionData, Form } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DATABASE_URL,
+});
 
 export const loader = async () => {
   try {
