@@ -16,8 +16,7 @@
         "prisma": "npx prisma",
         "graphql-codegen": "graphql-codegen",
         "start:api": "node api-server.js",
-        "dev": "shopify app dev",
-        "postinstall": "node scripts/remove-json-assertions.mjs"
+        "dev": "shopify app dev"
     },
     "type": "module",
     "engines": {
