@@ -9,7 +9,7 @@
         "deploy": "shopify app deploy",
         "config:use": "shopify app config use",
         "env": "shopify app env",
-        "start": "node api-server.js",
+        "start": "npx remix-serve ./build/index.js",
         "docker-start": "npm run setup && npm run start",
         "setup": "npx prisma generate && npx prisma migrate deploy",
         "shopify": "shopify",
@@ -67,6 +67,7 @@
     "license": "ISC",
     "devDependencies": {
         "@remix-run/serve": "^2.16.5",
+        
         "postinstall-postinstall": "^2.1.0"
     }
 }
