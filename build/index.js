@@ -97,8 +97,7 @@ __export(root_exports, {
 import { json } from "@remix-run/node";
 import { useLoaderData, useRouteError, Links, Meta, Outlet, Scripts, ScrollRestoration, useFetcher, useRevalidator } from "@remix-run/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
-import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
+import { AppProvider, Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { PrismaClient as PrismaClient2 } from "@prisma/client";
 import { useState, useEffect } from "react";
@@ -723,9 +722,9 @@ __export(app_exports, {
   loader: () => loader6
 });
 import { json as json5 } from "@remix-run/node";
-import { Link as Link4, useLoaderData as useLoaderData4, useActionData as useActionData2, Form as Form3 } from "@remix-run/react";
+import { useLoaderData as useLoaderData4, useActionData as useActionData2, Form as Form3 } from "@remix-run/react";
 import { PrismaClient as PrismaClient3 } from "@prisma/client";
-import { NavMenu } from "@shopify/app-bridge-react";
+import "@shopify/app-bridge-react";
 import { Fragment as Fragment2, jsx as jsx7, jsxs as jsxs6 } from "react/jsx-runtime";
 var prisma3 = new PrismaClient3(), loader6 = async () => {
   try {
@@ -754,10 +753,6 @@ var prisma3 = new PrismaClient3(), loader6 = async () => {
 function AppRoute() {
   let { color } = useLoaderData4(), actionData = useActionData2();
   return /* @__PURE__ */ jsxs6(Fragment2, { children: [
-    /* @__PURE__ */ jsxs6(NavMenu, { children: [
-      /* @__PURE__ */ jsx7(Link4, { to: "/app", rel: "home", children: "Home" }),
-      /* @__PURE__ */ jsx7(Link4, { to: "/app/additional", children: "Additional page" })
-    ] }),
     /* @__PURE__ */ jsx7("h2", { children: "Customize Appearance" }),
     /* @__PURE__ */ jsxs6(Form3, { method: "post", children: [
       /* @__PURE__ */ jsxs6("div", { children: [
@@ -798,7 +793,7 @@ function ErrorBoundary2() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-OCFFAO65.js", imports: ["/build/_shared/chunk-OPUZDJLF.js", "/build/_shared/chunk-TQC3RT7F.js", "/build/_shared/chunk-Q3IECNXJ.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-P4FVCSXL.js", imports: ["/build/_shared/chunk-J47K56SK.js", "/build/_shared/chunk-GDERO7BA.js", "/build/_shared/chunk-4NWZINHR.js", "/build/_shared/chunk-PGOH7JLP.js"], hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-XK2XWPF7.js", imports: ["/build/_shared/chunk-WK3XIJ7S.js"], hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/app": { id: "routes/app", parentId: "root", path: "app", index: void 0, caseSensitive: void 0, module: "/build/routes/app-6VYENVK2.js", imports: ["/build/_shared/chunk-5LFJ7ZD4.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0 }, "routes/app._index": { id: "routes/app._index", parentId: "routes/app", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/app._index-EDWXJX33.js", imports: ["/build/_shared/chunk-4NWZINHR.js", "/build/_shared/chunk-PGOH7JLP.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/app.additional": { id: "routes/app.additional", parentId: "routes/app", path: "additional", index: void 0, caseSensitive: void 0, module: "/build/routes/app.additional-QNCY2FW7.js", imports: ["/build/_shared/chunk-4NWZINHR.js"], hasAction: !1, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/auth.$": { id: "routes/auth.$", parentId: "root", path: "auth/*", index: void 0, caseSensitive: void 0, module: "/build/routes/auth.$-JID2MVQG.js", imports: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/auth.login": { id: "routes/auth.login", parentId: "root", path: "auth/login", index: void 0, caseSensitive: void 0, module: "/build/routes/auth.login-Z26IOC6B.js", imports: ["/build/_shared/chunk-WK3XIJ7S.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/webhooks": { id: "routes/webhooks", parentId: "root", path: "webhooks", index: void 0, caseSensitive: void 0, module: "/build/routes/webhooks-U3VAOICH.js", imports: void 0, hasAction: !0, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 } }, version: "24379d11", hmr: void 0, url: "/build/manifest-24379D11.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-GPHPYLJS.js", imports: ["/build/_shared/chunk-TTPYNCTF.js", "/build/_shared/chunk-TQC3RT7F.js", "/build/_shared/chunk-Q3IECNXJ.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-ILJ6MXTR.js", imports: ["/build/_shared/chunk-J47K56SK.js", "/build/_shared/chunk-GDERO7BA.js", "/build/_shared/chunk-4NWZINHR.js", "/build/_shared/chunk-PGOH7JLP.js"], hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-JMEY2S4E.js", imports: ["/build/_shared/chunk-WK3XIJ7S.js"], hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/app": { id: "routes/app", parentId: "root", path: "app", index: void 0, caseSensitive: void 0, module: "/build/routes/app-5KA6VHRC.js", imports: ["/build/_shared/chunk-P3J47CQI.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !0 }, "routes/app._index": { id: "routes/app._index", parentId: "routes/app", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/app._index-VWEWUNCM.js", imports: ["/build/_shared/chunk-4NWZINHR.js", "/build/_shared/chunk-PGOH7JLP.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/app.additional": { id: "routes/app.additional", parentId: "routes/app", path: "additional", index: void 0, caseSensitive: void 0, module: "/build/routes/app.additional-UANKBRS4.js", imports: ["/build/_shared/chunk-4NWZINHR.js"], hasAction: !1, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/auth.$": { id: "routes/auth.$", parentId: "root", path: "auth/*", index: void 0, caseSensitive: void 0, module: "/build/routes/auth.$-JID2MVQG.js", imports: void 0, hasAction: !1, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/auth.login": { id: "routes/auth.login", parentId: "root", path: "auth/login", index: void 0, caseSensitive: void 0, module: "/build/routes/auth.login-Z47NSTWJ.js", imports: ["/build/_shared/chunk-WK3XIJ7S.js"], hasAction: !0, hasLoader: !0, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 }, "routes/webhooks": { id: "routes/webhooks", parentId: "root", path: "webhooks", index: void 0, caseSensitive: void 0, module: "/build/routes/webhooks-U3VAOICH.js", imports: void 0, hasAction: !0, hasLoader: !1, hasClientAction: !1, hasClientLoader: !1, hasErrorBoundary: !1 } }, version: "3d0450d0", hmr: void 0, url: "/build/manifest-3D0450D0.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var mode = "production", assetsBuildDirectory = "public\\build", future = { v3_fetcherPersist: !0, v3_relativeSplatPath: !0, v3_throwAbortReason: !0, v3_routeConfig: !1, v3_singleFetch: !0, v3_lazyRouteDiscovery: !0, unstable_optimizeDeps: !1 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

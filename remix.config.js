@@ -30,7 +30,7 @@ export default {
     unstable_jsonModules: true,
   },
   serverDependenciesToBundle: [
-    // Bundle only server necessities; avoid bundling Polaris (CSS) into server build
+    // Bundle server dependencies; CSS is handled separately by Vite plugin
     "@shopify/shopify-app-remix",
     "@shopify/shopify-app-remix/**",
   ],

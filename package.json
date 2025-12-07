@@ -9,7 +9,7 @@
         "deploy": "shopify app deploy",
         "config:use": "shopify app config use",
         "env": "shopify app env",
-        "start": "npx remix-serve ./build/index.js",
+        "start": "npx remix-serve ./build",
         "docker-start": "npm run setup && npm run start",
         "setup": "npx prisma generate && npx prisma migrate deploy",
         "shopify": "shopify",
@@ -47,12 +47,12 @@
         "ignore-styles": "^5.0.1",
         "isbot": "^5.1.18",
         "ngrok": "^5.0.0-beta.2",
+        "patch-package": "^8.0.1",
+        "prisma": "5.22.0",
         "react": "^18.3.1",
         "react-bootstrap": "^2.10.7",
         "react-dom": "^18.3.1",
-        "vite-tsconfig-paths": "^5.1.4",
-        "patch-package": "^8.0.1",
-        "prisma": "5.22.0"
+        "vite-tsconfig-paths": "^5.1.4"
     },
     "trustedDependencies": [
         "@shopify/plugin-cloudflare"
@@ -66,8 +66,8 @@
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
+        "@esbuild-kit/cjs-loader": "^2.4.4",
         "@remix-run/serve": "^2.16.5",
-        
         "postinstall-postinstall": "^2.1.0"
     }
 }

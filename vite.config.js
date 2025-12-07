@@ -40,15 +40,36 @@ const stripCssPlugin = {
     name: 'strip-css',
     resolveId(id) {
         if (id.endsWith('.css')) {
-            return { id: 'virtual-css-module', external: false };
+            // return { id: 'virtual-css-module', external: false };
+            return id;
         }
     },
     load(id) {
-        if (id === 'virtual-css-module') {
-            return 'export default {};';
-        }
+        // if (id === 'virtual-css-module') {
+        //     return 'export default {};';
+        // }
+        if (id.endsWith('.css')) return 'export default {}';
     },
 };
+
+// ========== FIX: IGNORE CSS ON SERVER ==========
+const ignoreCssOnServer = () => ({
+  name: "ignore-css-on-server",
+  enforce: "pre",
+  resolveId(id) {
+    if (id.endsWith(".css")) {
+      return id;
+    }
+  },
+  load(id) {
+    if (id.endsWith(".css")) {
+      return "export default {};";
+    }
+  },
+});
+
+// NOTE: JSON assertions with { type: 'json' } are REQUIRED for ESM loaders.
+// Vite/Node use them to properly handle JSON imports. Keeping them ensures compatibility.
 
 export default defineConfig({
     server: {
@@ -67,6 +88,7 @@ export default defineConfig({
             ignoredRouteFiles: ["**/.*"],
         }),
         tsconfigPaths(),
+        ignoreCssOnServer(),  // Prevent CSS from being treated as ESM module on server
         stripCssPlugin,
     ],
     build: {
