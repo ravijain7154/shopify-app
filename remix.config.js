@@ -37,6 +37,9 @@ export default {
     // Bundle only server necessities; avoid bundling Polaris (CSS) into server build
     "@shopify/shopify-app-remix",
     "@shopify/shopify-app-remix/**",
+    // Bundle Polaris so Vite can process its CSS imports for server build
+    "@shopify/polaris",
+    "@shopify/polaris/**",
   ],
   browserNodeBuiltinsPolyfill: {
     modules: {
