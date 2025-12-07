@@ -51,8 +51,7 @@
         "react-bootstrap": "^2.10.7",
         "react-dom": "^18.3.1",
         "vite-tsconfig-paths": "^5.1.4",
-        "patch-package": "^8.0.1"
-    ,
+        "patch-package": "^8.0.1",
         "prisma": "5.22.0"
     },
     "trustedDependencies": [
@@ -68,7 +67,6 @@
     "license": "ISC",
     "devDependencies": {
         "@remix-run/serve": "^2.16.5",
-        
         "postinstall-postinstall": "^2.1.0"
     }
 }

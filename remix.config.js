@@ -10,14 +10,19 @@ if (
 
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
+  server: "./api-server.js",
+  serverBuildTarget: undefined,
+  serverModuleFormat: "esm",
+  
   ignoredRouteFiles: ["**/.*"],
 
   appDirectory: "app",
+  assetsBuildDirectory: "public/build",
+  publicPath: "/build/",
+  // serverModuleFormat: "esm",
+  // serverBuildTarget: undefined,
 
-  serverModuleFormat: "esm",
-  serverBuildTarget: undefined,
-
-  server: undefined,
+  // server: undefined,
   routes: undefined,
 
   future: {

@@ -8,7 +8,7 @@ import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-
+import { createRequestHandler } from "@remix-run/express";
 const { PrismaClient } = pkg;
 const app = express();
 const prisma = new PrismaClient();
@@ -228,23 +228,32 @@ app.post('/api/save-color', async (req, res) => {
 // For production on Render, configure two services:
 // 1. API server (api-server.js) - handles /api/* and /diamond-filter routes
 // 2. Remix server (remix-serve ./build/index.js or npm run start) - handles admin UI routes
-app.all("*", (req, res) => {
-    console.log(`→ Unhandled: ${req.method} ${req.path}`);
-    res.status(404).json({ 
-        message: "Not Found - API Server Only",
-        path: req.path,
-        method: req.method,
-        note: "Admin UI is served separately",
-        availableEndpoints: [
-            'GET /health',
-            'GET /api/products',
-            'GET /api/get-color',
-            'POST /api/save-color',
-            'GET /diamond-filter',
-        ]
-    });
-});
+// app.all("*", (req, res) => {
+//     console.log(`→ Unhandled: ${req.method} ${req.path}`);
+//     res.status(404).json({ 
+//         message: "Not Found - API Server Only",
+//         path: req.path,
+//         method: req.method,
+//         note: "Admin UI is served separately",
+//         availableEndpoints: [
+//             'GET /health',
+//             'GET /api/products',
+//             'GET /api/get-color',
+//             'POST /api/save-color',
+//             'GET /diamond-filter',
+//         ]
+//     });
+// });
 
+// -------------------------------------------
+// 4️⃣ REMIX ADMIN (ALL OTHER ROUTES)
+// -------------------------------------------
+app.all(
+  "*",
+  createRequestHandler({
+    build: await import("./build/index.js"), // ⬅️ IMPORTANT
+  })
+);
 // Start the API server
 app.listen(PORT, () => {
     console.log(`API server is running on http://localhost:${PORT}`);
