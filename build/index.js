@@ -27,7 +27,9 @@ import { restResources } from "@shopify/shopify-api/rest/admin/2024-07";
 
 // app/db.server.js
 import { PrismaClient } from "@prisma/client";
-var prisma = global.prisma || new PrismaClient(), db_server_default = prisma;
+var prisma = global.prisma || new PrismaClient();
+global.prisma || (global.prisma = new PrismaClient());
+var db_server_default = prisma;
 
 // app/shopify.server.js
 var shopify = shopifyApp({

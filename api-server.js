@@ -8,6 +8,10 @@ import path from 'path';
 import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import { createRequestHandler } from "@remix-run/express";
+import { pathToFileURL } from 'url';
+
+dotenv.config();
 
 const { PrismaClient } = pkg;
 const app = express();
@@ -223,23 +227,40 @@ app.post('/api/save-color', async (req, res) => {
     }
 });
 
-// ===== FALLBACK 404 HANDLER =====
-app.all("*", (req, res) => {
-    console.log(`→ Unhandled: ${req.method} ${req.path}`);
-    res.status(404).json({ 
-        message: "Not Found - API Server Only",
-        path: req.path,
-        method: req.method,
-        note: "Admin UI is served separately",
-        availableEndpoints: [
-            'GET /health',
-            'GET /api/products',
-            'GET /api/get-color',
-            'POST /api/save-color',
-            'GET /diamond-filter',
-        ]
+// ===== REMIX ADMIN OR FALLBACK 404 =====
+// Try to import the Remix server build and let it handle all other routes.
+const buildPath = path.join(process.cwd(), 'build', 'index.js');
+if (fs.existsSync(buildPath)) {
+    console.log('Remix build found at', buildPath, '- importing...');
+    try {
+        const build = await import(pathToFileURL(buildPath).href);
+        console.log('Remix build imported successfully. Mounting request handler.');
+        app.all('*', createRequestHandler({ build, mode: process.env.NODE_ENV }));
+    } catch (err) {
+        console.error('Failed to import Remix build:', err);
+        app.all('*', (req, res) => {
+            res.status(500).json({ message: 'Server error importing Remix build' });
+        });
+    }
+} else {
+    console.log('No Remix build found; serving API-only fallback.');
+    app.all('*', (req, res) => {
+        console.log(`→ Unhandled: ${req.method} ${req.path}`);
+        res.status(404).json({ 
+            message: 'Not Found - API Server Only',
+            path: req.path,
+            method: req.method,
+            note: 'Admin UI not built. Run `npm run build` to generate the Remix build.',
+            availableEndpoints: [
+                'GET /health',
+                'GET /api/products',
+                'GET /api/get-color',
+                'POST /api/save-color',
+                'GET /diamond-filter',
+            ]
+        });
     });
-});
+}
 
 // Start the API server
 app.listen(PORT, () => {
