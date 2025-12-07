@@ -45,11 +45,6 @@ export default function AppRoute() {
 
   return (
     <>
-      <NavMenu>
-        <Link to="/app" rel="home">Home</Link>
-        <Link to="/app/additional">Additional page</Link>
-      </NavMenu>
-      
       <h2>Customize Appearance</h2>
       <Form method="post">
         <div>

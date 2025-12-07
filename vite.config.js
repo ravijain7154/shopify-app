@@ -74,17 +74,17 @@ export default defineConfig({
             external: ['@remix-run/node'] // Exclude server-only modules
         },
         assetsInlineLimit: 0,
-        target: 'es2022',
+        // target: 'es2022',
     },
     json: {
         namedExports: true,
     },
-    optimizeDeps: {
-        esbuildOptions: {
-            supported: {
-                'import-assertions': true,
-                'import-meta-resolution': true,
-            },
-        },
-    },
+    // optimizeDeps: {
+    //     esbuildOptions: {
+    //         supported: {
+    //             'import-assertions': true,
+    //             'import-meta-resolution': true,
+    //         },
+    //     },
+    // },
 });

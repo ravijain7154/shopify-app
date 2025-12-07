@@ -2,8 +2,8 @@
 import { json } from "@remix-run/node";
 import { useLoaderData, useRouteError, Links, Link, Meta, Outlet, Scripts, ScrollRestoration, useFetcher, useRevalidator } from "@remix-run/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
-import { AppProvider } from "@shopify/shopify-app-remix/react"; 
-import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
+// import { AppProvider } from "@shopify/shopify-app-remix/react"; 
+import {AppProvider, Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 
 import { PrismaClient } from "@prisma/client";

@@ -3,7 +3,7 @@
 client_id = "8e6c56fe2f8e5b066c837a301d311caa"
 name = "filter-test"
 handle = "filter-test-5"
-application_url = "https://shopify-app-pndl.onrender.com/"
+application_url = "https://shopify-app-1-wu3f.onrender.com/"
 embedded = true
 
 [access_scopes]
@@ -12,9 +12,9 @@ scopes = "write_products,read_products,write_orders,read_orders"
 
 [auth]
 redirect_urls = [
-  "https://shopify-app-pndl.onrender.com/auth/callback",
-  "https://shopify-app-pndl.onrender.com/auth/shopify/callback",
-  "https://shopify-app-pndl.onrender.com/api/auth/callback"
+  "https://shopify-app-1-wu3f.onrender.com/auth/callback",
+  "https://shopify-app-1-wu3f.onrender.com/auth/shopify/callback",
+  "https://shopify-app-1-wu3f.onrender.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -22,7 +22,7 @@ api_version = "2024-07"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
-  uri = "https://shopify-app-pndl.onrender.com/webhooks"
+  uri = "https://shopify-app-1-wu3f.onrender.com/webhooks"
 
 [pos]
 embedded = false

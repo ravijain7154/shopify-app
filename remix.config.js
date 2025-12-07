@@ -10,21 +10,15 @@ if (
 
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
-  // Leave `server` undefined so the Remix build produces the standalone server build
-  // in `build/index.js`. The API server (`api-server.js`) will import that build at runtime.
-  server: undefined,
-  serverBuildTarget: undefined,
-  serverModuleFormat: "esm",
   
   ignoredRouteFiles: ["**/.*"],
 
   appDirectory: "app",
-  assetsBuildDirectory: "public/build",
-  publicPath: "/build/",
-  // serverModuleFormat: "esm",
-  // serverBuildTarget: undefined,
 
-  // server: undefined,
+  serverModuleFormat: "esm",
+  serverBuildTarget: undefined,
+
+  server: undefined,
   routes: undefined,
 
   future: {
@@ -39,9 +33,6 @@ export default {
     // Bundle only server necessities; avoid bundling Polaris (CSS) into server build
     "@shopify/shopify-app-remix",
     "@shopify/shopify-app-remix/**",
-    // Bundle Polaris so Vite can process its CSS imports for server build
-    "@shopify/polaris",
-    "@shopify/polaris/**",
   ],
   browserNodeBuiltinsPolyfill: {
     modules: {
