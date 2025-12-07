@@ -10,7 +10,9 @@ if (
 
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
-  server: "./api-server.js",
+  // Leave `server` undefined so the Remix build produces the standalone server build
+  // in `build/index.js`. The API server (`api-server.js`) will import that build at runtime.
+  server: undefined,
   serverBuildTarget: undefined,
   serverModuleFormat: "esm",
   
