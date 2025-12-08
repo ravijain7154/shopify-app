@@ -9,7 +9,8 @@ import { promisify } from 'util';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { createRequestHandler } from "@remix-run/express";
-import { pathToFileURL } from 'url';
+import {  fileURLToPath, pathToFileURL } from 'url';
+import "@shopify/shopify-app-remix/adapters/node";
 
 dotenv.config();
 
@@ -229,13 +230,19 @@ app.post('/api/save-color', async (req, res) => {
 
 // ===== REMIX ADMIN OR FALLBACK 404 =====
 // Try to import the Remix server build and let it handle all other routes.
-const buildPath = path.join(process.cwd(), 'build', 'index.js');
-if (fs.existsSync(buildPath)) {
-    console.log('Remix build found at', buildPath, '- importing...');
+// const buildPath = path.join(process.cwd(), 'build', 'index.js');
+
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BUILD_PATH = path.join(__dirname, "build", "index.js");
+
+
+if (fs.existsSync(BUILD_PATH)) {
+    console.log('Remix build found at', BUILD_PATH, '- importing...');
     try {
-        const build = await import(pathToFileURL(buildPath).href);
+        const build = await import(pathToFileURL(BUILD_PATH).href);
         console.log('Remix build imported successfully. Mounting request handler.');
-        app.all('*', createRequestHandler({ build, mode: process.env.NODE_ENV }));
+        app.all('*', createRequestHandler({ build: build, mode: process.env.NODE_ENV }));
     } catch (err) {
         console.error('Failed to import Remix build:', err);
         app.all('*', (req, res) => {
