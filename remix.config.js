@@ -23,7 +23,7 @@ export default {
   server: undefined,
   routes: undefined,
     // Vite output
-  assetsBuildDirectory: "public/build",
+  // assetsBuildDirectory: "public/build",
   publicPath: "/build/",
 
   future: {
