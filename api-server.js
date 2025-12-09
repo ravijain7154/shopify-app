@@ -234,7 +234,7 @@ app.post('/api/save-color', async (req, res) => {
 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BUILD_PATH = path.join(__dirname, "build", "index.js");
+const BUILD_PATH = path.join(process.cwd(), "build", "index.js");
 
 
 if (fs.existsSync(BUILD_PATH)) {
