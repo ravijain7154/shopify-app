@@ -16,11 +16,14 @@ export default {
   appDirectory: "app",
 
   serverModuleFormat: "esm",
+    // Prevent CSS imports in server bundle
+  ssr: true,
   serverBuildTarget: undefined,
 
-  server: "./api-server.js",
+  server: undefined,
   routes: undefined,
-   assetsBuildDirectory: "public/build",
+    // Vite output
+  assetsBuildDirectory: "public/build",
   publicPath: "/build/",
 
   future: {
@@ -35,13 +38,13 @@ export default {
     // Bundle server dependencies; CSS is handled separately by Vite plugin
     "@shopify/shopify-app-remix",
     "@shopify/shopify-app-remix/**",
+     "@shopify/polaris",
+    /^@shopify\/polaris.*/,
   ],
   browserNodeBuiltinsPolyfill: {
     modules: {
       module: true,
     },
   },
-  // Prevent CSS imports in server bundle
-  ssr: false,
 };
 
