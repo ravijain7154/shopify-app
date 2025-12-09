@@ -18,8 +18,10 @@ export default {
   serverModuleFormat: "esm",
   serverBuildTarget: undefined,
 
-  server: undefined,
+  server: "./api-server.js",
   routes: undefined,
+   assetsBuildDirectory: "public/build",
+  publicPath: "/build/",
 
   future: {
     v3_singleFetch: true,
@@ -40,6 +42,6 @@ export default {
     },
   },
   // Prevent CSS imports in server bundle
-  ssr: true,
+  ssr: false,
 };
 
