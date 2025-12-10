@@ -3,6 +3,8 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData, useActionData, Form } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
+import {Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
+import React, { useState, useEffect } from 'react';
 
 const prisma = new PrismaClient();
 
@@ -39,10 +41,35 @@ export const action = async ({ request }) => {
   }
 };
 
+
+
 export default function AppRoute() {
   const { color } = useLoaderData();
   const actionData = useActionData();
-
+  
+    // Update sync status when fetcher completes
+    useEffect(() => {
+      if (fetcher.state === 'idle' && fetcher.data) {
+        setIsSyncing(false);
+        setSyncMessage(fetcher.data.message);
+        // Revalidate the root loader to refresh the products list
+        if (fetcher.data.success) {
+          revalidator.revalidate();
+        }
+        // Clear message after 5 seconds
+        const timer = setTimeout(() => setSyncMessage(null), 5000);
+        return () => clearTimeout(timer);
+      }
+    }, [fetcher.state, fetcher.data, revalidator]);
+  
+  const handleSync = () => {
+    setIsSyncing(true);
+    setSyncMessage('Syncing diamonds...');
+    fetcher.submit(
+      { sync: 'true' },
+      { method: 'post', action: 'api/sync' }
+    );
+  };
   return (
     <>
     <h1 className="title">Diamonds Management</h1>
@@ -70,36 +97,84 @@ export default function AppRoute() {
                     </BlockStack>
                   </Card>
     
-      <h2>Customize Appearance</h2>
-      <Form method="post">
-        <div>
-          <label htmlFor="color">Select Color: </label>
-          <input
-            type="color"
-            name="color"
-            id="color"
-            defaultValue={color}
-            required
-          />
-        </div>
-        
-        {actionData?.error && <div style={{ color: 'red' }}>{actionData.error}</div>}
-        {actionData?.message && <div style={{ color: 'green' }}>{actionData.message}</div>}
-        
-        <button type="submit">Save Color</button>
-      </Form>
+      <Card>
+      <BlockStack gap="400">
+        <Text variant="headingLg" as="h2">
+          Theme Color Settings
+        </Text>
 
-      <div>
-        <p>Current Color:</p>
-        <div
-          style={{
-            width: "50px",
-            height: "50px",
-            backgroundColor: actionData?.color || color,
-            border: "1px solid #000"
-          }}
-        />
-      </div>
+        <Text variant="bodyMd">
+          Set the primary color used inside your storefront diamond filter UI.
+        </Text>
+
+        {/* RESULT MESSAGE */}
+        {actionData?.error && (
+          <Text color="critical" variant="bodyMd">
+            {actionData.error}
+          </Text>
+        )}
+
+        {actionData?.message && (
+          <Text color="success" variant="bodyMd">
+            {actionData.message}
+          </Text>
+        )}
+
+        <Form method="post">
+          <BlockStack gap="300">
+
+            {/* COLOR PICKER */}
+            <InlineStack gap="400" align="start">
+              <div>
+                <label
+                  htmlFor="color"
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontWeight: "600",
+                  }}
+                >
+                  Select Color
+                </label>
+
+                <input
+                  type="color"
+                  id="color"
+                  name="color"
+                  defaultValue={actionData?.color || color}
+                  style={{
+                    width: "60px",
+                    height: "40px",
+                    cursor: "pointer",
+                    border: "none",
+                    background: "transparent",
+                  }}
+                />
+              </div>
+
+              <div>
+                <Text variant="bodyMd">Preview</Text>
+                <div
+                  style={{
+                    width: "60px",
+                    height: "40px",
+                    backgroundColor: actionData?.color || color,
+                    borderRadius: "6px",
+                    border: "1px solid #d0d0d0",
+                    marginTop: "6px",
+                  }}
+                ></div>
+              </div>
+            </InlineStack>
+
+            {/* SAVE BUTTON */}
+            <Button variant="primary" submit>
+              Save Color
+            </Button>
+          </BlockStack>
+        </Form>
+      </BlockStack>
+    </Card>
     </>
   );
 }
