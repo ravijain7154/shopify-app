@@ -50,7 +50,29 @@ export default function App() {
     syncCount: null
   };
 
+  // Update sync status when fetcher completes
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data) {
+      setIsSyncing(false);
+      setSyncMessage(fetcher.data.message);
+      // Revalidate the root loader to refresh the products list
+      if (fetcher.data.success) {
+        revalidator.revalidate();
+      }
+      // Clear message after 5 seconds
+      const timer = setTimeout(() => setSyncMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [fetcher.state, fetcher.data, revalidator]);
 
+  const handleSync = () => {
+    setIsSyncing(true);
+    setSyncMessage('Syncing diamonds...');
+    fetcher.submit(
+      { sync: 'true' },
+      { method: 'post', action: '/api/sync' }
+    );
+  };
 
   if (!products || !Array.isArray(products)) {
     return (
