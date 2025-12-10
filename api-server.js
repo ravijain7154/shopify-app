@@ -35,6 +35,10 @@ app.get('/health', (req, res) => {
 // Static files for diamond filter UI
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 
+// Static files for diamond filter UI
+app.use('/build', express.static(path.join(process.cwd(), 'public', 'build')));
+// Static files for diamond filter UI
+app.use('/custom', express.static(path.join(process.cwd(), 'public', 'custom')));
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {

@@ -50,29 +50,7 @@ export default function App() {
     syncCount: null
   };
 
-  // Update sync status when fetcher completes
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
-      setIsSyncing(false);
-      setSyncMessage(fetcher.data.message);
-      // Revalidate the root loader to refresh the products list
-      if (fetcher.data.success) {
-        revalidator.revalidate();
-      }
-      // Clear message after 5 seconds
-      const timer = setTimeout(() => setSyncMessage(null), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [fetcher.state, fetcher.data, revalidator]);
 
-  const handleSync = () => {
-    setIsSyncing(true);
-    setSyncMessage('Syncing diamonds...');
-    fetcher.submit(
-      { sync: 'true' },
-      { method: 'post', action: '/api/sync' }
-    );
-  };
 
   if (!products || !Array.isArray(products)) {
     return (
@@ -108,31 +86,7 @@ export default function App() {
         <AppProvider>
           <div className="container">
             <div className="admin_dash">
-              <h1 className="title">Diamonds Management</h1>
               
-              <Card>
-                <BlockStack gap="300">
-                  <InlineStack align="space-between">
-                    <div>
-                      <h2>Database Status</h2>
-                      <p className="text">{message}</p>
-                      {syncMessage && (
-                        <Text as="p" variant="bodyMd" color={fetcher.data?.success ? 'success' : 'critical'}>
-                          {syncMessage}
-                        </Text>
-                      )}
-                    </div>
-                    <Button
-                      onClick={handleSync}
-                      disabled={isSyncing}
-                      variant="primary"
-                    >
-                      {isSyncing ? 'Syncing...' : 'Sync Diamonds'}
-                    </Button>
-                  </InlineStack>
-                </BlockStack>
-              </Card>
-
               <Outlet />
             </div>
           </div>
