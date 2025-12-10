@@ -1,6 +1,6 @@
 // app/routes/app.js
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useActionData, Form } from "@remix-run/react";
+import { Link, useLoaderData, useActionData, Form, useFetcher, useRevalidator } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
 import {Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
@@ -46,7 +46,11 @@ export const action = async ({ request }) => {
 export default function AppRoute() {
   const { color } = useLoaderData();
   const actionData = useActionData();
-  
+    const fetcher = useFetcher();
+    const revalidator = useRevalidator();
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [syncMessage, setSyncMessage] = useState(null);
+
     // Update sync status when fetcher completes
     useEffect(() => {
       if (fetcher.state === 'idle' && fetcher.data) {
