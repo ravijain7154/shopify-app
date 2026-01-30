@@ -159,13 +159,13 @@ app.get('/api/products', async(req, res) => {
 
         
         // console.log('filterCriteria', filterCriteria);
-        const products = await prisma.diamond_api.findMany({
+        const products = await prisma.diamond.findMany({
             where: filterCriteria,
             skip: skip,  
             take: take   
         }); 
          // Get the total number of products in the database for pagination metadata
-         const totalCount = await prisma.diamond_api.count({
+         const totalCount = await prisma.diamond.count({
             where: filterCriteria
         });
 
