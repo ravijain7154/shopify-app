@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://localhost:4000/api/products')
+    fetch('https://shopify-app-pndl.onrender.com/api/products')
       .then(response => response.json())
       .then(data => {
         if (Array.isArray(data) && data.length) {
