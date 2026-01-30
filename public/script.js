@@ -10,7 +10,7 @@ let isColorApplied = false;
       const container = document.createElement('div');
       container.id = 'my-shopify-app';
   
-      fetch('http://localhost:3000/index.html')
+      fetch('https://shopify-app-pndl.onrender.com/index.html')
         .then(res => res.text())
         .then(html => {
           container.innerHTML = html;
@@ -22,7 +22,7 @@ let isColorApplied = false;
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch('http://localhost:3000/api/get-color');
+        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -104,7 +104,7 @@ async function fetchDiamonds() {
             // cut_max: cutMax,
         }).toString();
 
-        const response = await fetch(`http://localhost:3000/api/products?${params}`);
+        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
