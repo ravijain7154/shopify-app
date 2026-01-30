@@ -254,7 +254,7 @@ export const loader = async () => {
   }
 
   // Always fetch data from DB to serve it
-  const fetchDiamondsFromDB = await prisma.diamond_api.findMany();
+  const fetchDiamondsFromDB = await prisma.diamond.findMany();
 
   // Get or create color setting
   let colorSetting = await prisma.colorsetting.findFirst();

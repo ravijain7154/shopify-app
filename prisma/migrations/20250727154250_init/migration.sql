@@ -88,59 +88,6 @@ CREATE TABLE "diamond" (
 );
 
 -- CreateTable
-CREATE TABLE "diamond_api" (
-    "id" SERIAL NOT NULL,
-    "certificateNumber" TEXT NOT NULL,
-    "shape" TEXT NOT NULL,
-    "weight" DOUBLE PRECISION NOT NULL,
-    "color" TEXT NOT NULL,
-    "clarity" TEXT NOT NULL,
-    "cutGrade" TEXT NOT NULL,
-    "polish" TEXT NOT NULL,
-    "symmetry" TEXT NOT NULL,
-    "fluoIntensity" TEXT NOT NULL,
-    "fluoColor" TEXT NOT NULL,
-    "rapDiscount" DOUBLE PRECISION NOT NULL,
-    "depthPercent" DOUBLE PRECISION NOT NULL,
-    "tablePercent" DOUBLE PRECISION NOT NULL,
-    "measLength" DOUBLE PRECISION NOT NULL,
-    "measWidth" DOUBLE PRECISION NOT NULL,
-    "measDepth" DOUBLE PRECISION NOT NULL,
-    "girdleSizeMin" DOUBLE PRECISION NOT NULL,
-    "location" TEXT NOT NULL,
-    "girdleSizeMax" DOUBLE PRECISION NOT NULL,
-    "finalPrice" DOUBLE PRECISION NOT NULL,
-    "culetSize" TEXT NOT NULL,
-    "culetCondition" TEXT NOT NULL,
-    "imageUrl" TEXT NOT NULL,
-
-    CONSTRAINT "diamond_api_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "product" (
-    "id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "description" TEXT NOT NULL,
-    "category" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
-    "ratingId" INTEGER,
-
-    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "rating" (
-    "id" SERIAL NOT NULL,
-    "rate" DOUBLE PRECISION NOT NULL,
-    "count" INTEGER NOT NULL,
-    "productId" INTEGER,
-
-    CONSTRAINT "rating_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "session" (
     "id" VARCHAR(255) NOT NULL,
     "shop" VARCHAR(255) NOT NULL,
@@ -164,14 +111,3 @@ CREATE TABLE "session" (
 -- CreateIndex
 CREATE UNIQUE INDEX "Diamond_Stock_No_key" ON "diamond"("Stock_No");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Diamond_api_certificateNumber_key" ON "diamond_api"("certificateNumber");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Product_ratingId_key" ON "product"("ratingId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Rating_productId_key" ON "rating"("productId");
-
--- AddForeignKey
-ALTER TABLE "product" ADD CONSTRAINT "Product_ratingId_fkey" FOREIGN KEY ("ratingId") REFERENCES "rating"("id") ON DELETE SET NULL ON UPDATE CASCADE;

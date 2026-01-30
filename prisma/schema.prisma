@@ -90,53 +90,6 @@ model diamond {
   Certificate                String?
 }
 
-model diamond_api {
-  id                Int      @id @default(autoincrement())
-  certificateNumber String   @unique(map: "Diamond_api_certificateNumber_key")
-  shape             String
-  weight            Float
-  color             String
-  clarity           String
-  cutGrade          String
-  polish            String
-  symmetry          String
-  fluoIntensity     String
-  fluoColor         String
-  rapDiscount       Float
-  depthPercent      Float
-  tablePercent      Float
-  measLength        Float
-  measWidth         Float
-  measDepth         Float
-  girdleSizeMin     Float
-  location          String
-  girdleSizeMax     Float
-  finalPrice        Float
-  culetSize         String
-  culetCondition    String
-  imageUrl          String
-  
-}
-
-model product {
-  id          Int     @id @default(autoincrement())
-  title       String
-  price       Float
-  description String
-  category    String
-  image       String
-  ratingId    Int?    @unique(map: "Product_ratingId_key")
-  rating      rating? @relation(fields: [ratingId], references: [id], map: "Product_ratingId_fkey")
-}
-
-model rating {
-  id        Int      @id @default(autoincrement())
-  rate      Float
-  count     Int
-  productId Int?     @unique(map: "Rating_productId_key")
-  product   product?
-}
-
 model session {
   id            String    @id @db.VarChar(255)
   shop          String    @db.VarChar(255)

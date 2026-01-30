@@ -37,18 +37,18 @@ export const loader = async () => {
 };
 
 export default function App() {
-  const loaderData = useLoaderData();
-  const fetcher = useFetcher();
-  const revalidator = useRevalidator();
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState(null);
+  // const loaderData = useLoaderData();
+  // const fetcher = useFetcher();
+  // const revalidator = useRevalidator();
+  // const [isSyncing, setIsSyncing] = useState(false);
+  // const [syncMessage, setSyncMessage] = useState(null);
 
-  const { products, message, color, syncCount } = loaderData || {
-    products: [],
-    message: 'Loading...',
-    color: '#ffffff',
-    syncCount: null
-  };
+  // const { products, message, color, syncCount } = loaderData || {
+  //   products: [],
+  //   message: 'Loading...',
+  //   color: '#ffffff',
+  //   syncCount: null
+  // };
 
   // // Update sync status when fetcher completes
   // useEffect(() => {
@@ -74,22 +74,22 @@ export default function App() {
   //   );
   // };
 
-  if (!products || !Array.isArray(products)) {
-    return (
-      <html>
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
-          <Meta />
-          <Links />
-        </head>
-        <body>
-          <div>Error: Products data is not available</div>
-          {/* <Scripts /> */}
-        </body>
-      </html>
-    );
-  }
+  // if (!products || !Array.isArray(products)) {
+  //   return (
+  //     <html>
+  //       <head>
+  //         <meta charSet="utf-8" />
+  //         <meta name="viewport" content="width=device-width,initial-scale=1" />
+  //         <Meta />
+  //         <Links />
+  //       </head>
+  //       <body>
+  //         <div>Error: Products data is not available</div>
+  //         <Scripts />
+  //       </body>
+  //     </html>
+  //   );
+  // }
 
   return (
     <html>

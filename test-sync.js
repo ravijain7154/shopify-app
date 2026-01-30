@@ -1,46 +1,57 @@
-// import prisma from '../db.server';
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-/**
- * Fetch diamonds from external API and sync to database
- * @returns {Object} { insertedCount, updatedCount, error }
- */
-export async function syncDiamondsFromAPI() {
-  const apiUrl = 'https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d';
-  let insertedCount = 0;
-  let updatedCount = 0;
-  let error = null;
-  const LIMIT = 1000; // Fetch only 100 diamonds to save DB space
 
+async function syncDiamonds() {
   try {
-    console.log('[syncDiamonds] Starting API fetch from:', apiUrl);
+    console.log("🔄 Starting diamond sync...\n");
+    
+    // Step 1: Fetch from Belgium API
+    const apiUrl = 'https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d';
+    const LIMIT = 1000; // Limit to 100 records for free tier database
+    
+    console.log("📡 Fetching from Belgium API...");
+    console.log("URL:", apiUrl);
+    
     const response = await fetch(apiUrl);
-    console.log('[syncDiamonds] API response status:', response.status);
+    console.log("✅ API Response Status:", response.status);
 
     if (!response.ok) {
-      throw new Error(`API responded with status ${response.status}`);
+      throw new Error(`API failed with status ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('[syncDiamonds] API data received, records:', data.Stock?.length || 0);
-    let responseData = data.Stock || [];
+    console.log("📋 API Response Sample:", JSON.stringify(data, null, 2).substring(0, 500));
+    let diamonds = data.Stock || [];
+    console.log(`✅ Received ${diamonds.length} diamonds from API`);
+    
+    // Limit to prevent database overflow
+    diamonds = diamonds.slice(0, LIMIT);
+    console.log(`⚙️  Limited to ${diamonds.length} records for processing\n`);
 
-    if (!Array.isArray(responseData)) {
-      throw new Error('Data is not in expected array format');
+    if (!Array.isArray(diamonds) || diamonds.length === 0) {
+      console.log("❌ No diamonds data received");
+      process.exit(0);
     }
 
-    // Limit data to prevent overwhelming free tier
-    responseData = responseData.slice(0, LIMIT);
-    console.log(`[syncDiamonds] Processing limited data - ${responseData.length} diamonds`);
+    // Step 2: Store in database
+    console.log("💾 Starting database sync...");
+    let insertedCount = 0;
+    let updatedCount = 0;
+    let errorCount = 0;
 
-    // Upsert all diamonds
-    const results = await Promise.all(
-      responseData.map(async (item) => {
-        try {
-          const result = await prisma.diamond.upsert({
-            where: { Stock_No: item.Stock_No || '' },
-            update: {
+    for (let i = 0; i < diamonds.length; i++) {
+      const item = diamonds[i];
+      
+      try {
+        // Check if record exists
+        const existingRecord = await prisma.diamond.findUnique({
+          where: { Stock_No: item.Stock_No || '' }
+        });
+        
+        const result = await prisma.diamond.upsert({
+          where: { Stock_No: item.Stock_No || '' },
+          update: {
             Availability: item.Availability,
             Shape: item.Shape,
             Weight: parseFloat(item.Weight) || 0,
@@ -188,32 +199,41 @@ export async function syncDiamondsFromAPI() {
             Certificate: item.Certificate
           }
         });
-          
-        return { success: true, result };
-        } catch (itemError) {
-          console.error(`[syncDiamonds] Error upserting ${item.Stock_No}:`, itemError.message);
-          return { success: false, error: itemError.message };
+
+        // Track if it was an insert or update
+        if (existingRecord) {
+          updatedCount++;
+        } else {
+          insertedCount++;
         }
-      })
-    );
+        
+        // Progress indicator
+        if ((i + 1) % 10 === 0) {
+          console.log(`   ⏳ Processed ${i + 1}/${diamonds.length} records (Inserted: ${insertedCount}, Updated: ${updatedCount})...`);
+        }
+      } catch (itemError) {
+        console.log(`   ❌ Error at record ${i + 1} (${item.Stock_No}): ${itemError.message}`);
+        errorCount++;
+      }
+    }
 
-    // Count successful operations
-    const successfulResults = results.filter(r => r.success);
-    const failedResults = results.filter(r => !r.success);
-    
-    // Count if it was an insert or update (Prisma upsert doesn't give us this info directly)
-    // So we approximate: assume first sync are inserts, subsequent are updates
-    insertedCount = Math.min(successfulResults.length, LIMIT);
-    updatedCount = 0;
-    
-    console.log(`[syncDiamonds] Sync complete - Total: ${insertedCount}, Failed: ${failedResults.length}`);
+    console.log("\n✅ Sync Complete!");
+    console.log(`📊 Total Records Processed: ${diamonds.length}`);
+    console.log(`✨ Newly Inserted: ${insertedCount}`);
+    console.log(`🔄 Updated: ${updatedCount}`);
+    console.log(`❌ Errors: ${errorCount}`);
+    console.log(`⏱️  Timestamp: ${new Date().toISOString()}\n`);
 
-  } catch (err) {
-    error = err.message || 'Unknown error during sync';
-    console.error('Diamond sync error:', error);
+    process.exit(0);
+
+  } catch (error) {
+    console.error("\n❌ Fatal Error:", error.message);
+    console.error("Stack:", error.stack);
+    process.exit(1);
   } finally {
     await prisma.$disconnect();
   }
-
-  return { insertedCount, updatedCount, error };
 }
+
+// Run the sync
+syncDiamonds();
