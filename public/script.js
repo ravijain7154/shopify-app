@@ -34,12 +34,14 @@ async function fetchAndApplyBackgroundColor() {
         console.error('Error applying background color:', error);
     }
 }
+
 document.getElementById('productsPerPage').addEventListener('change', function() {
     pageSize = parseInt(this.value, 25);  
     currentPage = 1;  
     // updateURL(); 
     fetchDiamonds();
 });
+
 // Fetch diamond data from the API (with dynamic pagination)
 async function fetchDiamonds() {
     try {
