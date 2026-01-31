@@ -40,7 +40,7 @@ app.use('/build', express.static(path.join(process.cwd(), 'public', 'build')));
 // Static files for diamond filter UI
 app.use('/custom', express.static(path.join(process.cwd(), 'public', 'custom')));
 
-app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
+app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css');

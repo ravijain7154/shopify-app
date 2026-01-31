@@ -72,6 +72,10 @@ async function fetchDiamonds() {
        let colorMax = '';
        if (colorRange) {
         [colorMin, colorMax] = colorRange.split(';');
+       } else {
+        // Support explicit params set by the slider to avoid semicolon parsing issues
+        colorMin = queryParams.get('color_min') || '';
+        colorMax = queryParams.get('color_max') || '';
        }
 
        const clarityRange = queryParams.get('clarity');
