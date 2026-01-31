@@ -285,15 +285,15 @@ function renderGridView(diamonds) {
     diamonds.forEach(diamond => {
         const gridDiv = document.createElement('div');
         gridDiv.classList.add('grid-item', 'grid-product');
-        gridDiv.setAttribute('data-product-handle', diamond.certificateNumber);
-        gridDiv.setAttribute('data-product-id', diamond.certificateNumber);
+        gridDiv.setAttribute('data-product-handle', diamond.Stock_No);
+        gridDiv.setAttribute('data-product-id', diamond.Stock_No);
 
         const gridImage = document.createElement('div');
         gridImage.classList.add('grid__image-ratio');
         const imageLink = document.createElement('a');
         const img = document.createElement('img');
-        img.src = diamond.imageUrl || 'default-image.jpg';
-        img.alt = `${diamond.shape} diamond`;
+        img.src = diamond.ImageLink || 'default-image.jpg';
+        img.alt = `${diamond.Shape} diamond`;
         imageLink.appendChild(img);
         gridImage.appendChild(imageLink);
         gridDiv.appendChild(gridImage);
@@ -301,7 +301,7 @@ function renderGridView(diamonds) {
         const gridContent = document.createElement('div');
         gridContent.classList.add('grid-item__content');
         const gridLink = document.createElement('a');
-        gridLink.href = `diamond-detail?product_id=${diamond.certificateNumber}`;
+        gridLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
         gridLink.classList.add('grid-item__link');
 
         const gridMeta = document.createElement('div');
@@ -310,18 +310,18 @@ function renderGridView(diamonds) {
         gridMetaMain.classList.add('grid-item__meta-main');
         const gridTitle = document.createElement('div');
         gridTitle.classList.add('grid-product__title');
-        gridTitle.innerHTML = ` ${diamond.shape || ''} - ${diamond.certificateNumber} <br>`;
+        gridTitle.innerHTML = ` ${diamond.Shape || ''} - ${diamond.Stock_No} <br>`;
 
         // Additional fields (shape, carat, color, clarity, etc.)
         const shapeSpan = document.createElement('span');
-        shapeSpan.textContent = `Shape: ${diamond.shape}\n`;
+        shapeSpan.textContent = `Shape: ${diamond.Shape}\n`;
         gridTitle.appendChild(shapeSpan);
        
         const caratSpan = document.createElement('span');
-        caratSpan.textContent = `Weight: ${diamond.weight} \n`;
+        caratSpan.textContent = `Weight: ${diamond.Weight} \n`;
         gridTitle.appendChild(caratSpan);
         const colorSpan = document.createElement('span');
-        colorSpan.textContent = `Color: ${diamond.color}  \n`;
+        colorSpan.textContent = `Color: ${diamond.Color}  \n`;
         gridTitle.appendChild(colorSpan);
 
         gridMetaMain.appendChild(gridTitle);
@@ -337,7 +337,7 @@ function renderGridView(diamonds) {
         gridPrice.classList.add('grid-product__price');
         const priceSpan = document.createElement('span');
         priceSpan.classList.add('regular_price');
-        priceSpan.textContent = `$${diamond.finalPrice || 'Price not available'}`;
+        priceSpan.textContent = `$${diamond.Buy_Price || 'Price not available'}`;
         gridPrice.appendChild(priceSpan);
         gridMetaSecondary.appendChild(gridPrice);
         gridDiv.appendChild(gridMetaSecondary);
@@ -356,27 +356,27 @@ function renderTableView(diamonds) {
 
         const imageCell = document.createElement('td');
         const image = document.createElement('img');
-        image.src = diamond.imageUrl || 'default-image.jpg';
-        image.alt = `${diamond.shape} diamond`;
+        image.src = diamond.ImageLink || 'default-image.jpg';
+        image.alt = `${diamond.Shape} diamond`;
         image.style.width = '50px';
         image.style.height = '50px';
         image.style.objectFit = 'contain';
         imageCell.appendChild(image);
 
         const stockCell = document.createElement('td');
-        stockCell.textContent = diamond.certificateNumber;
+        stockCell.textContent = diamond.Stock_No;
 
         const shapeCell = document.createElement('td');
-        shapeCell.textContent = diamond.shape || '';
+        shapeCell.textContent = diamond.Shape || '';
 
         const caratCell = document.createElement('td');
-        caratCell.textContent = diamond.weight || '';
+        caratCell.textContent = diamond.Weight || '';
 
         const colorCell = document.createElement('td');
-        colorCell.textContent = diamond.color || '';
+        colorCell.textContent = diamond.Color || '';
 
         const clarityCell = document.createElement('td');
-        clarityCell.textContent = diamond.clarity || '';
+        clarityCell.textContent = diamond.Clarity || '';
 
         const cutCell = document.createElement('td');
         // let cutGradeAbbr = diamond.cutGrade;
@@ -394,14 +394,14 @@ function renderTableView(diamonds) {
 
         // cutCell.textContent = cutGradeAbbr || '';  // Use the abbreviated cutGrade or fallback to an empty string
 
-        cutCell.textContent = diamond.cutGrade || '';
+        cutCell.textContent = diamond.Cut_Grade || '';
 
         const priceCell = document.createElement('td');
-        priceCell.textContent = `$${diamond.finalPrice || ''}`;
+        priceCell.textContent = `$${diamond.Buy_Price || ''}`;
 
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
-        actionLink.href = `diamond-detail?product_id=${diamond.certificateNumber}`;
+        actionLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
         actionLink.textContent = "View Details";
         actionCell.appendChild(actionLink);
 
@@ -419,7 +419,7 @@ function renderTableView(diamonds) {
     });
 }
 
-let sortColumn = 'certificateNumber';  // Default sort column
+let sortColumn = 'Stock_No';  // Default sort column
 let sortDirection = 'asc';  // Default sort direction
 
 // Function to handle sorting when a column is clicked
