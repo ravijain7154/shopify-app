@@ -10,7 +10,7 @@ let isColorApplied = false;
       const container = document.createElement('div');
       container.id = 'my-shopify-app';
   
-      fetch('https://shopify-app-pndl.onrender.com/index.html')
+      fetch('https://shopify-app-pndl.onrender.com/diamond-filter/index.html')
         .then(res => res.text())
         .then(html => {
           container.innerHTML = html;

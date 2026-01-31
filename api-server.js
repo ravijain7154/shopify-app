@@ -104,56 +104,56 @@ app.get('/api/products', async(req, res) => {
 
         // Add shape filter if present
         if (shapes.length > 0) {
-            filterCriteria.shape = { in: shapes };  // Use `in` to filter for multiple shapes
+            filterCriteria.Shape = { in: shapes };  // Use `in` to filter for multiple shapes
         }
          // Filter by price range (if provided)
-         if (priceMin !== null && priceMax !== null) {
-            filterCriteria.finalPrice = {
+         if (priceMin !== undefined && priceMax !== undefined) {
+            filterCriteria.Buy_Price = {
                 gte: priceMin,
                 lte: priceMax,
             };
-        } else if (priceMin !== null) {
-            filterCriteria.finalPrice = {
+        } else if (priceMin !== undefined) {
+            filterCriteria.Buy_Price = {
                 gte: priceMin,
             };
-        } else if (priceMax !== null) {
-            filterCriteria.finalPrice = {
+        } else if (priceMax !== undefined) {
+            filterCriteria.Buy_Price = {
                 lte: priceMax,
             };
         }
 
        // Apply carat (weight) filter if present
         if (caratMin !== null && caratMax !== null) {
-            filterCriteria.weight = { gte: caratMin, lte: caratMax };
+            filterCriteria.Weight = { gte: caratMin, lte: caratMax };
         } else if (caratMin !== null) {
-            filterCriteria.weight = { gte: caratMin };
+            filterCriteria.Weight = { gte: caratMin };
         } else if (caratMax !== null) {
-            filterCriteria.weight = { lte: caratMax };
+            filterCriteria.Weight = { lte: caratMax };
         }
         
        
         if (colorMin !== null && colorMax !== null) {
-            filterCriteria.color = { gte: colorMin, lte: colorMax };
+            filterCriteria.Color = { gte: colorMin, lte: colorMax };
         } else if (colorMin !== null) {
-            filterCriteria.color = { gte: colorMin };
+            filterCriteria.Color = { gte: colorMin };
         } else if (colorMax !== null) {
-            filterCriteria.color = { lte: colorMax };
+            filterCriteria.Color = { lte: colorMax };
         }
         
         if (clarityMin !== null && clarityMax !== null) {
-            filterCriteria.clarity = { gte: clarityMin, lte: clarityMax };
+            filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
         } else if (clarityMin !== null) {
-            filterCriteria.clarity = { gte: clarityMin };
+            filterCriteria.Clarity = { gte: clarityMin };
         } else if (clarityMax !== null) {
-            filterCriteria.clarity = { lte: clarityMax };
+            filterCriteria.Clarity = { lte: clarityMax };
         }
          // Apply cut (cut) filter if present
         if (cutMin !== null && cutMax !== null) {
-            filterCriteria.cutGrade = { gte: cutMin, lte: cutMax };
+            filterCriteria.Cut_Grade = { gte: cutMin, lte: cutMax };
         } else if (cutMin !== null) {
-            filterCriteria.cutGrade = { gte: cutMin };
+            filterCriteria.Cut_Grade = { gte: cutMin };
         } else if (cutMax !== null) {
-            filterCriteria.cutGrade = { lte: cutMax };
+            filterCriteria.Cut_Grade = { lte: cutMax };
         }
 
 
