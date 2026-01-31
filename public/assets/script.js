@@ -243,7 +243,7 @@ function filterGridView() {
   var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
   var fromColorIndex = colorSlider.result.from;
   var toColorIndex = colorSlider.result.to;
-  var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
+  var selected_colors = color_arr.slice(fromColorIndex, toColorIndex );
 
 
   var $range_clarity = $("#range_50");
@@ -859,7 +859,7 @@ $range_color.ionRangeSlider({
         var from_index = data.from;
         var to_index = data.to;
         var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
-        var selected_colors = color_arr.slice(from_index, to_index + 1);
+        var selected_colors = color_arr.slice(from_index, to_index );
         var colorStr = selected_colors.join("|");
         var tab = table.column(4).search(colorStr, true, false).draw();
         filterGridView();
