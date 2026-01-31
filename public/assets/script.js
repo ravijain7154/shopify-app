@@ -891,11 +891,22 @@ $range_color.ionRangeSlider({
 
 
         } else{
-             updateURLWithFilters('color',data.from_value, data.to_value);
+             // Update all color-related URL params in a single, atomic pushState to avoid race conditions
+             (function(){
+               var url = window.location.pathname;
+               var urlParams = new URLSearchParams(window.location.search);
+               urlParams.delete('color');
+               urlParams.delete('color_min');
+               urlParams.delete('color_max');
+               urlParams.set('color', encodeURIComponent(data.from_value) + ';' + encodeURIComponent(data.to_value));
+               urlParams.set('color_min', color_arr[from_index]);
+               urlParams.set('color_max', color_arr[to_index]);
+               var newURL = url + '?' + urlParams.toString();
+               window.history.pushState({}, '', newURL);
+             })();
              handleFilterChange();
              filterGridView();
              fetchDiamonds();
-
 
 
           }

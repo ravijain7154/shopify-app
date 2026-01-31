@@ -110,6 +110,8 @@ async function fetchDiamonds() {
             // cut_max: cutMax,
         }).toString();
 
+        console.log('Fetching products with params:', params);
+        console.log('Full fetch URL:', `https://shopify-app-pndl.onrender.com/api/products?${params}`);
         const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
