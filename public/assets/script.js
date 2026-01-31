@@ -891,22 +891,11 @@ $range_color.ionRangeSlider({
 
 
         } else{
-             // Update all color-related URL params in a single, atomic pushState to avoid race conditions
-             (function(){
-               var url = window.location.pathname;
-               var urlParams = new URLSearchParams(window.location.search);
-               urlParams.delete('color');
-               urlParams.delete('color_min');
-               urlParams.delete('color_max');
-               urlParams.set('color', encodeURIComponent(data.from_value) + ';' + encodeURIComponent(data.to_value));
-               urlParams.set('color_min', color_arr[from_index]);
-               urlParams.set('color_max', color_arr[to_index]);
-               var newURL = url + '?' + urlParams.toString();
-               window.history.pushState({}, '', newURL);
-             })();
+             updateURLWithFilters('color',data.from_value, data.to_value);
              handleFilterChange();
              filterGridView();
              fetchDiamonds();
+
 
 
           }
@@ -2031,8 +2020,8 @@ function updateURLWithFilters(filterName, fromValue, toValue) {
     
     var newURL = url + '?' + urlParams.toString();
 
-    // Keep semicolons encoded (%3B) in query values to avoid servers/parsers treating ';' as parameter separator.
-    // (Do not replace %3B with ';')
+     newURL = newURL.replace(/%3B/g, ';');
+
 
     // Replace the current URL with the updated URL
     window.history.pushState({}, '', newURL);
