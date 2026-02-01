@@ -39,7 +39,9 @@ app.use(cors({
       return callback(null, true);
     }
 
-    return callback(new Error('CORS not allowed'));
+    // Don't throw here (causes a 500). Log and return false so CORS headers are simply not set.
+    console.warn('CORS not allowed for origin:', origin);
+    return callback(null, false);
   },
     methods: ['GET', 'POST', 'OPTIONS'], // Allow only specific methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Adjust headers as needed
