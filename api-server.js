@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-const rawAllowed = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://quickstart-fad8588b.myshopify.com,http://192.168.1.136:3000')
+const rawAllowed = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://*.myshopify.com,http://192.168.1.136:3000')
   .split(',')
   .map(s => s.trim())
   .filter(Boolean);
