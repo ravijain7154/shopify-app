@@ -28,8 +28,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const allowedOrigins = (
   process.env.ALLOWED_ORIGINS ||
   'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://quickstart-fad8588b.myshopify.com,http://192.168.1.136:3000'
-).split(',').map(s => s.trim()).filter(Boolean);
-
+).split(',');
 // Use the CORS middleware with the correct configuration
 app.use(cors({
     origin: function (origin, callback) {
@@ -47,22 +46,6 @@ app.use(cors({
     credentials: false   // If your app uses credentials (like cookies)
 }));
 app.options('*', cors());
-
-// Middleware to add CORS headers for static diamond-filter files (used by external storefronts)
-app.use('/diamond-filter', (req, res, next) => {
-    const origin = req.get('origin');
-    if (!origin || allowedOrigins.includes(origin)) {
-        // Allow the requesting origin (or allow all for non-browser requests)
-        res.setHeader('Access-Control-Allow-Origin', origin || '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    }
-    // If it's an OPTIONS preflight, end here
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(204);
-    }
-    next();
-});
 // Middleware to parse JSON request body
 app.use(express.json()); // This line should be active for JSON parsing
 
