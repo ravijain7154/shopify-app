@@ -118,6 +118,41 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
     }
 }));
 
+// Add permissive CORS headers for static asset routes so the storefront can fetch scripts/styles
+app.use(['/diamond-filter','/build','/custom'], (req, res, next) => {
+    const origin = req.get('origin');
+
+    if (!origin) {
+        // Non-browser requests or script tags that don't send Origin: allow broadly
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        if (req.method === 'OPTIONS') return res.sendStatus(204);
+        return next();
+    }
+
+    let originNormalized;
+    try {
+        originNormalized = new URL(origin).origin.toLowerCase();
+    } catch (e) {
+        originNormalized = origin.replace(/\/$/, '').toLowerCase();
+    }
+
+    const isAllowed = allowedOrigins.includes(originNormalized) ||
+        allowedOrigins.some(a => a.includes('*') && new RegExp('^' + a.replace(/\*/g, '.*') + '$').test(originNormalized));
+
+    if (isAllowed) {
+        res.setHeader('Access-Control-Allow-Origin', originNormalized);
+        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    } else {
+        console.warn('CORS not allowed for origin (static):', origin);
+    }
+
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
+
 
 
 // Endpoint to fetch products from the database
