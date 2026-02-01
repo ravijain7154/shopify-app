@@ -21,6 +21,36 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000; // Port for your API server
 app.use(bodyParser.json());
 
+
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGINS ||
+  'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://quickstart-fad8588b.myshopify.com,http://192.168.1.136:3000'
+).split(',');
+// Use the CORS middleware with the correct configuration
+app.use(cors({
+    origin: function (origin, callback) {
+    // allow server-to-server, curl, postman
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('CORS not allowed'));
+  },
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow only specific methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Adjust headers as needed
+    credentials: false   // If your app uses credentials (like cookies)
+}));
+app.options('*', cors());
+// Middleware to parse JSON request body
+app.use(express.json()); // This line should be active for JSON parsing
+
+
+
 // Logging middleware to debug incoming requests
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
@@ -57,21 +87,6 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 
 
 
-const readFileAsync = promisify(fs.readFile);
-const writeFileAsync = promisify(fs.writeFile);
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000, https://shopify-app-pndl.onrender.com, https://quickstart-fad8588b.myshopify.com, http://192.168.1.136:3000,';
-// Use the CORS middleware with the correct configuration
-app.use(cors({
-    origin: allowedOrigins.split(','),
-    methods: ['GET', 'POST'], // Allow only specific methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Adjust headers as needed
-    credentials: true // If your app uses credentials (like cookies)
-}));
-
-// Middleware to parse JSON request body
-app.use(express.json()); // This line should be active for JSON parsing
-
 
 // Endpoint to fetch products from the database
 app.get('/api/products', async(req, res) => {
@@ -86,8 +101,15 @@ app.get('/api/products', async(req, res) => {
         const caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
         const caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
         // Parsing the color range from the URL
-        const colorMin = req.query.color_min ? req.query.color_min : undefined;
-        const colorMax = req.query.color_max ? req.query.color_max : undefined;
+        let colorMin = req.query.color_min ? req.query.color_min : undefined;
+        let colorMax = req.query.color_max ? req.query.color_max : undefined;
+        // Support shorthand `?color=MIN;MAX` or `?color=MIN,MAX` (semicolon or comma separated)
+        if (req.query.color) {
+            const parts = decodeURIComponent(req.query.color).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) colorMin = parts[0];
+            if (parts[1]) colorMax = parts[1];
+        }
+        console.log('colorMin:', colorMin);
         // Parsing the color range from the URL
         const clarityMin = req.query.clarity_min ? req.query.clarity_min : undefined;
         const clarityMax = req.query.clarity_max ? req.query.clarity_max : undefined;
@@ -123,11 +145,11 @@ app.get('/api/products', async(req, res) => {
         }
 
        // Apply carat (weight) filter if present
-        if (caratMin !== null && caratMax !== null) {
+        if (caratMin !== undefined && caratMax !== undefined) {
             filterCriteria.Weight = { gte: caratMin, lte: caratMax };
-        } else if (caratMin !== null) {
+        } else if (caratMin !== undefined) {
             filterCriteria.Weight = { gte: caratMin };
-        } else if (caratMax !== null) {
+        } else if (caratMax !== undefined) {
             filterCriteria.Weight = { lte: caratMax };
         }
         
@@ -141,19 +163,19 @@ app.get('/api/products', async(req, res) => {
             filterCriteria.Color = { lte: colorMax };
         }
         
-        if (clarityMin !== null && clarityMax !== null) {
+        if (clarityMin !== undefined && clarityMax !== undefined) {
             filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
-        } else if (clarityMin !== null) {
+        } else if (clarityMin !== undefined) {
             filterCriteria.Clarity = { gte: clarityMin };
-        } else if (clarityMax !== null) {
+        } else if (clarityMax !== undefined) {
             filterCriteria.Clarity = { lte: clarityMax };
         }
          // Apply cut (cut) filter if present
-        if (cutMin !== null && cutMax !== null) {
+        if (cutMin !== undefined && cutMax !== undefined) {
             filterCriteria.Cut_Grade = { gte: cutMin, lte: cutMax };
-        } else if (cutMin !== null) {
+        } else if (cutMin !== undefined) {
             filterCriteria.Cut_Grade = { gte: cutMin };
-        } else if (cutMax !== null) {
+        } else if (cutMax !== undefined) {
             filterCriteria.Cut_Grade = { lte: cutMax };
         }
 
@@ -189,8 +211,6 @@ app.get('/api/products', async(req, res) => {
     }
 });
 
-// Endpoint to save color to style.css
-app.use(express.json());  // Middleware to parse JSON requests
 
 // Endpoint to save color to style.css
 app.get('/api/get-color', async (req, res) => {
