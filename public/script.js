@@ -4,32 +4,33 @@ let diamonds = [];    // Store fetched diamonds data
 let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
-let SHOPIFY_APP_URL = process.env.SHOPIFY_APP_URL || "";
+
 (function() {
-    if (window.location.pathname.includes('/pages/diamond')) {
-    //   const container = document.createElement('div');
-    //   container.id = 'my-shopify-app';
-        const container = document.getElementById('diamond-app');
+   if (!window.location.pathname.includes('/pages/diamond')) return;
+
+  const container = document.getElementById('diamond-app');
   if (!container) return;
 
-  fetch('https://shopify-app-pndl.onrender.com/diamond-filter/index.html')
-    .then(res => res.text())
+  const APP_URL = 'https://shopify-app-pndl.onrender.com';
+
+  fetch(`${APP_URL}/diamond-filter/index.html`)
+    .then(res => {
+      if (!res.ok) throw new Error('HTML load failed');
+      return res.text();
+    })
     .then(html => {
       container.innerHTML = html;
+    })
+    .catch(err => {
+      console.error('Diamond app load error:', err);
     });
-    //   fetch(`${SHOPIFY_APP_URL}/diamond-filter/index.html`)
-    //     .then(res => res.text())
-    //     .then(html => {
-    //       container.innerHTML = html;
-    //       document.body.prepend(container);
-    //     });
-    }
+
   })();
   
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch(`${SHOPIFY_APP_URL}/api/get-color`);
+        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -117,7 +118,7 @@ async function fetchDiamonds() {
             // cut_max: cutMax,
         }).toString();
 
-        const response = await fetch(`${SHOPIFY_APP_URL}/api/products?${params}`);
+        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
