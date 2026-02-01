@@ -7,24 +7,22 @@ let isColorApplied = false;
 let SHOPIFY_APP_URL = process.env.SHOPIFY_APP_URL || "";
 (function() {
     if (window.location.pathname.includes('/pages/diamond')) {
-      const container = document.createElement('div');
-      container.id = 'my-shopify-app';
-        
-       const target = document.querySelector('#MainContent .rte') || document.querySelector('main .rte');
+    //   const container = document.createElement('div');
+    //   container.id = 'my-shopify-app';
+        const container = document.getElementById('diamond-app');
+  if (!container) return;
 
-  if (!target) {
-    console.warn('Shopify MainContent not found');
-    return;
-  }
-
-  target.prepend(container);
-
-      fetch(`${SHOPIFY_APP_URL}/diamond-filter/index.html`)
-        .then(res => res.text())
-        .then(html => {
-          container.innerHTML = html;
-        //   document.body.prepend(container);
-        });
+  fetch('https://shopify-app-pndl.onrender.com/diamond-filter/index.html')
+    .then(res => res.text())
+    .then(html => {
+      container.innerHTML = html;
+    });
+    //   fetch(`${SHOPIFY_APP_URL}/diamond-filter/index.html`)
+    //     .then(res => res.text())
+    //     .then(html => {
+    //       container.innerHTML = html;
+    //       document.body.prepend(container);
+    //     });
     }
   })();
   
