@@ -10,7 +10,7 @@ let SHOPIFY_APP_URL = process.env.SHOPIFY_APP_URL || "";
       const container = document.createElement('div');
       container.id = 'my-shopify-app';
         
-       const target = document.querySelector('#MainContent .shopify-section .rte') || document.querySelector('main .shopify-section .rte');
+       const target = document.querySelector('#MainContent .rte') || document.querySelector('main .rte');
 
   if (!target) {
     console.warn('Shopify MainContent not found');
