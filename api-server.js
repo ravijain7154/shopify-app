@@ -96,34 +96,11 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'API server is running' });
 });
 
-// Static files for diamond filter UI
-app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
-
-// Static files for diamond filter UI
-app.use('/build', express.static(path.join(process.cwd(), 'public', 'build')));
-// Static files for diamond filter UI
-app.use('/custom', express.static(path.join(process.cwd(), 'public', 'custom')));
-
-app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'public', 'assets'), {
-    setHeaders: (res, filePath) => {
-        if (filePath.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css');
-        }
-        if (filePath.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-        if (filePath.endsWith('.svg')) {
-            res.setHeader('Content-Type', 'image/svg+xml');
-        }
-    }
-}));
-
-// Add permissive CORS headers for static asset routes so the storefront can fetch scripts/styles
-app.use(['/diamond-filter','/build','/custom'], (req, res, next) => {
+// Static asset CORS middleware — run BEFORE express.static so files include CORS headers
+const staticCorsMiddleware = (req, res, next) => {
     const origin = req.get('origin');
 
     if (!origin) {
-        // Non-browser requests or script tags that don't send Origin: allow broadly
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -151,7 +128,31 @@ app.use(['/diamond-filter','/build','/custom'], (req, res, next) => {
 
     if (req.method === 'OPTIONS') return res.sendStatus(204);
     next();
-});
+};
+
+// Static files for diamond filter UI (CORS applied)
+app.use('/diamond-filter', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public')));
+
+// Static build assets (CORS applied)
+app.use('/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'build')));
+
+// Custom static assets (CORS applied)
+app.use('/custom', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'custom')));
+
+app.use('/diamond-filter/assets', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'assets'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+        if (filePath.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+        if (filePath.endsWith('.svg')) {
+            res.setHeader('Content-Type', 'image/svg+xml');
+        }
+    }
+}));
+
 
 
 
