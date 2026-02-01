@@ -25,17 +25,49 @@ app.use(bodyParser.json());
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-const allowedOrigins = (
-  process.env.ALLOWED_ORIGINS ||
-  'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://quickstart-fad8588b.myshopify.com,http://192.168.1.136:3000'
-).split(',');
+const rawAllowed = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://shopify-app-pndl.onrender.com,https://quickstart-fad8588b.myshopify.com,http://192.168.1.136:3000')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+// Normalize allowed origins to full origins (lowercase, no trailing slash). Support literal host/URLs or wildcard patterns like `https://*.myshopify.com`.
+const allowedOrigins = rawAllowed.map(o => {
+  try {
+    return new URL(o).origin.toLowerCase();
+  } catch (e) {
+    return o.replace(/\/$/, '').toLowerCase();
+  }
+});
+
+// Also allow the app's own URL (if provided)
+const selfOrigin = (process.env.SHOPIFY_APP_URL || '').replace(/\/$/, '').toLowerCase();
+if (selfOrigin && !allowedOrigins.includes(selfOrigin)) {
+  allowedOrigins.push(selfOrigin);
+}
+
+console.log('Allowed CORS origins:', allowedOrigins);
+
 // Use the CORS middleware with the correct configuration
 app.use(cors({
     origin: function (origin, callback) {
     // allow server-to-server, curl, postman
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    let originNormalized;
+    try {
+      originNormalized = new URL(origin).origin.toLowerCase();
+    } catch (e) {
+      originNormalized = origin.replace(/\/$/, '').toLowerCase();
+    }
+
+    // Exact match
+    if (allowedOrigins.includes(originNormalized)) {
+      return callback(null, true);
+    }
+
+    // Wildcard match (supports * in the config)
+    const wildcardMatch = allowedOrigins.some(a => a.includes('*') && new RegExp('^' + a.replace(/\*/g, '.*') + '$').test(originNormalized));
+    if (wildcardMatch) {
       return callback(null, true);
     }
 
@@ -85,8 +117,6 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
         }
     }
 }));
-
-
 
 
 
