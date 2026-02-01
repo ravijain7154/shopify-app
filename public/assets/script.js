@@ -913,7 +913,6 @@ var colorSlider = $range_color.data("ionRangeSlider");
     const color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
     const urlParams = new URLSearchParams(window.location.search);
     const colorFrom = urlParams.get('ColorFrom');
-  
     const colorTo = urlParams.get('ColorTo');
     if (colorFrom && colorTo) {
         // Set the color range slider values based on URL parameters
@@ -948,14 +947,12 @@ var colorSlider = $range_color.data("ionRangeSlider");
         const combinedColor = urlParams.get('color');
         if (combinedColor) {
             const colors = combinedColor.split(';');
-
             if (colors.length === 2) {
+
                 const colorValues = [colors[0], colors[1]];
-              
                 const colorIndexValues = colorValues.map(value => color_arr.indexOf(value));
                 $range_color.data("ionRangeSlider").update({ from: colorIndexValues[0], to: colorIndexValues[1] });
                 const selectedColorValues = color_arr.slice(colorIndexValues[0], colorIndexValues[1] + 1);
-
                 const colorStr = selectedColorValues.join('|');
                 var tab = table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
                 filterGridView();
