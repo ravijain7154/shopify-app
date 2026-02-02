@@ -895,9 +895,6 @@ $range_color.ionRangeSlider({
              handleFilterChange();
              filterGridView();
              fetchDiamonds();
-
-
-
           }
     }
 });

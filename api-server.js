@@ -134,8 +134,20 @@ const staticCorsMiddleware = (req, res, next) => {
 app.use('/diamond-filter', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public')));
 
 // Static build assets (CORS applied)
-app.use('/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'build')));
-
+// app.use('/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'build')));
+app.use('/diamond-filter/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'build'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+        if (filePath.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+        if (filePath.endsWith('.svg')) {
+            res.setHeader('Content-Type', 'image/svg+xml');
+        }
+    }
+}));
 // Custom static assets (CORS applied)
 app.use('/custom', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'custom')));
 
