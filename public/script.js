@@ -5,27 +5,61 @@ let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
 
-(function() {
-   if (!window.location.pathname.includes('/pages/diamond')) return;
+(function () {
+  if (!location.pathname.includes('/pages/diamond')) return;
 
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
   const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
+  // 1️⃣ Load CSS explicitly
+  const styles = [
+    `${APP_URL}/diamond-filter/assets/styles.css`,
+    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
+    `${APP_URL}/diamond-filter/assets/ring_builder.css`,
+    `${APP_URL}/diamond-filter/assets/diamond.css`,
+    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
+    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
+  ];
+
+  styles.forEach(href => {
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+  });
+
+  // 2️⃣ Inject HTML
   fetch(`${APP_URL}/diamond-filter/index.html`)
-    .then(res => {
-      if (!res.ok) throw new Error('HTML load failed');
-      return res.text();
-    })
+    .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
     })
-    .catch(err => {
-      console.error('Diamond app load error:', err);
-    });
+    .then(() => {
+      // 3️⃣ Load JS AFTER HTML exists
+      const scripts = [
+        `${APP_URL}/diamond-filter/assets/jquery.min.js`,
+        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
+        `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
+        `${APP_URL}/diamond-filter/assets/app.js`,
+        `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
+      ];
 
-  })();
+      scripts.reduce((p, src) => {
+        return p.then(() => new Promise(resolve => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = resolve;
+          document.body.appendChild(s);
+        }));
+      }, Promise.resolve());
+    })
+    .catch(err => console.error('Diamond app load error:', err));
+})();
+
   
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
