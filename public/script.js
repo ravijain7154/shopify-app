@@ -45,6 +45,7 @@ let isColorApplied = false;
         `${APP_URL}/diamond-filter/assets/datatables.min.js`,
         `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
         `${APP_URL}/diamond-filter/assets/app.js`,
+        `${APP_URL}/diamond-filter/script.js`,
         `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
       ];
 
