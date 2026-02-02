@@ -321,6 +321,11 @@ app.post('/api/save-color', async (req, res) => {
     }
 });
 
+// 🚨 BLOCK SHOPIFY CDN REQUESTS — MUST BE BEFORE REMIX
+app.use('/cdn', (req, res) => {
+    const shop = process.env.SHOPIFY_STORE_URL; // quickstart-fad8588b.myshopify.com
+    return res.redirect(`https://${shop}${req.originalUrl}`);
+});
 // ===== REMIX ADMIN OR FALLBACK 404 =====
 // Try to import the Remix server build and let it handle all other routes.
 // const buildPath = path.join(process.cwd(), 'build', 'index.js');
