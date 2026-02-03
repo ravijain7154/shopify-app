@@ -16,11 +16,11 @@ function initDiamondUI() {
     });
   }
 
-  const gridBtn = document.getElementById('grid-view-btn');
-  const listBtn = document.getElementById('list-view-btn');
+//   const gridBtn = document.getElementById('grid-view-btn');
+//   const listBtn = document.getElementById('list-view-btn');
 
-  if (gridBtn) gridBtn.addEventListener('click', switchToGridView);
-  if (listBtn) listBtn.addEventListener('click', switchToListView);
+//   if (gridBtn) gridBtn.addEventListener('click', switchToGridView);
+//   if (listBtn) listBtn.addEventListener('click', switchToListView);
 
   document.querySelectorAll('.sortable').forEach((header) => {
     header.addEventListener('click', () => {
@@ -87,6 +87,9 @@ function initDiamondUI() {
         }));
       }, Promise.resolve()).then(() => {
         // Initialize the diamond UI after all scripts are loaded
+          document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView);
+  document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
+
         initDiamondUI();
       });
     })
