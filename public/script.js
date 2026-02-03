@@ -7,14 +7,14 @@ let isColorApplied = false;
 
 
 function initDiamondUI() {
-  const productsPerPage = document.getElementById('productsPerPage');
-  if (productsPerPage) {
-    productsPerPage.addEventListener('change', function () {
-      pageSize = parseInt(this.value, 10) || 25;
-      currentPage = 1;
-      fetchDiamonds();
-    });
-  }
+//   const productsPerPage = document.getElementById('productsPerPage');
+//   if (productsPerPage) {
+//     productsPerPage.addEventListener('change', function () {
+//       pageSize = parseInt(this.value, 10) || 25;
+//       currentPage = 1;
+//       fetchDiamonds();
+//     });
+//   }
 
 //   const gridBtn = document.getElementById('grid-view-btn');
 //   const listBtn = document.getElementById('list-view-btn');
@@ -197,7 +197,10 @@ async function fetchDiamonds() {
         // console.log(diamonds);
         totalPages = data.pagination.totalPages;  // Update totalPages from API
         totalCount = data.pagination.totalCount;  // Update totalCount from API
-        renderDiamonds();  // Render diamonds after fetching
+       // renderDiamonds();  // Render diamonds after fetching
+        const view = localStorage.getItem('selectedView') || 'grid';
+view === 'grid' ? switchToGridView() : switchToListView();
+
         renderPagination();  // Render pagination after fetching
         updateSortArrow();
         hideLoader(); 
@@ -528,36 +531,51 @@ document.querySelectorAll('.sortable').forEach((header) => {
     });
 });
 
-// Render diamonds based on the selected view (grid or table)
-function renderDiamonds() {
-    const selectedView = localStorage.getItem('selectedView') || 'grid';
-    if (selectedView === 'grid') {
-        renderGridView(diamonds);
-    } else {
-        renderTableView(diamonds);
-    }
-}
+// // Render diamonds based on the selected view (grid or table)
+// function renderDiamonds() {
+//     const selectedView = localStorage.getItem('selectedView') || 'grid';
+//     if (selectedView === 'grid') {
+//         renderGridView(diamonds);
+//     } else {
+//         renderTableView(diamonds);
+//     }
+// }
 
 
 // Switch to grid view
 function switchToGridView() {
-    document.getElementById('table-container').classList.remove('list-view');
-    document.getElementById('table-container').classList.add('grid-view');
-    document.getElementById('grid-view-btn').classList.add('active');
-    document.getElementById('list-view-btn').classList.remove('active');
-    localStorage.setItem('selectedView', 'grid');
-    renderDiamonds();  // Re-render diamonds in grid view
+  localStorage.setItem('selectedView', 'grid');
+
+  const grid = document.getElementById('grid-view');
+  const table = document.getElementById('table-wrapper');
+
+  if (grid) grid.style.display = 'grid';
+  if (table) table.style.display = 'none';
+
+  document.getElementById('grid-view-btn')?.classList.add('active');
+  document.getElementById('list-view-btn')?.classList.remove('active');
+
+  renderGridView(diamonds);
 }
+
+
 
 // Switch to list view
 function switchToListView() {
-    document.getElementById('table-container').classList.remove('grid-view');
-    document.getElementById('table-container').classList.add('list-view');
-    document.getElementById('list-view-btn').classList.add('active');
-    document.getElementById('grid-view-btn').classList.remove('active');
-    localStorage.setItem('selectedView', 'list');
-    renderDiamonds();  // Re-render diamonds in table view
+  localStorage.setItem('selectedView', 'list');
+
+  const grid = document.getElementById('grid-view');
+  const table = document.getElementById('table-wrapper');
+
+  if (grid) grid.style.display = 'none';
+  if (table) table.style.display = 'block';
+
+  document.getElementById('list-view-btn')?.classList.add('active');
+  document.getElementById('grid-view-btn')?.classList.remove('active');
+
+  renderTableView(diamonds);
 }
+
 
 // // Event listeners for view switches
 // document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
