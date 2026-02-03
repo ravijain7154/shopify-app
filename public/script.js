@@ -5,35 +5,6 @@ let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
 
-
-function initDiamondUI() {
-//   const productsPerPage = document.getElementById('productsPerPage');
-//   if (productsPerPage) {
-//     productsPerPage.addEventListener('change', function () {
-//       pageSize = parseInt(this.value, 10) || 25;
-//       currentPage = 1;
-//       fetchDiamonds();
-//     });
-//   }
-
-//   const gridBtn = document.getElementById('grid-view-btn');
-//   const listBtn = document.getElementById('list-view-btn');
-
-//   if (gridBtn) gridBtn.addEventListener('click', switchToGridView);
-//   if (listBtn) listBtn.addEventListener('click', switchToListView);
-
-  document.querySelectorAll('.sortable').forEach((header) => {
-    header.addEventListener('click', () => {
-      const column = header.getAttribute('data-column');
-      handleSort(column);
-    });
-  });
-
-  fetchDiamonds();
-  fetchAndApplyBackgroundColor();
-}
-
-
 (function () {
   if (!location.pathname.includes('/pages/diamond')) return;
 
@@ -86,11 +57,10 @@ function initDiamondUI() {
           document.body.appendChild(s);
         }));
       }, Promise.resolve()).then(() => {
-        // Initialize the diamond UI after all scripts are loaded
-          document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView);
-  document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
-
-        initDiamondUI();
+        console.log('Diamond app loaded');
+        // Initialize the diamond UI after all scripts are loaded 
+        document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
+        document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
       });
     })
     .catch(err => console.error('Diamond app load error:', err));
@@ -197,10 +167,7 @@ async function fetchDiamonds() {
         // console.log(diamonds);
         totalPages = data.pagination.totalPages;  // Update totalPages from API
         totalCount = data.pagination.totalCount;  // Update totalCount from API
-       // renderDiamonds();  // Render diamonds after fetching
-        const view = localStorage.getItem('selectedView') || 'grid';
-view === 'grid' ? switchToGridView() : switchToListView();
-
+        renderDiamonds();  // Render diamonds after fetching
         renderPagination();  // Render pagination after fetching
         updateSortArrow();
         hideLoader(); 
@@ -326,12 +293,12 @@ function renderPagination() {
   }
 
   // Add ellipses before the start page if necessary
-  if (startPage > 1) {
+  if (startPage) {
       const dotsButton = document.createElement('button');
       dotsButton.textContent = '...';
       dotsButton.disabled = true;
       paginationContainer.appendChild(dotsButton);
-    }
+  }
 
   // Add Last Page Button
   const lastPageButton = document.createElement('button');
@@ -531,57 +498,42 @@ document.querySelectorAll('.sortable').forEach((header) => {
     });
 });
 
-// // Render diamonds based on the selected view (grid or table)
-// function renderDiamonds() {
-//     const selectedView = localStorage.getItem('selectedView') || 'grid';
-//     if (selectedView === 'grid') {
-//         renderGridView(diamonds);
-//     } else {
-//         renderTableView(diamonds);
-//     }
-// }
+// Render diamonds based on the selected view (grid or table)
+function renderDiamonds() {
+    const selectedView = localStorage.getItem('selectedView') || 'grid';
+    if (selectedView === 'grid') {
+        renderGridView(diamonds);
+    } else {
+        renderTableView(diamonds);
+    }
+}
 
 
 // Switch to grid view
 function switchToGridView() {
-  localStorage.setItem('selectedView', 'grid');
-
-  const grid = document.getElementById('grid-view');
-  const table = document.getElementById('table-wrapper');
-
-  if (grid) grid.style.display = 'grid';
-  if (table) table.style.display = 'none';
-
-  document.getElementById('grid-view-btn')?.classList.add('active');
-  document.getElementById('list-view-btn')?.classList.remove('active');
-
-  renderGridView(diamonds);
+    document.getElementById('table-container').classList.remove('list-view');
+    document.getElementById('table-container').classList.add('grid-view');
+    document.getElementById('grid-view-btn').classList.add('active');
+    document.getElementById('list-view-btn').classList.remove('active');
+    localStorage.setItem('selectedView', 'grid');
+    renderDiamonds();  // Re-render diamonds in grid view
 }
-
-
 
 // Switch to list view
 function switchToListView() {
-  localStorage.setItem('selectedView', 'list');
-
-  const grid = document.getElementById('grid-view');
-  const table = document.getElementById('table-wrapper');
-
-  if (grid) grid.style.display = 'none';
-  if (table) table.style.display = 'block';
-
-  document.getElementById('list-view-btn')?.classList.add('active');
-  document.getElementById('grid-view-btn')?.classList.remove('active');
-
-  renderTableView(diamonds);
+    document.getElementById('table-container').classList.remove('grid-view');
+    document.getElementById('table-container').classList.add('list-view');
+    document.getElementById('list-view-btn').classList.add('active');
+    document.getElementById('grid-view-btn').classList.remove('active');
+    localStorage.setItem('selectedView', 'list');
+    renderDiamonds();  // Re-render diamonds in table view
 }
 
+// Event listeners for view switches
+document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
+document.getElementById('list-view-btn').addEventListener('click', switchToListView);
 
-// // Event listeners for view switches
-// document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
-// document.getElementById('list-view-btn').addEventListener('click', switchToListView);
 
-
-// // Initialize the app
-// fetchDiamonds();
-// fetchAndApplyBackgroundColor();
+// Initialize the app
+fetchDiamonds();
+fetchAndApplyBackgroundColor();
