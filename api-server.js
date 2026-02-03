@@ -161,7 +161,9 @@ app.get('/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
-
+        const sortColumn = req.query.sort || 'id'; // Default sort column
+        const sortDirection = req.query.direction === 'desc' ? 'desc' : 'asc'; // Default to ascending
+        // Parsing the shapes from the URL
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
         const priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
         const priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
@@ -252,7 +254,10 @@ app.get('/api/products', async(req, res) => {
         // console.log('filterCriteria', filterCriteria);
         const products = await prisma.diamond.findMany({
             where: filterCriteria,
-            skip: skip,  
+            skip: skip,
+            orderBy: {
+            [sort]: direction
+            },  
             take: take   
         }); 
          // Get the total number of products in the database for pagination metadata

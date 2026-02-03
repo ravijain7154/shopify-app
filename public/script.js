@@ -5,6 +5,35 @@ let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
 
+
+function initDiamondUI() {
+  const productsPerPage = document.getElementById('productsPerPage');
+  if (productsPerPage) {
+    productsPerPage.addEventListener('change', function () {
+      pageSize = parseInt(this.value, 10) || 25;
+      currentPage = 1;
+      fetchDiamonds();
+    });
+  }
+
+  const gridBtn = document.getElementById('grid-view-btn');
+  const listBtn = document.getElementById('list-view-btn');
+
+  if (gridBtn) gridBtn.addEventListener('click', switchToGridView);
+  if (listBtn) listBtn.addEventListener('click', switchToListView);
+
+  document.querySelectorAll('.sortable').forEach((header) => {
+    header.addEventListener('click', () => {
+      const column = header.getAttribute('data-column');
+      handleSort(column);
+    });
+  });
+
+  fetchDiamonds();
+  fetchAndApplyBackgroundColor();
+}
+
+
 (function () {
   if (!location.pathname.includes('/pages/diamond')) return;
 
@@ -56,7 +85,10 @@ let isColorApplied = false;
           s.onload = resolve;
           document.body.appendChild(s);
         }));
-      }, Promise.resolve());
+      }, Promise.resolve()).then(() => {
+        // Initialize the diamond UI after all scripts are loaded
+        initDiamondUI();
+      });
     })
     .catch(err => console.error('Diamond app load error:', err));
 })();
@@ -141,6 +173,8 @@ async function fetchDiamonds() {
             page: currentPage,
             perPage: pageSize,
             Shape: selectedShapes.join(','),
+            sort: sortColumn,
+            direction: sortDirection,
             price_min: priceMin,
             price_max: priceMax,
             carat_min: caratMin,
@@ -288,12 +322,12 @@ function renderPagination() {
   }
 
   // Add ellipses before the start page if necessary
-  if (startPage) {
+  if (startPage > 1) {
       const dotsButton = document.createElement('button');
       dotsButton.textContent = '...';
       dotsButton.disabled = true;
       paginationContainer.appendChild(dotsButton);
-  }
+    }
 
   // Add Last Page Button
   const lastPageButton = document.createElement('button');
@@ -524,11 +558,11 @@ function switchToListView() {
     renderDiamonds();  // Re-render diamonds in table view
 }
 
-// Event listeners for view switches
-document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
-document.getElementById('list-view-btn').addEventListener('click', switchToListView);
+// // Event listeners for view switches
+// document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
+// document.getElementById('list-view-btn').addEventListener('click', switchToListView);
 
 
-// Initialize the app
-fetchDiamonds();
-fetchAndApplyBackgroundColor();
+// // Initialize the app
+// fetchDiamonds();
+// fetchAndApplyBackgroundColor();
