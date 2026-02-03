@@ -161,7 +161,15 @@ app.get('/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
-        const sortColumn = req.query.sort || 'id'; // Default sort column
+        const SORT_MAP = {
+                            price: 'Buy_Price',
+                            weight: 'Weight',
+                            color: 'Color',
+                            clarity: 'Clarity',
+                            stock: 'Stock_No'
+                            };
+
+        const sortColumn = SORT_MAP[req.query.sort] || 'Stock_No';
         const sortDirection = req.query.direction === 'desc' ? 'desc' : 'asc'; // Default to ascending
         // Parsing the shapes from the URL
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
@@ -256,7 +264,7 @@ app.get('/api/products', async(req, res) => {
             where: filterCriteria,
             skip: skip,
             orderBy: {
-            [sort]: direction
+            [sortColumn]: sortDirection
             },  
             take: take   
         }); 
