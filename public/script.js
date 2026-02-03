@@ -173,8 +173,6 @@ async function fetchDiamonds() {
             page: currentPage,
             perPage: pageSize,
             Shape: selectedShapes.join(','),
-            sort: sortColumn,
-            direction: sortDirection,
             price_min: priceMin,
             price_max: priceMax,
             carat_min: caratMin,
