@@ -516,7 +516,8 @@ function switchToGridView() {
     document.getElementById('grid-view-btn').classList.add('active');
     document.getElementById('list-view-btn').classList.remove('active');
     localStorage.setItem('selectedView', 'grid');
-    renderDiamonds();  // Re-render diamonds in grid view
+    // renderDiamonds();  // Re-render diamonds in grid view
+     renderGridView(diamonds);
 }
 
 // Switch to list view
@@ -526,12 +527,13 @@ function switchToListView() {
     document.getElementById('list-view-btn').classList.add('active');
     document.getElementById('grid-view-btn').classList.remove('active');
     localStorage.setItem('selectedView', 'list');
-    renderDiamonds();  // Re-render diamonds in table view
+    // renderDiamonds();  // Re-render diamonds in table view
+    renderTableView(diamonds);
 }
 
 // Event listeners for view switches
-document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
-document.getElementById('list-view-btn').addEventListener('click', switchToListView);
+// document.getElementById('grid-view-btn').addEventListener('click', switchToGridView);
+// document.getElementById('list-view-btn').addEventListener('click', switchToListView);
 
 
 // Initialize the app
