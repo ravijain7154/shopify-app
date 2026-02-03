@@ -632,7 +632,15 @@ function parsepriceFromURL() {
     const priceFrom = parseFloat(urlParams.get('PriceFrom'));
     const priceTo = parseFloat(urlParams.get('PriceTo'));
       if (!isNaN(priceFrom) && !isNaN(priceTo)) {
-       $('#range_55').data("ionRangeSlider").update({ from: priceFrom, to: priceTo });
+       var fromIndex = price_value2.indexOf(priceFrom);
+       var toIndex = price_value2.indexOf(priceTo);
+       if (fromIndex === -1) {
+           fromIndex = 0;
+       }
+       if (toIndex === -1) {
+           toIndex = price_value2.length - 1;
+       }
+       $('#range_55').data("ionRangeSlider").update({ from: fromIndex, to: toIndex });
        $("#range_55_input_from").val(priceFrom);
         $("#range_55_input_to").val(priceTo);
         table.draw();
@@ -652,12 +660,20 @@ function parsepriceFromURL() {
     }
   else{
      const combinedPrice = urlParams.get('price');
-         if (combinedPrice) {
+        if (combinedPrice) {
             const price = combinedPrice.split(';');
             if(price.length === 2){
                   var from = parseFloat(price[0]);
                   var to = parseFloat(price[1]);
-                  $('#range_55').data("ionRangeSlider").update({ from: from, to: to });
+                  var fromIndex = price_value2.indexOf(from);
+                  var toIndex = price_value2.indexOf(to);
+                  if (fromIndex === -1) {
+                      fromIndex = 0;
+                  }
+                  if (toIndex === -1) {
+                      toIndex = price_value2.length - 1;
+                  }
+                  $('#range_55').data("ionRangeSlider").update({ from: fromIndex, to: toIndex });
                   $("#range_55_input_from").val(from);
                   $("#range_55_input_to").val(to);
                   table.draw();
@@ -1094,7 +1110,9 @@ var colorSlider = $range_color.data("ionRangeSlider");
         const combinedClarity = urlParams.get('clarity');
         if(combinedClarity){
           const claritys = combinedClarity.split(';');
-          if(claritys.length == 2){}
+          if(claritys.length !== 2){
+            return;
+          }
                 const clarityValues = [claritys[0], claritys[1]];
                 const clarityIndexValues = clarityValues.map(value => clarity_arr.indexOf(value));
                 $range_50.data("ionRangeSlider").update({ from: clarityIndexValues[0], to: clarityIndexValues[1] });
@@ -1248,8 +1266,11 @@ $reset_btn.on("click", function () {
    if (cutFrom && cutTo) {
         const cutValues = [cutFrom, cutTo];
         const cutIndexValues = cutValues.map(value => cut_arr.indexOf(value));
+        if (cutIndexValues[0] < 0 || cutIndexValues[1] < 0) {
+            return;
+        }
         $range_51a.data("ionRangeSlider").update({ from: cutIndexValues[0], to: cutIndexValues[1] });
-        const selectedcutValues = cut_arr.slice(cutIndexValues[0],cutIndexValues[1]);
+        const selectedcutValues = cut_arr.slice(cutIndexValues[0],cutIndexValues[1] + 1);
         const cutStr = selectedcutValues.join("|");
         table.columns(6).search('^(' + cutStr + ')$', true, false, true).draw();
         filterGridView();
@@ -1274,9 +1295,14 @@ $reset_btn.on("click", function () {
         const combinedCut = urlParams.get('cut');
         if(combinedCut){
           const cuts = combinedCut.split(';');
-          if(cuts.length == 2){}
+          if(cuts.length !== 2){
+            return;
+          }
                 const cutValues = [cuts[0], cuts[1]];
                 const cutIndexValues = cutValues.map(value => cut_arr.indexOf(value));
+                if (cutIndexValues[0] < 0 || cutIndexValues[1] < 0) {
+                    return;
+                }
                 $range_51a.data("ionRangeSlider").update({ from: cutIndexValues[0], to: cutIndexValues[1] });
                 const selectedCutValues = cut_arr.slice(cutIndexValues[0], cutIndexValues[1] + 1);
                 const cutStr = selectedCutValues.join('|');
@@ -1429,8 +1455,11 @@ $reset_btn.on("click", function () {
    if (polishFrom && polishTo) {
         const polishValues = [polishFrom, polishTo];
         const polishIndexValues = polishValues.map(value => polish_arr.indexOf(value));
+        if (polishIndexValues[0] < 0 || polishIndexValues[1] < 0) {
+            return;
+        }
         $range_51ab.data("ionRangeSlider").update({ from: polishIndexValues[0], to: polishIndexValues[1] });
-        const selectedpolishValues = polish_arr.slice(polishIndexValues[0],polishIndexValues[1]);
+        const selectedpolishValues = polish_arr.slice(polishIndexValues[0],polishIndexValues[1] + 1);
         const polishStr = selectedpolishValues.join("|");
         table.columns(7).search('^(' + polishStr + ')$', true, false, true).draw();
         filterGridView();
@@ -1455,9 +1484,14 @@ $reset_btn.on("click", function () {
         const combinedPolish = urlParams.get('polish');
         if(combinedPolish){
           const polishs = combinedPolish.split(';');
-          if(polishs.length == 2){}
+          if(polishs.length !== 2){
+            return;
+          }
                 const polishValues = [polishs[0], polishs[1]];
                 const polishIndexValues = polishValues.map(value => polish_arr.indexOf(value));
+                if (polishIndexValues[0] < 0 || polishIndexValues[1] < 0) {
+                    return;
+                }
                 $range_51ab.data("ionRangeSlider").update({ from: polishIndexValues[0], to: polishIndexValues[1] });
                 const selectedPolishValues = polish_arr.slice(polishIndexValues[0], polishIndexValues[1] + 1);
                 const polishStr = selectedPolishValues.join('|');
@@ -1613,8 +1647,11 @@ $reset_btn.on("click", function () {
    if (fluorFrom && fluorTo) {
         const fluorValues = [fluorFrom, fluorTo];
         const fluorIndexValues = fluorValues.map(value => fluor_arr.indexOf(value));
+        if (fluorIndexValues[0] < 0 || fluorIndexValues[1] < 0) {
+            return;
+        }
         $range_fluor.data("ionRangeSlider").update({ from: fluorIndexValues[0], to: fluorIndexValues[1] });
-        const selectedfluorValues = fluor_arr.slice(fluorIndexValues[0],fluorIndexValues[1]);
+        const selectedfluorValues = fluor_arr.slice(fluorIndexValues[0],fluorIndexValues[1] + 1);
         const fluorStr = selectedfluorValues.join("|");
         table.columns(7).search('^(' + fluorStr + ')$', true, false, true).draw();
         filterGridView();
@@ -1639,9 +1676,14 @@ $reset_btn.on("click", function () {
         const combinedFluor = urlParams.get('fluor');
         if(combinedFluor){
           const fluors = combinedFluor.split(';');
-          if(fluors.length == 2){}
+          if(fluors.length !== 2){
+            return;
+          }
                 const fluorValues = [fluors[0], fluors[1]];
                 const fluorIndexValues = fluorValues.map(value => fluor_arr.indexOf(value));
+                if (fluorIndexValues[0] < 0 || fluorIndexValues[1] < 0) {
+                    return;
+                }
                 $range_fluor.data("ionRangeSlider").update({ from: fluorIndexValues[0], to: fluorIndexValues[1] });
                 const selectedFluorValues = fluor_arr.slice(fluorIndexValues[0], fluorIndexValues[1] + 1);
                 const fluorStr = selectedFluorValues.join('|');
@@ -1800,8 +1842,11 @@ $reset_btn.on("click", function () {
    if (symFrom && symTo) {
         const symValues = [symFrom, symTo];
         const symIndexValues = symValues.map(value => sym_arr.indexOf(value));
+        if (symIndexValues[0] < 0 || symIndexValues[1] < 0) {
+            return;
+        }
         $range_sym.data("ionRangeSlider").update({ from: symIndexValues[0], to: symIndexValues[1] });
-        const selectedsymValues = sym_arr.slice(symIndexValues[0],symIndexValues[1]);
+        const selectedsymValues = sym_arr.slice(symIndexValues[0],symIndexValues[1] + 1);
         const symStr = selectedsymValues.join("|");
         table.columns(7).search('^(' + symStr + ')$', true, false, true).draw();
         filterGridView();
@@ -1826,9 +1871,14 @@ $reset_btn.on("click", function () {
         const combinedSym = urlParams.get('sym');
         if(combinedSym){
           const syms = combinedSym.split(';');
-          if(syms.length == 2){}
+          if(syms.length !== 2){
+            return;
+          }
                 const symValues = [syms[0], syms[1]];
                 const symIndexValues = symValues.map(value => sym_arr.indexOf(value));
+                if (symIndexValues[0] < 0 || symIndexValues[1] < 0) {
+                    return;
+                }
                 $range_sym.data("ionRangeSlider").update({ from: symIndexValues[0], to: symIndexValues[1] });
                 const selectedSymValues = sym_arr.slice(symIndexValues[0], symIndexValues[1] + 1);
                 const symStr = selectedSymValues.join('|');
