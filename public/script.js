@@ -100,7 +100,7 @@ if (productsPerPageEl) {
   });
 }
 // Fetch diamond data from the API (with dynamic pagination)
-async function fetchDiamonds() {
+async function fetchDiamonds(retry = true) {
     try {
         showLoader(); 
 
@@ -173,9 +173,27 @@ async function fetchDiamonds() {
         }
         const data = await response.json();
         diamonds = data.products || [];  // Correctly assign products to diamonds array
-        // console.log(diamonds);
-        totalPages = data.pagination.totalPages;  // Update totalPages from API
-        totalCount = data.pagination.totalCount;  // Update totalCount from API
+        totalPages = data.pagination.totalPages || 0;  // Update totalPages from API
+        totalCount = data.pagination.totalCount || 0;  // Update totalCount from API
+
+        // If filters reduced results so current page is out of range, reset to first page and retry once
+        const startIndex = ((currentPage - 1) * pageSize) + 1;
+        if (totalCount > 0 && startIndex > totalCount && retry === true) {
+            currentPage = 1;
+            return fetchDiamonds(false);
+        }
+
+        // If there are no products, clear and render empty state
+        if (totalCount === 0) {
+            diamonds = [];
+            renderDiamonds();
+            renderPagination();
+            updateSortArrow();
+            hideLoader();
+            return;
+        }
+
+        // Normal render flow
         renderDiamonds();  // Render diamonds after fetching
         renderPagination();  // Render pagination after fetching
         updateSortArrow();
@@ -259,7 +277,13 @@ function renderPagination() {
   // Create a container for product count info
   const productCountContainer = document.createElement('div');
   productCountContainer.classList.add('product-count');
-  productCountContainer.textContent = `Showing ${((currentPage - 1) * pageSize) + 1} - ${Math.min(currentPage * pageSize, totalCount)} of ${totalCount} products`;
+  if (totalCount === 0) {
+      productCountContainer.textContent = 'No products found';
+  } else {
+      const startIndex = ((currentPage - 1) * pageSize) + 1;
+      const endIndex = Math.min(currentPage * pageSize, totalCount);
+      productCountContainer.textContent = `Showing ${startIndex} - ${endIndex} of ${totalCount} products`;
+  }
   paginationContainer.appendChild(productCountContainer);
 
   // Create First Page Button (<<)
@@ -287,7 +311,7 @@ function renderPagination() {
   // Create range of page buttons (current, next, previous pages)
   const displayRange = 3;  // Show up to 3 page buttons at a time
   const startPage = Math.max(1, currentPage - 1); // Starting page for the range
-  const endPage = Math.min(totalPages, currentPage + 0); // Ending page for the range
+  const endPage = Math.min(totalPages, currentPage + 1); // Ending page for the range (show neighbor page)
 
   // Add current page and neighboring pages
   for (let page = startPage; page <= endPage; page++) {
