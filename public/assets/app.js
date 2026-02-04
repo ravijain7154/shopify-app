@@ -361,9 +361,36 @@ function filterGridView() {
 }
 
 
-updateFilterInputsAndData();
-filterGridView();
-fetchDiamonds();
+(function initDiamondApp() {
+  function doInit() {
+    try {
+      updateFilterInputsAndData();
+      filterGridView();
+      fetchDiamonds();
+    } catch (err) {
+      console.warn('Diamond init error', err);
+    }
+  }
+
+  if (typeof $ !== 'undefined' && typeof $.fn !== 'undefined') {
+    $(document).ready(doInit);
+  } else {
+    // Poll for jQuery (useful when script may load before jquery)
+    let attempts = 0;
+    const poll = setInterval(() => {
+      attempts++;
+      if (typeof $ !== 'undefined' && typeof $.fn !== 'undefined') {
+        $(document).ready(doInit);
+        clearInterval(poll);
+      } else if (attempts > 20) {
+        // Give up after ~5 seconds and try once
+        console.warn('jQuery not available, running init without it');
+        doInit();
+        clearInterval(poll);
+      }
+    }, 250);
+  }
+})();
 
 // Diamond Check FILTER....S
 

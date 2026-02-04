@@ -61,6 +61,8 @@ let isColorApplied = false;
         // Initialize the diamond UI after all scripts are loaded 
         document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
         document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
+        // Apply configured background color if available (safe to call)
+        fetchAndApplyBackgroundColor().catch(err => console.warn('fetch color failed', err));
       });
     })
     .catch(err => console.error('Diamond app load error:', err));
@@ -83,13 +85,20 @@ async function fetchAndApplyBackgroundColor() {
     }
 }
 
-document.getElementById('productsPerPage').addEventListener('change', function() {
-    pageSize = parseInt(this.value, 25);  
-    currentPage = 1;  
-    // updateURL(); 
+// document.getElementById('productsPerPage').addEventListener('change', function() {
+//     pageSize = parseInt(this.value, 25);  
+//     currentPage = 1;  
+//     // updateURL(); 
+//     fetchDiamonds();
+// });
+const productsPerPageEl = document.getElementById('productsPerPage');
+if (productsPerPageEl) {
+  productsPerPageEl.addEventListener('change', function() {
+    pageSize = parseInt(this.value, 10) || 25; // radix 10 + fallback
+    currentPage = 1;
     fetchDiamonds();
-});
-
+  });
+}
 // Fetch diamond data from the API (with dynamic pagination)
 async function fetchDiamonds() {
     try {
@@ -179,12 +188,12 @@ async function fetchDiamonds() {
 }
 // Show the loader
 function showLoader() {
-    document.getElementById('loader').style.display = 'flex';
+  const loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'flex';
 }
-
-// Hide the loader
 function hideLoader() {
-    document.getElementById('loader').style.display = 'none';
+  const loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'none';
 }
 // function updateURL() {
 //     const selectedShapes = getSelectedShapes(); 
@@ -293,7 +302,7 @@ function renderPagination() {
   }
 
   // Add ellipses before the start page if necessary
-  if (startPage) {
+  if (startPage > 1) {
       const dotsButton = document.createElement('button');
       dotsButton.textContent = '...';
       dotsButton.disabled = true;
