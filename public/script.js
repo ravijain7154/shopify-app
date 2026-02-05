@@ -151,22 +151,42 @@ async function fetchDiamonds(retry = true) {
        }
 
 
-        const params = new URLSearchParams({
-            page: currentPage,
-            perPage: pageSize,
-            Shape: selectedShapes.join(','),
-            price_min: priceMin,
-            price_max: priceMax,
-            carat_min: caratMin,
-            carat_max: caratMax,
-            color_min: colorMin,
-            color_max: colorMax,
-            clarity_min: clarityMin,
-            clarity_max: clarityMax,
-            cut_min: cutMin,
-            // cut_max: cutMax,
-        }).toString();
+        // const params = new URLSearchParams({
+        //     page: currentPage,
+        //     perPage: pageSize,
+        //     Shape: selectedShapes.join(','),
+        //     price_min: priceMin,
+        //     price_max: priceMax,
+        //     carat_min: caratMin,
+        //     carat_max: caratMax,
+        //     color_min: colorMin,
+        //     color_max: colorMax,
+        //     clarity_min: clarityMin,
+        //     clarity_max: clarityMax,
+        //     cut_min: cutMin,
+        //     // cut_max: cutMax,
+        // }).toString();
 
+        const apiParams = {
+  page: currentPage,
+  perPage: pageSize,
+};
+
+if (selectedShapes.length) apiParams.Shape = selectedShapes.join(',');
+if (priceMin) apiParams.price_min = priceMin;
+if (priceMax) apiParams.price_max = priceMax;
+if (caratMin) apiParams.carat_min = caratMin;
+if (caratMax) apiParams.carat_max = caratMax;
+if (clarityMin) apiParams.clarity_min = clarityMin;
+if (clarityMax) apiParams.clarity_max = clarityMax;
+if (cutMin) apiParams.cut_min = cutMin;
+
+// ✅ IMPORTANT: send color only if selected
+if (colorMin && colorMax) {
+  apiParams.color = `${colorMin};${colorMax}`;
+}
+
+const params = new URLSearchParams(apiParams).toString();
         const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -571,4 +591,4 @@ function switchToListView() {
 
 // Initialize the app
 fetchDiamonds();
-fetchAndApplyBackgroundColor();
+// fetchAndApplyBackgroundColor();
