@@ -222,15 +222,33 @@ app.get('/api/products', async(req, res) => {
         }
         
        
-        if (colorMin !== undefined && colorMax !== undefined) {
-            filterCriteria.Color = { gte: colorMin, lte: colorMax };
-            console.log('color filter applied', filterCriteria.Color);
-        } else if (colorMin !== undefined) {
-            filterCriteria.Color = { gte: colorMin };
-        } else if (colorMax !== undefined) {
-            filterCriteria.Color = { lte: colorMax };
-        }
+        // if (colorMin !== undefined && colorMax !== undefined) {
+        //     filterCriteria.Color = { gte: colorMin, lte: colorMax };
+        //     console.log('color filter applied', filterCriteria.Color);
+        // } else if (colorMin !== undefined) {
+        //     filterCriteria.Color = { gte: colorMin };
+        // } else if (colorMax !== undefined) {
+        //     filterCriteria.Color = { lte: colorMax };
+        // }
         
+        const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
+
+        if (colorMin && colorMax) {
+            const start = COLOR_ORDER.indexOf(colorMin);
+            const end = COLOR_ORDER.indexOf(colorMax);
+
+            if (start !== -1 && end !== -1) {
+                const allowedColors = COLOR_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+
+                filterCriteria.Color = {
+                    in: allowedColors
+                };
+            }
+        }
+
         if (clarityMin !== undefined && clarityMax !== undefined) {
             filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
         } else if (clarityMin !== undefined) {
