@@ -229,8 +229,11 @@ app.get('/api/products', async(req, res) => {
             console.log('color filter applied', filterCriteria.Color);
         } else if (colorMin !== undefined) {
             filterCriteria.Color = { gte: colorMin };
+            console.log('colorMin filter applied', filterCriteria.Color);
         } else if (colorMax !== undefined) {
             filterCriteria.Color = { lte: colorMax };
+            console.log('colorMax filter applied', filterCriteria.Color);
+
         }
         
         if (clarityMin !== undefined && clarityMax !== undefined) {
