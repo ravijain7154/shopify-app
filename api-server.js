@@ -233,7 +233,7 @@ app.get('/api/products', async(req, res) => {
         
         const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
 
-        if (colorMin && colorMax) {
+        if (colorMin || colorMax) {
             const start = COLOR_ORDER.indexOf(colorMin);
             const end = COLOR_ORDER.indexOf(colorMax);
 
