@@ -255,7 +255,7 @@ function filterGridView() {
   var toColorIndex = colorSlider.result.to;
   var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
  
-  alert('Selected colors:', selected_colors.join(', '));
+  alert('Selected colors:', selected_colors);
 
   var $range_clarity = $("#range_50");
 
@@ -985,7 +985,7 @@ var colorSlider = $range_color.data("ionRangeSlider");
                 $range_color.data("ionRangeSlider").update({ from: colorIndexValues[0], to: colorIndexValues[1] });
                 const selectedColorValues = color_arr.slice(colorIndexValues[0], colorIndexValues[1] + 1);
                 const colorStr = selectedColorValues.join('|');
-                var tab = table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
+                table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
                 filterGridView();
                 fetchDiamonds();
 
