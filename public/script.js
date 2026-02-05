@@ -105,6 +105,7 @@ async function fetchDiamonds(retry = true) {
         showLoader(); 
 
         const queryParams = new URLSearchParams(window.location.search);  // Get query parameters from the URL
+       
         const selectedShapes = queryParams.get('Shape') ? decodeURIComponent(queryParams.get('Shape')).split(',') : [];
 
         const priceRange = queryParams.get('price');
@@ -145,7 +146,7 @@ async function fetchDiamonds(retry = true) {
        // Get cut range from the URL (e.g., VG;FR)
        const cutRange = queryParams.get('cut');
        let cutMin = '';
-    //    let cutMax = '';
+        //    let cutMax = '';
        if (cutRange) {
            [cutMin] = decodeURIComponent(cutRange).split(';');
        }
