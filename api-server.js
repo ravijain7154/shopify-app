@@ -253,26 +253,11 @@ app.get('/api/products', async(req, res) => {
         }
 
         /* ---------- SORT ---------- */
-        let orderBy = {};
-        switch (req.query.sort) {
-        case 'price_asc':
-            orderBy = { Buy_Price: 'asc' };
-            break;
-        case 'price_desc':
-            orderBy = { Buy_Price: 'desc' };
-            break;
-        case 'carat_asc':
-            orderBy = { Weight: 'asc' };
-            break;
-        case 'carat_desc':
-            orderBy = { Weight: 'desc' };
-            break;
-        }
+    
         
         // console.log('filterCriteria', filterCriteria);
         const products = await prisma.diamond.findMany({
             where: filterCriteria,
-            orderBy,
             skip: skip,  
             take: take   
         }); 
