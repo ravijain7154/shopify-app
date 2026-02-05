@@ -255,7 +255,6 @@ function filterGridView() {
   var toColorIndex = colorSlider.result.to;
   var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
  
-  alert('Selected colors:', selected_colors);
 
   var $range_clarity = $("#range_50");
 
