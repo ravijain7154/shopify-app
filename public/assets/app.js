@@ -223,7 +223,17 @@ function updateFilterInputsAndData() {
     
 }
 function filterGridView() {
- 
+   var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
+
+  var clarity_arr = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2", "I1", "I2"];
+
+  var cut_array = ["EX", "VG", "GD", "FR"];
+
+  var polish_array = ["EX", "VG", "GD", "FR"];
+  var fluor_array = ["N", "F", "M", "S", "VS"];
+  var sym_array = ["EX", "VG", "GD", "FR"];
+
+
   var selectedShapes = $('input:checkbox[name="checkbox[]"]:checked').map(function() {
       return this.value;
   }).get();
@@ -240,11 +250,12 @@ function filterGridView() {
       return;
   }
 
-  var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
+
   var fromColorIndex = colorSlider.result.from;
   var toColorIndex = colorSlider.result.to;
   var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
-
+ 
+  alert('Selected colors:', selected_colors.join(', '));
 
   var $range_clarity = $("#range_50");
 
@@ -255,7 +266,6 @@ function filterGridView() {
       return;
   }
 
-  var clarity_arr = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2", "I1", "I2"];
   const startIndex = claritySlider.result.from; 
   const endIndex = claritySlider.result.to; 
   const selectedClarityValues = clarity_arr.slice(startIndex, endIndex + 1);
@@ -268,7 +278,6 @@ function filterGridView() {
       console.error("Cut range slider is not initialized.");
       return;
   }
-  var cut_array = ["EX", "VG", "GD", "FR"];
   const startCutIndex = cutSlider.result.from; 
   const endCutIndex = cutSlider.result.to; 
   const selectedCutValues = cut_array.slice(startCutIndex, endCutIndex + 1);
@@ -283,7 +292,6 @@ function filterGridView() {
       console.error("Cut range slider is not initialized.");
       return;
   }
-  var polish_array = ["EX", "VG", "GD", "FR"];
   const startPolishIndex = polishSlider.result.from; 
   const endPolishIndex = polishSlider.result.to; 
   const selectedPolishValues = polish_array.slice(startPolishIndex, endPolishIndex + 1);
@@ -296,7 +304,6 @@ function filterGridView() {
       console.error("Cut range slider is not initialized.");
       return;
   }
-  var fluor_array = ["N", "F", "M", "S", "VS"];
   const startFluorIndex = fluorSlider.result.from; 
   const endFluorIndex = fluorSlider.result.to; 
   const selectedFluorValues = fluor_array.slice(startFluorIndex, endFluorIndex + 1);
@@ -309,7 +316,7 @@ function filterGridView() {
       console.error("Sym range slider is not initialized.");
       return;
   }
-  var sym_array = ["EX", "VG", "GD", "FR"];
+
   const startSymIndex = symSlider.result.from; 
   const endSymIndex = symSlider.result.to; 
   const selectedSymValues = sym_array.slice(startSymIndex, endSymIndex + 1);

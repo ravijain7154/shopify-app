@@ -171,8 +171,6 @@ app.get('/api/products', async(req, res) => {
         // Parsing the color range from the URL
         let colorMin = req.query.color_min ? req.query.color_min : undefined;
         let colorMax = req.query.color_max ? req.query.color_max : undefined;
-        alert('colorMin before shorthand:', colorMin);
-        alert('colorMax before shorthand:', colorMax);
         // Support shorthand `?color=MIN;MAX` or `?color=MIN,MAX` (semicolon or comma separated)
         if (req.query.color) {
             const parts = decodeURIComponent(req.query.color).split(/[;,]/).map(p => p.trim()).filter(Boolean);
@@ -229,11 +227,8 @@ app.get('/api/products', async(req, res) => {
             console.log('color filter applied', filterCriteria.Color);
         } else if (colorMin !== undefined) {
             filterCriteria.Color = { gte: colorMin };
-            console.log('colorMin filter applied', filterCriteria.Color);
         } else if (colorMax !== undefined) {
             filterCriteria.Color = { lte: colorMax };
-            console.log('colorMax filter applied', filterCriteria.Color);
-
         }
         
         if (clarityMin !== undefined && clarityMax !== undefined) {
@@ -252,8 +247,7 @@ app.get('/api/products', async(req, res) => {
             filterCriteria.Cut_Grade = { lte: cutMax };
         }
 
-        /* ---------- SORT ---------- */
-    
+
         
         // console.log('filterCriteria', filterCriteria);
         const products = await prisma.diamond.findMany({
