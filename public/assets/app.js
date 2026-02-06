@@ -198,7 +198,7 @@ function parseURLParams(url) {
             updateFilterInputsAndData();
           
             updateURLWithFilters('Shape', [$checkbox.val()]);
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
         }
     }
@@ -222,149 +222,143 @@ function updateFilterInputsAndData() {
     });
     
 }
-function filterGridView() {
-   var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
-
-  var clarity_arr = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2", "I1", "I2"];
-
-  var cut_array = ["EX", "VG", "GD", "FR"];
-
-  var polish_array = ["EX", "VG", "GD", "FR"];
-  var fluor_array = ["N", "F", "M", "S", "VS"];
-  var sym_array = ["EX", "VG", "GD", "FR"];
-
-
-  var selectedShapes = $('input:checkbox[name="checkbox[]"]:checked').map(function() {
-      return this.value;
-  }).get();
-
- var minCarat = parseFloat($('#range_56_input_from').val());
-  var maxCarat = parseFloat($('#range_56_input_to').val());
-  var minPrice = parseFloat($("#range_55_input_from").val().replace(/\$/g, '')); // Remove $ sign
-  var maxPrice = parseFloat($("#range_55_input_to").val().replace(/\$/g, '')); // Remove $ sign
-
-  var $range_color = $("#range_color");
-  var colorSlider = $range_color.data("ionRangeSlider");
-  if (!colorSlider) {
-      console.error("Color range slider is not initialized.");
-      return;
-  }
-
-
-  var fromColorIndex = colorSlider.result.from;
-  var toColorIndex = colorSlider.result.to;
-  var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
+// function filterGridView() {
  
+//   var selectedShapes = $('input:checkbox[name="checkbox[]"]:checked').map(function() {
+//       return this.value;
+//   }).get();
 
-  var $range_clarity = $("#range_50");
+//  var minCarat = parseFloat($('#range_56_input_from').val());
+//   var maxCarat = parseFloat($('#range_56_input_to').val());
+//   var minPrice = parseFloat($("#range_55_input_from").val().replace(/\$/g, '')); // Remove $ sign
+//   var maxPrice = parseFloat($("#range_55_input_to").val().replace(/\$/g, '')); // Remove $ sign
 
-  
-  var claritySlider = $range_clarity.data("ionRangeSlider");
-  if (!claritySlider) {
-      console.error("Clarity range slider is not initialized.");
-      return;
-  }
+//   var $range_color = $("#range_color");
+//   var colorSlider = $range_color.data("ionRangeSlider");
+//   if (!colorSlider) {
+//       console.error("Color range slider is not initialized.");
+//       return;
+//   }
 
-  const startIndex = claritySlider.result.from; 
-  const endIndex = claritySlider.result.to; 
-  const selectedClarityValues = clarity_arr.slice(startIndex, endIndex + 1);
+//   var color_arr = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
+//   var fromColorIndex = colorSlider.result.from;
+//   var toColorIndex = colorSlider.result.to;
+//   var selected_colors = color_arr.slice(fromColorIndex, toColorIndex + 1);
 
-  var $range_cut = $("#range_51a");
 
-  
-  var cutSlider = $range_cut.data("ionRangeSlider");
-  if (!cutSlider) {
-      console.error("Cut range slider is not initialized.");
-      return;
-  }
-  const startCutIndex = cutSlider.result.from; 
-  const endCutIndex = cutSlider.result.to; 
-  const selectedCutValues = cut_array.slice(startCutIndex, endCutIndex + 1);
-
+//   var $range_clarity = $("#range_50");
 
   
- var $range_polish = $("#range_51ab");
+//   var claritySlider = $range_clarity.data("ionRangeSlider");
+//   if (!claritySlider) {
+//       console.error("Clarity range slider is not initialized.");
+//       return;
+//   }
+
+//   var clarity_arr = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2", "I1", "I2"];
+//   const startIndex = claritySlider.result.from; 
+//   const endIndex = claritySlider.result.to; 
+//   const selectedClarityValues = clarity_arr.slice(startIndex, endIndex + 1);
+
+//   var $range_cut = $("#range_51a");
 
   
-  var polishSlider = $range_polish.data("ionRangeSlider");
-  if (!polishSlider) {
-      console.error("Cut range slider is not initialized.");
-      return;
-  }
-  const startPolishIndex = polishSlider.result.from; 
-  const endPolishIndex = polishSlider.result.to; 
-  const selectedPolishValues = polish_array.slice(startPolishIndex, endPolishIndex + 1);
+//   var cutSlider = $range_cut.data("ionRangeSlider");
+//   if (!cutSlider) {
+//       console.error("Cut range slider is not initialized.");
+//       return;
+//   }
+//   var cut_array = ["EX", "VG", "GD", "FR"];
+//   const startCutIndex = cutSlider.result.from; 
+//   const endCutIndex = cutSlider.result.to; 
+//   const selectedCutValues = cut_array.slice(startCutIndex, endCutIndex + 1);
 
-  var $range_fluor = $("#range_fluor");
-
-  
-  var fluorSlider = $range_fluor.data("ionRangeSlider");
-  if (!fluorSlider) {
-      console.error("Cut range slider is not initialized.");
-      return;
-  }
-  const startFluorIndex = fluorSlider.result.from; 
-  const endFluorIndex = fluorSlider.result.to; 
-  const selectedFluorValues = fluor_array.slice(startFluorIndex, endFluorIndex + 1);
-
-   var $range_sym = $("#range_sys");
 
   
-  var symSlider = $range_sym.data("ionRangeSlider");
-  if (!symSlider) {
-      console.error("Sym range slider is not initialized.");
-      return;
-  }
+//  var $range_polish = $("#range_51ab");
 
-  const startSymIndex = symSlider.result.from; 
-  const endSymIndex = symSlider.result.to; 
-  const selectedSymValues = sym_array.slice(startSymIndex, endSymIndex + 1);
+  
+//   var polishSlider = $range_polish.data("ionRangeSlider");
+//   if (!polishSlider) {
+//       console.error("Cut range slider is not initialized.");
+//       return;
+//   }
+//   var polish_array = ["EX", "VG", "GD", "FR"];
+//   const startPolishIndex = polishSlider.result.from; 
+//   const endPolishIndex = polishSlider.result.to; 
+//   const selectedPolishValues = polish_array.slice(startPolishIndex, endPolishIndex + 1);
 
-  // Loop through each grid item
-  $('.grid-item').each(function() {
-        var shape = $(this).find('[data-shape]').data('shape');
-        var carat = parseFloat($(this).find('[data-carat]').data('carat')) || 0; 
+//   var $range_fluor = $("#range_fluor");
+
+  
+//   var fluorSlider = $range_fluor.data("ionRangeSlider");
+//   if (!fluorSlider) {
+//       console.error("Cut range slider is not initialized.");
+//       return;
+//   }
+//   var fluor_array = ["N", "F", "M", "S", "VS"];
+//   const startFluorIndex = fluorSlider.result.from; 
+//   const endFluorIndex = fluorSlider.result.to; 
+//   const selectedFluorValues = fluor_array.slice(startFluorIndex, endFluorIndex + 1);
+
+//    var $range_sym = $("#range_sys");
+
+  
+//   var symSlider = $range_sym.data("ionRangeSlider");
+//   if (!symSlider) {
+//       console.error("Sym range slider is not initialized.");
+//       return;
+//   }
+//   var sym_array = ["EX", "VG", "GD", "FR"];
+//   const startSymIndex = symSlider.result.from; 
+//   const endSymIndex = symSlider.result.to; 
+//   const selectedSymValues = sym_array.slice(startSymIndex, endSymIndex + 1);
+
+//   // Loop through each grid item
+//   $('.grid-item').each(function() {
+//         var shape = $(this).find('[data-shape]').data('shape');
+//         var carat = parseFloat($(this).find('[data-carat]').data('carat')) || 0; 
       
-        var priceElement = $(this).find(".grid-product__price--current span:first-child");
-        var priceText = priceElement.text();
-        var price = parseFloat(priceText.replace(/[^\d.-]/g, '')); 
+//         var priceElement = $(this).find(".grid-product__price--current span:first-child");
+//         var priceText = priceElement.text();
+//         var price = parseFloat(priceText.replace(/[^\d.-]/g, '')); 
          
-        var color_data = $(this).find('[data-color]').data('color');
-        var clarity_data = $(this).find('[data-clarity]').data('clarity');
-        var cut_data = $(this).find('[data-cut]').data('cut');
-        var polish_data = $(this).find('[data-polish]').data('polish');
-        var fluor_data = $(this).find('[data-fluor]').data('fluor');
-        var sym_data = $(this).find('[data-sym]').data('sym');
+//         var color_data = $(this).find('[data-color]').data('color');
+//         var clarity_data = $(this).find('[data-clarity]').data('clarity');
+//         var cut_data = $(this).find('[data-cut]').data('cut');
+//         var polish_data = $(this).find('[data-polish]').data('polish');
+//         var fluor_data = $(this).find('[data-fluor]').data('fluor');
+//         var sym_data = $(this).find('[data-sym]').data('sym');
     
 
-        var shapeMatch = (selectedShapes.length === 0 || selectedShapes.includes(shape));
+//         var shapeMatch = (selectedShapes.length === 0 || selectedShapes.includes(shape));
 
-      // Check if the carat is within the selected range
-      var caratMatch = (isNaN(minCarat) && isNaN(maxCarat)) ||
-                       (isNaN(minCarat) && carat <= maxCarat) ||
-                       (minCarat <= carat && isNaN(maxCarat)) ||
-                       (minCarat <= carat && carat <= maxCarat);
+//       // Check if the carat is within the selected range
+//       var caratMatch = (isNaN(minCarat) && isNaN(maxCarat)) ||
+//                        (isNaN(minCarat) && carat <= maxCarat) ||
+//                        (minCarat <= carat && isNaN(maxCarat)) ||
+//                        (minCarat <= carat && carat <= maxCarat);
 
-      var priceMatch = (isNaN(minPrice) && isNaN(maxPrice)) ||
-                       (isNaN(minPrice) && price <= maxPrice) ||
-                       (minPrice <= price && isNaN(maxPrice)) ||
-                       (minPrice <= price && price <= maxPrice);
+//       var priceMatch = (isNaN(minPrice) && isNaN(maxPrice)) ||
+//                        (isNaN(minPrice) && price <= maxPrice) ||
+//                        (minPrice <= price && isNaN(maxPrice)) ||
+//                        (minPrice <= price && price <= maxPrice);
                        
-      var colorMatch = (selected_colors.length === 0 || selected_colors.includes(color_data));
-      var clarityMatch = (selectedClarityValues.length === 0 || selectedClarityValues.includes(clarity_data));
-      var cutMatch = (selectedCutValues.length === 0 || selectedCutValues.includes(cut_data));
-       var polishMatch = (selectedPolishValues.length === 0 || selectedPolishValues.includes(polish_data));
-       var fluorMatch = (selectedFluorValues.length === 0 || selectedFluorValues.includes(fluor_data));
-       var symMatch = (selectedSymValues.length === 0 || selectedSymValues.includes(sym_data));
-// console.log(polishMatch)
+//       var colorMatch = (selected_colors.length === 0 || selected_colors.includes(color_data));
+//       var clarityMatch = (selectedClarityValues.length === 0 || selectedClarityValues.includes(clarity_data));
+//       var cutMatch = (selectedCutValues.length === 0 || selectedCutValues.includes(cut_data));
+//        var polishMatch = (selectedPolishValues.length === 0 || selectedPolishValues.includes(polish_data));
+//        var fluorMatch = (selectedFluorValues.length === 0 || selectedFluorValues.includes(fluor_data));
+//        var symMatch = (selectedSymValues.length === 0 || selectedSymValues.includes(sym_data));
+// // console.log(polishMatch)
 
-      if (shapeMatch && caratMatch && priceMatch && colorMatch && clarityMatch && cutMatch && polishMatch && fluorMatch && symMatch) {
-          $(this).show(); // Show the grid item
-      } else {
-          $(this).hide(); // Hide the grid item
-      }
-  });
-}
+//       if (shapeMatch && caratMatch && priceMatch && colorMatch && clarityMatch && cutMatch && polishMatch && fluorMatch && symMatch) {
+//           $(this).show(); // Show the grid item
+//       } else {
+//           $(this).hide(); // Hide the grid item
+//       }
+//   });
+// }
 
 
 (function initDiamondApp() {
@@ -503,7 +497,7 @@ $('input:checkbox').on('change', function () {
                     }
                 });
         }
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
         // displayDiamonds();
     });
@@ -624,12 +618,12 @@ $("#range_55").ionRangeSlider({
             updateURLWithFilters('PriceFrom', fromPrice);
             updateURLWithFilters('PriceTo', toPrice);
             handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
         } else{
              updateURLWithFilters('price', data.from_value, data.to_value);
              handleFilterChange();
-             filterGridView();
+            //  filterGridView();
              fetchDiamonds();
           }   
     }
@@ -657,7 +651,7 @@ setSliderFromTo = function () {
     });
 };
 $('#range_55_input_from, #range_55_input_to').on('input', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 function parsepriceFromURL() {
@@ -669,7 +663,7 @@ function parsepriceFromURL() {
        $("#range_55_input_from").val(priceFrom);
         $("#range_55_input_to").val(priceTo);
         table.draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
            $(".grid-item").each(function() {
             var priceElement = $(this).find(".grid-product__price--current span:first-child");
@@ -694,7 +688,7 @@ function parsepriceFromURL() {
                   $("#range_55_input_from").val(from);
                   $("#range_55_input_to").val(to);
                   table.draw();
-                  filterGridView();
+                //   filterGridView();
                   fetchDiamonds();
                    $(".grid-item").each(function() {
                   var priceElement = $(this).find(".grid-product__price--current span:first-child");
@@ -776,13 +770,13 @@ $("#range_56").ionRangeSlider({
             updateURLWithFilters('CaratFrom', fromCarat);
             updateURLWithFilters('CaratTo', toCarat);
             handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
 
         } else{
             updateURLWithFilters('carat', data.from, data.to);
             handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
          } 
     }
@@ -799,7 +793,7 @@ setSliderFromTo1 = function() {
 };
 // Event handler for carat range input change
 $('#range_56_input_from, #range_56_input_to').on('input', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -813,7 +807,7 @@ function parseCaratFromURL() {
         $("#range_56_input_from").val(caratFrom);
         $("#range_56_input_to").val(caratTo);
         table.draw();
-        filterGridView(); 
+        // filterGridView(); 
         fetchDiamonds();
         $(".grid-product__title").each(function() {
             var carat_data = $(this).find('[data-carat]').data('carat');
@@ -860,7 +854,7 @@ function parseCaratFromURL() {
                         $(this).closest('.grid-item').hide(); // Hide the parent grid item
                     }
                 });
-                filterGridView();
+                // filterGridView();
                 fetchDiamonds();
 
             }
@@ -895,7 +889,7 @@ $range_color.ionRangeSlider({
         var selected_colors = color_arr.slice(from_index, to_index + 1);
         var colorStr = selected_colors.join("|");
         var tab = table.column(4).search(colorStr, true, false).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
               
         $(".grid-product__title").each(function() {
@@ -919,21 +913,21 @@ $range_color.ionRangeSlider({
             updateURLWithFilters('ColorFrom', fromColor);
             updateURLWithFilters('ColorTo', toColor);
             handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
 
 
         } else{
              updateURLWithFilters('color',data.from_value, data.to_value);
              handleFilterChange();
-             filterGridView();
+            //  filterGridView();
              fetchDiamonds();
           }
     }
 });
   
 $('#range_color').on('change', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -952,7 +946,7 @@ var colorSlider = $range_color.data("ionRangeSlider");
         const selectedColorValues = color_arr.slice(colorIndexValues[0], colorIndexValues[1] + 1);
         const colorStr = selectedColorValues.join('|');
         table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
       $(".grid-product__title").each(function() {
@@ -984,8 +978,8 @@ var colorSlider = $range_color.data("ionRangeSlider");
                 $range_color.data("ionRangeSlider").update({ from: colorIndexValues[0], to: colorIndexValues[1] });
                 const selectedColorValues = color_arr.slice(colorIndexValues[0], colorIndexValues[1] + 1);
                 const colorStr = selectedColorValues.join('|');
-                table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
-                filterGridView();
+                var tab = table.columns(4).search('^(' + colorStr + ')$', true, false, true).draw();
+                // filterGridView();
                 fetchDiamonds();
 
 
@@ -1052,7 +1046,7 @@ var colorSlider = $range_color.data("ionRangeSlider");
         
           // Apply the filter to the table
           table.columns(5).search('^(' + clarityStr + ')$', true, false, true).draw();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
            $(".grid-product__title").each(function() {
              var clarity_data = $(this).find('[data-clarity]').data('clarity');
@@ -1075,20 +1069,20 @@ var colorSlider = $range_color.data("ionRangeSlider");
             updateURLWithFilters('ClarityFrom', fromClarity);
             updateURLWithFilters('ClarityTo', toClarity);
             handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
 
         } else{
               updateURLWithFilters('clarity', data.from_value, data.to_value);
              handleFilterChange();
-            filterGridView();
+            // filterGridView();
             fetchDiamonds();
             }   
           }      
   });
 
   $('#range_50').on('change', function() {
-    filterGridView(); // Filter grid items when carat range changes
+    // filterGridView(); // Filter grid items when carat range changes
     fetchDiamonds();
   });
 
@@ -1105,7 +1099,7 @@ var colorSlider = $range_color.data("ionRangeSlider");
         const selectedClarityValues = clarity_arr.slice(clarityIndexValues[0], clarityIndexValues[1] + 1);
         const clarityStr = selectedClarityValues.join('|');
         table.columns(5).search('^(' + clarityStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
        $(".grid-product__title").each(function() {
@@ -1134,7 +1128,7 @@ var colorSlider = $range_color.data("ionRangeSlider");
                 const selectedClarityValues = clarity_arr.slice(clarityIndexValues[0], clarityIndexValues[1] + 1);
                 const clarityStr = selectedClarityValues.join('|');
                 table.columns(5).search('^(' + clarityStr + ')$', true, false, true).draw();
-               filterGridView();
+            //    filterGridView();
                fetchDiamonds();
 
                $(".grid-product__title").each(function() {
@@ -1204,7 +1198,7 @@ $range_51a.ionRangeSlider({
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
         table.columns(6).search('^(' + newStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
     
@@ -1229,13 +1223,13 @@ $range_51a.ionRangeSlider({
                updateURLWithFilters('CutFrom', fromCut);
               updateURLWithFilters('CutTo', toCut);
               handleFilterChange();
-              filterGridView();
+            //   filterGridView();
               fetchDiamonds();
 
         } else{
             updateURLWithFilters('cut',data.from_value, data.to_value);
             handleFilterChange();
-         filterGridView();
+        //  filterGridView();
          fetchDiamonds();
 
           }   
@@ -1253,7 +1247,7 @@ $range_51a.ionRangeSlider({
 });
 
 $('#range_51a').on('change', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -1285,7 +1279,7 @@ $reset_btn.on("click", function () {
         const selectedcutValues = cut_arr.slice(cutIndexValues[0],cutIndexValues[1]);
         const cutStr = selectedcutValues.join("|");
         table.columns(6).search('^(' + cutStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
         $(".grid-product__title").each(function() {
@@ -1314,7 +1308,7 @@ $reset_btn.on("click", function () {
                 const selectedCutValues = cut_arr.slice(cutIndexValues[0], cutIndexValues[1] + 1);
                 const cutStr = selectedCutValues.join('|');
                 table.columns(6).search('^(' + cutStr + ')$', true, false, true).draw();
-                filterGridView();
+                // filterGridView();
                 fetchDiamonds();
 
                $(".grid-product__title").each(function() {
@@ -1381,7 +1375,7 @@ $range_51ab.ionRangeSlider({
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
         table.columns(7).search('^(' + newStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
    
 
@@ -1410,13 +1404,13 @@ $range_51ab.ionRangeSlider({
                updateURLWithFilters('PolishFrom', fromPolish);
               updateURLWithFilters('PolishTo', toPolish);
               handleFilterChange();
-              filterGridView();
+            //   filterGridView();
               fetchDiamonds();
 
         } else{
             updateURLWithFilters('polish',data.from_value, data.to_value);
             handleFilterChange();
-           filterGridView();
+        //    filterGridView();
            fetchDiamonds();
 
           }   
@@ -1434,7 +1428,7 @@ $range_51ab.ionRangeSlider({
 });
 
 $('#range_51ab').on('change', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -1466,7 +1460,7 @@ $reset_btn.on("click", function () {
         const selectedpolishValues = polish_arr.slice(polishIndexValues[0],polishIndexValues[1]);
         const polishStr = selectedpolishValues.join("|");
         table.columns(7).search('^(' + polishStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
         $(".grid-product__title").each(function() {
@@ -1495,7 +1489,7 @@ $reset_btn.on("click", function () {
                 const selectedPolishValues = polish_arr.slice(polishIndexValues[0], polishIndexValues[1] + 1);
                 const polishStr = selectedPolishValues.join('|');
                 table.columns(7).search('^(' + polishStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
                $(".grid-product__title").each(function() {
@@ -1565,7 +1559,7 @@ $range_fluor.ionRangeSlider({
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
         table.columns(7).search('^(' + newStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
    
 
@@ -1594,13 +1588,13 @@ $range_fluor.ionRangeSlider({
                updateURLWithFilters('FluorFrom', fromFluor);
               updateURLWithFilters('FluorTo', toFluor);
               handleFilterChange();
-              filterGridView();
+            //   filterGridView();
               fetchDiamonds();
 
         } else{
             updateURLWithFilters('fluor',data.from_value, data.to_value);
             handleFilterChange();
-           filterGridView();
+        //    filterGridView();
            fetchDiamonds();
 
           }   
@@ -1618,7 +1612,7 @@ $range_fluor.ionRangeSlider({
 });
 
 $('#range_fluor').on('change', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -1650,7 +1644,7 @@ $reset_btn.on("click", function () {
         const selectedfluorValues = fluor_arr.slice(fluorIndexValues[0],fluorIndexValues[1]);
         const fluorStr = selectedfluorValues.join("|");
         table.columns(7).search('^(' + fluorStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
         $(".grid-product__title").each(function() {
@@ -1679,7 +1673,7 @@ $reset_btn.on("click", function () {
                 const selectedFluorValues = fluor_arr.slice(fluorIndexValues[0], fluorIndexValues[1] + 1);
                 const fluorStr = selectedFluorValues.join('|');
                 table.columns(7).search('^(' + fluorStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
                $(".grid-product__title").each(function() {
               var fluor_data = $(this).find('[data-fluor]').data('fluor');
@@ -1752,7 +1746,7 @@ $range_sym.ionRangeSlider({
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
         table.columns(7).search('^(' + newStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
    
 
@@ -1781,13 +1775,13 @@ $range_sym.ionRangeSlider({
                updateURLWithFilters('SymFrom', fromSym);
               updateURLWithFilters('SymTo', toSym);
               handleFilterChange();
-              filterGridView();
+            //   filterGridView();
               fetchDiamonds();
 
         } else{
             updateURLWithFilters('sym',data.from_value, data.to_value);
             handleFilterChange();
-           filterGridView();
+        //    filterGridView();
            fetchDiamonds();
 
           }   
@@ -1805,7 +1799,7 @@ $range_sym.ionRangeSlider({
 });
 
 $('#range_sys').on('change', function() {
-  filterGridView(); // Filter grid items when carat range changes
+//   filterGridView(); // Filter grid items when carat range changes
   fetchDiamonds();
 });
 
@@ -1837,7 +1831,7 @@ $reset_btn.on("click", function () {
         const selectedsymValues = sym_arr.slice(symIndexValues[0],symIndexValues[1]);
         const symStr = selectedsymValues.join("|");
         table.columns(7).search('^(' + symStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
         $(".grid-product__title").each(function() {
@@ -1866,7 +1860,7 @@ $reset_btn.on("click", function () {
                 const selectedSymValues = sym_arr.slice(symIndexValues[0], symIndexValues[1] + 1);
                 const symStr = selectedSymValues.join('|');
                 table.columns(7).search('^(' + symStr + ')$', true, false, true).draw();
-        filterGridView();
+        // filterGridView();
         fetchDiamonds();
 
                $(".grid-product__title").each(function() {
