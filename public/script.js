@@ -544,7 +544,7 @@ function renderTableView(diamonds) {
 
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
-        actionLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
+        actionLink.href = `diamond-detail?Stock_id=${diamond.Stock_No}`;
         actionLink.textContent = "View Details";
         actionCell.appendChild(actionLink);
 

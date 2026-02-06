@@ -132,6 +132,7 @@ const staticCorsMiddleware = (req, res, next) => {
 
 // Static files for diamond filter UI (CORS applied)
 app.use('/diamond-filter', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public')));
+app.use('/diamond-filter/diamond-detail/', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'diamond-detail')));
 
 // Static build assets (CORS applied)
 app.use('/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'build')));
@@ -161,60 +162,26 @@ app.get('/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
+                // Calculate the pagination range
+        const skip = (page - 1) * perPage;
+        const take = perPage;
+
+        const filterCriteria = {};
 
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
+                // Add shape filter if present
+        if (shapes.length > 0) {
+            filterCriteria.Shape = { in: shapes };  // Use `in` to filter for multiple shapes
+        }
+        
+  
+
         let priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
         let priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
          if (req.query.price) {
             const parts = decodeURIComponent(req.query.price).split(/[;,]/).map(p => p.trim()).filter(Boolean);
             if (parts[0]) priceMin = parts[0];
             if (parts[1]) priceMax = parts[1];
-        }
-        // Parsing the carat range from the URL
-        let caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
-        let caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
-            if (req.query.carat) {
-            const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) caratMin = parts[0];
-            if (parts[1]) caratMax = parts[1];
-        }
-
-        // Parsing the color range from the URL
-        let colorMin = req.query.color_min ? req.query.color_min : undefined;
-        let colorMax = req.query.color_max ? req.query.color_max : undefined;
-        // Support shorthand `?color=MIN;MAX` or `?color=MIN,MAX` (semicolon or comma separated)
-        if (req.query.color) {
-            const parts = decodeURIComponent(req.query.color).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) colorMin = parts[0];
-            if (parts[1]) colorMax = parts[1];
-        }
-        
-        // Parsing the color range from the URL
-        let clarityMin = req.query.clarity_min ? req.query.clarity_min : undefined;
-        let clarityMax = req.query.clarity_max ? req.query.clarity_max : undefined;
-        if (req.query.clarity) {
-            const parts = decodeURIComponent(req.query.clarity).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) clarityMin = parts[0];
-            if (parts[1]) clarityMax = parts[1];
-        }
-
-        let cutMin = req.query.cut_min ? decodeURIComponent(req.query.cut_min) : undefined;
-        let cutMax = req.query.cut_max ? decodeURIComponent(req.query.cut_max) : undefined;
-        if (req.query.cut) {
-            const parts = decodeURIComponent(req.query.cut).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) cutMin = parts[0];
-            if (parts[1]) cutMax = parts[1];
-        }   
-
-        // Calculate the pagination range
-        const skip = (page - 1) * perPage;
-        const take = perPage;
-
-        const filterCriteria = {};
-
-        // Add shape filter if present
-        if (shapes.length > 0) {
-            filterCriteria.Shape = { in: shapes };  // Use `in` to filter for multiple shapes
         }
          // Filter by price range (if provided)
          if (priceMin !== undefined && priceMax !== undefined) {
@@ -232,7 +199,16 @@ app.get('/api/products', async(req, res) => {
             };
         }
 
-       // Apply carat (weight) filter if present
+
+        // Parsing the carat range from the URL
+        let caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
+        let caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
+            if (req.query.carat) {
+            const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) caratMin = parts[0];
+            if (parts[1]) caratMax = parts[1];
+        }
+             // Apply carat (weight) filter if present
         if (caratMin !== undefined && caratMax !== undefined) {
             filterCriteria.Weight = { gte: caratMin, lte: caratMax };
         } else if (caratMin !== undefined) {
@@ -241,17 +217,18 @@ app.get('/api/products', async(req, res) => {
             filterCriteria.Weight = { lte: caratMax };
         }
         
-       
-        // if (colorMin !== undefined && colorMax !== undefined) {
-        //     filterCriteria.Color = { gte: colorMin, lte: colorMax };
-        //     console.log('color filter applied', filterCriteria.Color);
-        // } else if (colorMin !== undefined) {
-        //     filterCriteria.Color = { gte: colorMin };
-        // } else if (colorMax !== undefined) {
-        //     filterCriteria.Color = { lte: colorMax };
-        // }
-        
-        const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
+
+
+        // Parsing the color range from the URL
+        let colorMin = req.query.color_min ? req.query.color_min : undefined;
+        let colorMax = req.query.color_max ? req.query.color_max : undefined;
+        // Support shorthand `?color=MIN;MAX` or `?color=MIN,MAX` (semicolon or comma separated)
+        if (req.query.color) {
+            const parts = decodeURIComponent(req.query.color).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) colorMin = parts[0];
+            if (parts[1]) colorMax = parts[1];
+        }
+                const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
 
         if (colorMin || colorMax) {
             const start = COLOR_ORDER.indexOf(colorMin);
@@ -267,6 +244,15 @@ app.get('/api/products', async(req, res) => {
                     in: allowedColors
                 };
             }
+        }
+
+        // Parsing the color range from the URL
+        let clarityMin = req.query.clarity_min ? req.query.clarity_min : undefined;
+        let clarityMax = req.query.clarity_max ? req.query.clarity_max : undefined;
+        if (req.query.clarity) {
+            const parts = decodeURIComponent(req.query.clarity).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) clarityMin = parts[0];
+            if (parts[1]) clarityMax = parts[1];
         }
 
          const CLARITY_ORDER = ["I3","I2","I1","SI2","SI1","VS2","VS1","VVS2","VVS1","IF","FL"];
@@ -286,16 +272,15 @@ app.get('/api/products', async(req, res) => {
         }
         
 
-        // if (clarityMin !== undefined && clarityMax !== undefined) {
-        //     filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
-        // } else if (clarityMin !== undefined) {
-        //     filterCriteria.Clarity = { gte: clarityMin };
-        // } else if (clarityMax !== undefined) {
-        //     filterCriteria.Clarity = { lte: clarityMax };
-        // }
 
-
-         // Apply cut (cut) filter if present
+        let cutMin = req.query.cut_min ? decodeURIComponent(req.query.cut_min) : undefined;
+        let cutMax = req.query.cut_max ? decodeURIComponent(req.query.cut_max) : undefined;
+        if (req.query.cut) {
+            const parts = decodeURIComponent(req.query.cut).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) cutMin = parts[0];
+            if (parts[1]) cutMax = parts[1];
+        }   
+                 // Apply cut (cut) filter if present
         const CUT_ORDER     = ["Fair","Good","Very Good","Excellent","Ideal"];
         
         if (cutMin || cutMax) {
@@ -312,6 +297,33 @@ app.get('/api/products', async(req, res) => {
             }
         }
         
+
+
+
+       
+        // if (colorMin !== undefined && colorMax !== undefined) {
+        //     filterCriteria.Color = { gte: colorMin, lte: colorMax };
+        //     console.log('color filter applied', filterCriteria.Color);
+        // } else if (colorMin !== undefined) {
+        //     filterCriteria.Color = { gte: colorMin };
+        // } else if (colorMax !== undefined) {
+        //     filterCriteria.Color = { lte: colorMax };
+        // }
+        
+
+
+        
+
+        // if (clarityMin !== undefined && clarityMax !== undefined) {
+        //     filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
+        // } else if (clarityMin !== undefined) {
+        //     filterCriteria.Clarity = { gte: clarityMin };
+        // } else if (clarityMax !== undefined) {
+        //     filterCriteria.Clarity = { lte: clarityMax };
+        // }
+
+
+
         //  if (cutMin !== undefined && cutMax !== undefined) {
         //     filterCriteria.Cut_Grade = { gte: cutMin, lte: cutMax };
         // } else if (cutMin !== undefined) {
@@ -349,6 +361,31 @@ app.get('/api/products', async(req, res) => {
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).json({ message: 'Error fetching products from the database' });
+    }
+});
+
+app.get('/api/diamond-detail', async(req, res) => {
+    try {
+        const Stock_id = req.query.Stock_id;
+                // Add shape filter if present
+        if (!Stock_id) {
+            return res.status(400).json({ message: 'Stock_id query parameter is required' });
+        }
+
+        const diamond = await prisma.diamond.findMany({
+            where: { Stock_No: Stock_id },
+        }); 
+
+        if (!diamond || diamond.length === 0) {
+            return res.status(404).json({ message: 'Diamond not found' });
+        }
+
+        res.json({ diamond }); // Send products as JSON
+
+    } catch (error) {
+        
+        console.error('Error fetching diamond details:', error);
+        res.status(500).json({ message: 'Error fetching diamond details from the database' });
     }
 });
 
