@@ -463,7 +463,7 @@ function renderTableView(diamonds) {
 
         const imageCell = document.createElement('td');
         const image = document.createElement('img');
-        image.src = diamond.ImageLink || 'default-image.jpg';
+        image.src = diamond.ImageLink || 'assets/images/default-image.jpg';
         image.alt = `${diamond.Shape} diamond`;
         image.style.width = '50px';
         image.style.height = '50px';
