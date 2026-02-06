@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const d = data.diamond;
-
+    console.log("Diamond details:", d);
+    
     document.getElementById("diamond-title").innerText =
       `Diamond ${d.CertificateNumber || d.Stock_No}`;
 
