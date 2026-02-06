@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`/api/diamond-detail?Stock_id=${Stock_id}`);
+    const res = await fetch(`/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
     const data = await res.json();
 
     if (!data.diamond) {
@@ -19,9 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const d = data.diamond;
 
     document.getElementById("diamond-title").innerText =
-      `Diamond ${d.CertificateNumber}`;
+      `Diamond ${d.CertificateNumber || d.Stock_No}`;
 
     const table = document.getElementById("diamond-details");
+    table.innerHTML = "";
 
     const fields = {
       Shape: d.Shape,
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       Polish: d.Polish,
       Symmetry: d.Symmetry,
       Fluorescence: d.FluoIntensity,
-      Price: `₹ ${d.Buy_Price}`
+      Price: d.Buy_Price ? `₹ ${d.Buy_Price}` : "-"
     };
 
     Object.entries(fields).forEach(([key, value]) => {
