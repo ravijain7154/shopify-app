@@ -124,16 +124,16 @@ async function fetchDiamonds(retry = true) {
            [caratMin, caratMax] = caratRange.split(';');
        }
 
-       const colorRange = queryParams.get('color');
-       let colorMin = '';
-       let colorMax = '';
-       if (colorRange) {
-        [colorMin, colorMax] = colorRange.split(';');
-       } else {
-        // Support explicit params set by the slider to avoid semicolon parsing issues
-        colorMin = queryParams.get('color_min') || '';
-        colorMax = queryParams.get('color_max') || '';
-       }
+       const colorParam = queryParams.get('color');
+        let colorMin = '';
+        let colorMax = '';
+
+        if (colorParam && colorParam.includes(';')) {
+        const parts = colorParam.split(';').map(v => v.trim());
+        colorMin = parts[0] || '';
+        colorMax = parts[1] || '';
+        }
+
 
        const clarityRange = queryParams.get('clarity');
        let clarityMin = '';
@@ -399,7 +399,7 @@ function renderGridView(diamonds) {
         gridImage.classList.add('grid__image-ratio');
         const imageLink = document.createElement('a');
         const img = document.createElement('img');
-        img.src = diamond.ImageLink || 'default-image.jpg';
+        img.src = diamond.ImageLink || 'assets/images/default-image.jpg';
         img.alt = `${diamond.Shape} diamond`;
         imageLink.appendChild(img);
         gridImage.appendChild(imageLink);

@@ -365,7 +365,7 @@ function updateFilterInputsAndData() {
   function doInit() {
     try {
       updateFilterInputsAndData();
-      filterGridView();
+      //filterGridView();
       fetchDiamonds();
     } catch (err) {
       console.warn('Diamond init error', err);
@@ -1943,7 +1943,7 @@ function switchToGridView() {
         parsePolishFromURL();
         parseFluorFromURL();
         parseSymFromURL()
-        filterGridView()
+        //filterGridView()
         fetchDiamonds();
      
       // parseColorFromURL();
@@ -1971,7 +1971,7 @@ function switchToGridView() {
         parsePolishFromURL();
         parseFluorFromURL();
         parseSymFromURL()
-        filterGridView()
+       // filterGridView()
         fetchDiamonds();
 
       
