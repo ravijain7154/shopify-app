@@ -112,43 +112,66 @@ async function fetchDiamonds(retry = true) {
         let priceMin = '';  // Change to 'let' instead of 'const'
         let priceMax = '';  // Change to 'let' instead of 'const'
 
-        if (priceRange) {
-            [priceMin, priceMax] = priceRange.split(';');  // Split the price range
-        }
+        // if (priceRange) {
+        //     [priceMin, priceMax] = priceRange.split(';');  // Split the price range
+        // }
+
+        if (priceRange && priceRange.includes(';')) {
+        const parts = priceRange.split(';').map(v => v.trim());
+            priceMin = parts[0] || '';
+            priceMax = parts[1] || '';
+        } 
 
        // Get carat range from the URL
        const caratRange = queryParams.get('carat');
        let caratMin = '';
        let caratMax = '';
-       if (caratRange) {
-           [caratMin, caratMax] = caratRange.split(';');
-       }
+        //    if (caratRange) {
+        //        [caratMin, caratMax] = caratRange.split(';');
+        //    }
+       if (caratRange && caratRange.includes(';')) {
+        const parts = caratRange.split(';').map(v => v.trim());
+            caratMin = parts[0] || '';
+            caratMax = parts[1] || '';
+        } 
 
+       // get color range from url  
        const colorParam = queryParams.get('color');
         let colorMin = '';
         let colorMax = '';
 
         if (colorParam && colorParam.includes(';')) {
-        const parts = colorParam.split(';').map(v => v.trim());
-        colorMin = parts[0] || '';
-        colorMax = parts[1] || '';
+            const parts = colorParam.split(';').map(v => v.trim());
+            colorMin = parts[0] || '';
+            colorMax = parts[1] || '';
         }
 
 
        const clarityRange = queryParams.get('clarity');
        let clarityMin = '';
        let clarityMax = '';
-       if (clarityRange) {
-        [clarityMin, clarityMax] = clarityRange.split(';');
-       }
+        if (clarityRange && clarityRange.includes(';')) {
+            const parts = clarityRange.split(';').map(v => v.trim());
+            clarityMin = parts[0] || '';
+            clarityMax = parts[1] || '';
+        }
+
+    //    if (clarityRange) {
+    //     [clarityMin, clarityMax] = clarityRange.split(';');
+    //    }
 
        // Get cut range from the URL (e.g., VG;FR)
        const cutRange = queryParams.get('cut');
        let cutMin = '';
-    //    let cutMax = '';
-       if (cutRange) {
-           [cutMin] = decodeURIComponent(cutRange).split(';');
-       }
+       let cutMax = '';
+    //    if (cutRange) {
+    //        [cutMin] = decodeURIComponent(cutRange).split(';');
+    //    }
+         if (cutRange && cutRange.includes(';')) {
+            const parts = cutRange.split(';').map(v => v.trim());
+            cutMin = parts[0] || '';
+            cutMax = parts[1] || '';
+        }
 
 
         // const params = new URLSearchParams({
@@ -173,15 +196,28 @@ async function fetchDiamonds(retry = true) {
 };
 
 if (selectedShapes.length) apiParams.Shape = selectedShapes.join(',');
-if (priceMin) apiParams.price_min = priceMin;
-if (priceMax) apiParams.price_max = priceMax;
-if (caratMin) apiParams.carat_min = caratMin;
-if (caratMax) apiParams.carat_max = caratMax;
-if (clarityMin) apiParams.clarity_min = clarityMin;
-if (clarityMax) apiParams.clarity_max = clarityMax;
-if (cutMin) apiParams.cut_min = cutMin;
-
+// if (priceMin) apiParams.price_min = priceMin;
+// if (priceMax) apiParams.price_max = priceMax;
+// if (caratMin) apiParams.carat_min = caratMin;
+// if (caratMax) apiParams.carat_max = caratMax;
+// if (clarityMin) apiParams.clarity_min = clarityMin;
+// if (clarityMax) apiParams.clarity_max = clarityMax;
+// if (cutMin) apiParams.cut_min = cutMin;
+// if (cutMax) apiParams.cut_max = cutMax;
 // ✅ IMPORTANT: send color only if selected
+if (priceMin && priceMax) {
+  apiParams.price = `${priceMin};${priceMax}`;
+}
+if (caratMin && caratMax) {
+  apiParams.carat = `${caratMin};${caratMax}`;
+}
+if (clarityMin && clarityMax) {
+  apiParams.clarity = `${clarityMin};${clarityMax}`;
+}
+if (cutMin && cutMax) {
+    apiParams.cut = `${cutMin};${cutMax}`;
+}
+
 if (colorMin && colorMax) {
   apiParams.color = `${colorMin};${colorMax}`;
 }

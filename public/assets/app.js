@@ -76,7 +76,7 @@ function handleFilterChange() {
         const key = 'Shape';
         const value = input.value;
         if (!selectedFilters.has(key)) {
-            selectedFilters.set(key, [value]);
+            // selectedFilters.set(key, [value]);
         } else {
             let existingValues = selectedFilters.getAll(key);
             existingValues.push(value);

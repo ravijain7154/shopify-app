@@ -163,11 +163,22 @@ app.get('/api/products', async(req, res) => {
         const perPage = parseInt(req.query.perPage) || 25;
 
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
-        const priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
-        const priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
+        let priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
+        let priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
+         if (req.query.price) {
+            const parts = decodeURIComponent(req.query.price).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) priceMin = parts[0];
+            if (parts[1]) priceMax = parts[1];
+        }
         // Parsing the carat range from the URL
-        const caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
-        const caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
+        let caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
+        let caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
+            if (req.query.carat) {
+            const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) caratMin = parts[0];
+            if (parts[1]) caratMax = parts[1];
+        }
+
         // Parsing the color range from the URL
         let colorMin = req.query.color_min ? req.query.color_min : undefined;
         let colorMax = req.query.color_max ? req.query.color_max : undefined;
@@ -177,14 +188,23 @@ app.get('/api/products', async(req, res) => {
             if (parts[0]) colorMin = parts[0];
             if (parts[1]) colorMax = parts[1];
         }
-        console.log('colorMin:', colorMin);
+        
         // Parsing the color range from the URL
-        const clarityMin = req.query.clarity_min ? req.query.clarity_min : undefined;
-        const clarityMax = req.query.clarity_max ? req.query.clarity_max : undefined;
+        let clarityMin = req.query.clarity_min ? req.query.clarity_min : undefined;
+        let clarityMax = req.query.clarity_max ? req.query.clarity_max : undefined;
+        if (req.query.clarity) {
+            const parts = decodeURIComponent(req.query.clarity).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) clarityMin = parts[0];
+            if (parts[1]) clarityMax = parts[1];
+        }
 
-        const cutMin = req.query.cut_min ? decodeURIComponent(req.query.cut_min) : undefined;
-        const cutMax = req.query.cut_max ? decodeURIComponent(req.query.cut_max) : undefined;
-
+        let cutMin = req.query.cut_min ? decodeURIComponent(req.query.cut_min) : undefined;
+        let cutMax = req.query.cut_max ? decodeURIComponent(req.query.cut_max) : undefined;
+        if (req.query.cut) {
+            const parts = decodeURIComponent(req.query.cut).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) cutMin = parts[0];
+            if (parts[1]) cutMax = parts[1];
+        }   
 
         // Calculate the pagination range
         const skip = (page - 1) * perPage;
@@ -249,21 +269,56 @@ app.get('/api/products', async(req, res) => {
             }
         }
 
-        if (clarityMin !== undefined && clarityMax !== undefined) {
-            filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
-        } else if (clarityMin !== undefined) {
-            filterCriteria.Clarity = { gte: clarityMin };
-        } else if (clarityMax !== undefined) {
-            filterCriteria.Clarity = { lte: clarityMax };
+         const CLARITY_ORDER = ["I3","I2","I1","SI2","SI1","VS2","VS1","VVS2","VVS1","IF","FL"];
+
+        if (clarityMin || clarityMax) {
+            const start = CLARITY_ORDER.indexOf(clarityMin);
+            const end = CLARITY_ORDER.indexOf(clarityMax);
+            if (start !== -1 && end !== -1) {
+                const allowedClarities = CLARITY_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+                filterCriteria.Clarity = {
+                    in: allowedClarities
+                };
+            }
         }
+        
+
+        // if (clarityMin !== undefined && clarityMax !== undefined) {
+        //     filterCriteria.Clarity = { gte: clarityMin, lte: clarityMax };
+        // } else if (clarityMin !== undefined) {
+        //     filterCriteria.Clarity = { gte: clarityMin };
+        // } else if (clarityMax !== undefined) {
+        //     filterCriteria.Clarity = { lte: clarityMax };
+        // }
+
+
          // Apply cut (cut) filter if present
-        if (cutMin !== undefined && cutMax !== undefined) {
-            filterCriteria.Cut_Grade = { gte: cutMin, lte: cutMax };
-        } else if (cutMin !== undefined) {
-            filterCriteria.Cut_Grade = { gte: cutMin };
-        } else if (cutMax !== undefined) {
-            filterCriteria.Cut_Grade = { lte: cutMax };
+        const CUT_ORDER     = ["Fair","Good","Very Good","Excellent","Ideal"];
+        
+        if (cutMin || cutMax) {
+            const start = CUT_ORDER.indexOf(cutMin);
+            const end = CUT_ORDER.indexOf(cutMax); 
+            if (start !== -1 && end !== -1) {
+                const allowedCuts = CUT_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+                filterCriteria.Cut_Grade = { 
+                    in: allowedCuts
+                };
+            }
         }
+        
+        //  if (cutMin !== undefined && cutMax !== undefined) {
+        //     filterCriteria.Cut_Grade = { gte: cutMin, lte: cutMax };
+        // } else if (cutMin !== undefined) {
+        //     filterCriteria.Cut_Grade = { gte: cutMin };
+        // } else if (cutMax !== undefined) {
+        //     filterCriteria.Cut_Grade = { lte: cutMax };
+        // }
 
 
         
