@@ -2,19 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Diamond Detail</title>
-  <link rel="stylesheet" href="/diamond-filter/assets/css/diamond-detail.css" />
+  <title>Diamond Details</title>
+  <link rel="stylesheet" href="/diamond-filter/assets/diamond-detail.css">
 </head>
 <body>
 
-<div class="diamond-detail-container">
-  <h1 id="diamond-title">Loading...</h1>
+<div class="diamond-container">
 
-  <table class="diamond-table">
-    <tbody id="diamond-details"></tbody>
-  </table>
+  <!-- LEFT -->
+  <div class="diamond-left">
+    <img id="diamond-image" src="/diamond-filter/assets/images/default-image.jpg" alt="Diamond">
+  </div>
+
+  <!-- RIGHT -->
+  <div class="diamond-right">
+    <h1 id="diamond-title">Diamond</h1>
+    <div class="price" id="diamond-price">₹ 0</div>
+
+    <table class="diamond-specs">
+      <tbody id="diamond-details"></tbody>
+    </table>
+
+    <div class="actions">
+      <button class="btn primary">Request Price</button>
+      <button class="btn">Add to Wishlist</button>
+    </div>
+  </div>
+
 </div>
 
-<script src="/diamond-filter/assets/js/diamond-detail.js"></script>
+<script src="/diamond-filter/assets/diamond-details.js"></script>
 </body>
 </html>

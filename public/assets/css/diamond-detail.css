@@ -1,0 +1,65 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  margin: 0;
+}
+
+.diamond-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.diamond-left img {
+  width: 100%;
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+.diamond-right h1 {
+  margin: 0 0 10px;
+  font-size: 26px;
+}
+
+.price {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.diamond-specs {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.diamond-specs th,
+.diamond-specs td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.diamond-specs th {
+  width: 40%;
+  color: #666;
+}
+
+.actions {
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 12px 20px;
+  margin-right: 10px;
+  border: 1px solid #000;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #000;
+  color: #fff;
+}

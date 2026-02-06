@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const Stock_id = params.get("Stock_id");
 
   if (!Stock_id) {
-    alert("Invalid Diamond ID");
+    document.body.innerHTML = "<h2>Invalid Diamond ID</h2>";
     return;
   }
 
@@ -11,30 +11,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch(`/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
     const data = await res.json();
 
-    if (!data.diamond) {
-      document.getElementById("diamond-title").innerText = "Diamond Not Found";
+    if (!data.diamond || data.diamond.length === 0) {
+      document.body.innerHTML = "<h2>Diamond Not Found</h2>";
       return;
     }
 
-    const d = data.diamond;
+    // API returns array
+    const d = data.diamond[0];
     console.log("Diamond details:", d);
-    
-    document.getElementById("diamond-title").innerText =
-      `Diamond ${d.CertificateNumber || d.Stock_No}`;
 
+    // Title
+    document.getElementById("diamond-title").innerText =
+      `Diamond ${d.Stock_No}`;
+
+    // Left image (fallback image)
+    document.getElementById("diamond-image").src =
+      d.Image_URL || "/diamond-filter/default-image.jpg";
+
+    // Price
+    document.getElementById("diamond-price").innerText =
+      d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : "-";
+
+    // Specification table
     const table = document.getElementById("diamond-details");
     table.innerHTML = "";
 
     const fields = {
-      Shape: d.Shape,
-      Carat: d.Weight,
-      Color: d.Color,
-      Clarity: d.Clarity,
-      Cut: d.Cut_Grade,
-      Polish: d.Polish,
-      Symmetry: d.Symmetry,
-      Fluorescence: d.FluoIntensity,
-      Price: d.Buy_Price ? `₹ ${d.Buy_Price}` : "-"
+      "Stock No": d.Stock_No,
+      "Shape": d.Shape,
+      "Carat": d.Weight,
+      "Color": d.Color,
+      "Clarity": d.Clarity,
+      "Cut": d.Cut_Grade,
+      "Polish": d.Polish,
+      "Symmetry": d.Symmetry,
+      "Fluorescence": d.FluoIntensity,
+      "Depth %": d.DepthPercent,
+      "Table %": d.TablePercent,
+      "Measurements": `${d.MeasLength} × ${d.MeasWidth} × ${d.MeasDepth}`,
+      "Certificate": d.CertificateNumber,
+      "Location": d.Location
     };
 
     Object.entries(fields).forEach(([key, value]) => {
@@ -48,6 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (err) {
     console.error(err);
-    alert("Failed to load diamond details");
+    document.body.innerHTML = "<h2>Failed to load diamond details</h2>";
   }
 });
