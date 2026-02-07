@@ -451,12 +451,7 @@ function find_range(range_from, range_to) {
 
 $(document).ready(function () {
   ///////////////////////////////////////////////////////////
-  var table = $("#example").DataTable({
-      scrollX: true,
-      // scrollY: '500px',
-      paging: false,
-      autoWidth: true
-  });
+  var table = $("#example");
 
 
 $.fn.dataTable.ext.search.push(
