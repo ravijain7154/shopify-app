@@ -1156,9 +1156,9 @@ var colorSlider = $range_color.data("ionRangeSlider");
 
   /*****Cut*******/
 var from_cut = 0;
-var to_cut = 3;
-var from_cut_val = "Excellent";
-var to_cut_val = "Fair";
+var to_cut = 4;
+var from_cut_val = "EX";
+var to_cut_val = "I";
 if (urlToParse.length) {
   var cut_url = result_url.cut;
   var cut_url = cut_url.split("%3B");
@@ -1168,7 +1168,7 @@ if (urlToParse.length) {
     from_cut_val = from_cut;
     to_cut_val = to_cut;
 
-    var price_value1 = ["Excellent", "Very good", "Good", "Fair"];
+    var price_value1 = ["EX", "VG", "GD", "FR", "I"];
     from_cut = price_value1.indexOf(from_cut);
     to_cut = price_value1.indexOf(to_cut);
   }
@@ -1183,13 +1183,13 @@ $range_51a.ionRangeSlider({
   grid: true,
   from: from_cut,
   to: to_cut,
-  values: ["Excellent", "Very good", "Good", "Fair"],
+  values: ["EX", "VG", "GD", "FR", "I"],
   onStart: function (data) {
     $("#range_51a").val(from_cut_val + ";" + to_cut_val);
   },
   onChange: function (data) {
     
-    var myArray = ["Excellent", "Very good", "Good", "Fair"];
+    var myArray = ["EX", "VG", "GD", "FR", "I"];
     const startIndex = data.from; // Replace with the index of the desired start value
     const endIndex = data.to; // Replace with the index of the desired end value
 
@@ -1263,13 +1263,13 @@ $update_btn.on("click", function () {
 $reset_btn.on("click", function () {
   rangeCut.update({
     from: 0,
-    to: 3,
-    values: ["Excellent", "Very good", "Good", "Fair"],
+    to: 4,
+    values: ["EX", "VG", "GD", "FR", "I"],
   });
 });
 
   function parseCutFromURL() {
-    var cut_arr = ["Excellent", "Very good", "Good", "Fair"];
+    var cut_arr = ["EX", "VG", "GD", "FR", "I"];
     const urlParams = new URLSearchParams(window.location.search);
     const cutFrom = urlParams.get('CutFrom');
     const cutTo = urlParams.get('CutTo');
