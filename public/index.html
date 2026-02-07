@@ -480,7 +480,7 @@
                       </div>
                     </div>
                   </div>
-                  <button class="more_filter_btn">
+                  <button  type="button" class="more_filter_btn">
                     <span>More Filter </span>
                     <svg
                       viewBox="64 64 896 896"
@@ -714,29 +714,6 @@
 
     </style>
     <ul id="product-list" class="custom-products-container"></ul>
-
-   <script>
-$(document).on('click', '.more_filter_btn', function (e) {
-  e.preventDefault();
-
-  const $btn = $(this);
-  const $panel = $('.more-filter');
-  const $icon = $btn.find('svg');
-  const $text = $btn.find('span');
-  alert('clicked');
-
-  if ($panel.is(':visible')) {
-    $panel.slideUp(200);
-    $text.text('More Filter');
-    $icon.removeClass('rotate-270').addClass('rotate-90');
-  } else {
-    $panel.slideDown(200);
-    $text.text('Less Filter');
-    $icon.removeClass('rotate-90').addClass('rotate-270');
-  }
-});
-</script>
-
 
     <!-- <script>
 

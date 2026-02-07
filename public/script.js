@@ -5,6 +5,35 @@ let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
 
+function initMoreFilterToggle() {
+  const btn = document.querySelector('.more_filter_btn');
+  const panel = document.querySelector('.more-filter');
+
+  if (!btn || !panel) {
+    console.warn('More filter elements not found');
+    return;
+  }
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const isOpen = panel.style.display === 'block';
+
+    if (isOpen) {
+      panel.style.display = 'none';
+      btn.querySelector('span').textContent = 'More Filter';
+      btn.querySelector('svg')?.classList.remove('rotate-270');
+      btn.querySelector('svg')?.classList.add('rotate-90');
+    } else {
+      panel.style.display = 'block';
+      btn.querySelector('span').textContent = 'Less Filter';
+      btn.querySelector('svg')?.classList.remove('rotate-90');
+      btn.querySelector('svg')?.classList.add('rotate-270');
+    }
+  });
+}
+
 (function () {
   if (!location.pathname.includes('/pages/diamond')) return;
 
@@ -58,6 +87,7 @@ let isColorApplied = false;
         }));
       }, Promise.resolve()).then(() => {
         console.log('Diamond app loaded');
+        initMoreFilterToggle();
         // Initialize the diamond UI after all scripts are loaded 
         document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
         document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
