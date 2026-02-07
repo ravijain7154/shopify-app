@@ -162,8 +162,8 @@ app.use('/diamond-filter/assets', staticCorsMiddleware, express.static(path.join
 // Endpoint to fetch products from the database
 app.get('/api/products', async(req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const perPage = parseInt(req.query.perPage) || 25;
+        const page = parseInt(req.query.page) ;
+        const perPage = parseInt(req.query.perPage) ;
                 // Calculate the pagination range
         const skip = (page - 1) * perPage;
         const take = perPage;
@@ -230,7 +230,7 @@ app.get('/api/products', async(req, res) => {
             if (parts[0]) colorMin = parts[0];
             if (parts[1]) colorMax = parts[1];
         }
-                const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
+        const COLOR_ORDER = ["D","E","F","G","H","I","J","K","L","M"];
 
         if (colorMin || colorMax) {
             const start = COLOR_ORDER.indexOf(colorMin);
@@ -283,7 +283,7 @@ app.get('/api/products', async(req, res) => {
             if (parts[1]) cutMax = parts[1];
         }   
                  // Apply cut (cut) filter if present
-        const CUT_ORDER     = ["Fair","Good","Very Good","Excellent","Ideal"];
+        const CUT_ORDER     = ["Excellent", "Very good", "Good", "Fair"];
         
         if (cutMin || cutMax) {
             const start = CUT_ORDER.indexOf(cutMin);
