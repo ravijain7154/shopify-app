@@ -4,6 +4,7 @@ let diamonds = [];    // Store fetched diamonds data
 let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
+  const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
 (function () {
   if (!location.pathname.includes('/pages/diamond')) return;
@@ -11,7 +12,6 @@ let isColorApplied = false;
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
-  const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
   // 1️⃣ Load CSS explicitly
   const styles = [
