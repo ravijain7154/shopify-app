@@ -4,7 +4,6 @@ let diamonds = [];    // Store fetched diamonds data
 let totalPages = 1;   // Total pages (from the API response)
 let totalCount = 0;   // Total product count (from the API response)
 let isColorApplied = false;
-  const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
 (function () {
   if (!location.pathname.includes('/pages/diamond')) return;
@@ -12,6 +11,7 @@ let isColorApplied = false;
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
+  const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
   // 1️⃣ Load CSS explicitly
   const styles = [
@@ -72,7 +72,7 @@ let isColorApplied = false;
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch(`${APP_URL}/api/get-color`);
+        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -191,9 +191,9 @@ async function fetchDiamonds(retry = true) {
         // }).toString();
 
         const apiParams = {
-            page: currentPage,
-            perPage: pageSize,
-        };
+  page: currentPage,
+  perPage: pageSize,
+};
 
 if (selectedShapes.length) apiParams.Shape = selectedShapes.join(',');
 // if (priceMin) apiParams.price_min = priceMin;
@@ -223,7 +223,7 @@ if (colorMin && colorMax) {
 }
 
 const params = new URLSearchParams(apiParams).toString();
-        const response = await fetch(`${APP_URL}/api/products?${params}`);
+        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -444,7 +444,7 @@ function renderGridView(diamonds) {
         const gridContent = document.createElement('div');
         gridContent.classList.add('grid-item__content');
         const gridLink = document.createElement('a');
-        gridLink.href = `diamond-detail?Stock_id=${diamond.Stock_No}`;
+        gridLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
         gridLink.classList.add('grid-item__link');
 
         const gridMeta = document.createElement('div');
@@ -544,7 +544,7 @@ function renderTableView(diamonds) {
 
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
-        actionLink.href = `diamond-detail?Stock_id=${diamond.Stock_No}`;
+        actionLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
         actionLink.textContent = "View Details";
         actionCell.appendChild(actionLink);
 
