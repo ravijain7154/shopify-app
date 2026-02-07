@@ -35,9 +35,12 @@ function initMoreFilterToggle() {
 }
 
 (function () {
-  if (!location.pathname.includes('/pages/diamond')) return;
+//   if (!location.pathname.includes('/pages/diamond')) return;
 
-  const container = document.getElementById('diamond-app');
+if (!location.pathname.startsWith('/apps/diamond-filter')) return;
+
+
+  const container = document.getElementById('MainContent');
   if (!container) return;
 
   const APP_URL = '';
