@@ -45,7 +45,7 @@ function initMoreFilterToggle() {
   // 1️⃣ Load CSS explicitly
   const styles = [
     `${APP_URL}/diamond-filter/assets/styles.css`,
-    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
+    // `${APP_URL}/diamond-filter/assets/datatables.min.css`,
     `${APP_URL}/diamond-filter/assets/ring_builder.css`,
     `${APP_URL}/diamond-filter/assets/diamond.css`,
     `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
@@ -71,7 +71,7 @@ function initMoreFilterToggle() {
       // 3️⃣ Load JS AFTER HTML exists
       const scripts = [
         `${APP_URL}/diamond-filter/assets/jquery.min.js`,
-        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
+        // `${APP_URL}/diamond-filter/assets/datatables.min.js`,
         `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
         `${APP_URL}/diamond-filter/assets/app.js`,
         `${APP_URL}/diamond-filter/script.js`,
