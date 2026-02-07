@@ -715,27 +715,46 @@
     </style>
     <ul id="product-list" class="custom-products-container"></ul>
 
-    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
+   <script>
+$(document).on('click', '.more_filter_btn', function (e) {
+  e.preventDefault();
+
+  const $btn = $(this);
+  const $panel = $('.more-filter');
+  const $icon = $btn.find('svg');
+  const $text = $btn.find('span');
+
+  if ($panel.is(':visible')) {
+    $panel.slideUp(200);
+    $text.text('More Filter');
+    $icon.removeClass('rotate-270').addClass('rotate-90');
+  } else {
+    $panel.slideDown(200);
+    $text.text('Less Filter');
+    $icon.removeClass('rotate-90').addClass('rotate-270');
+  }
+});
+</script>
 
 
-    <script>
+    <!-- <script>
 
       document.addEventListener('DOMContentLoaded', function () {
                 $(document).on('click', '.more_filter_btn', function (e) {
-    e.preventDefault();
+                e.preventDefault();
 
-    const label = $(this).find('span').text().trim();
+                const label = $(this).find('span').text().trim();
 
-    if (label === 'Less Filter') {
-      $(this).find('span').text('More Filter');
-      $('.more-filter').slideUp();
-      $(this).find('svg').removeClass('rotate-270').addClass('rotate-90');
-    } else {
-      $(this).find('span').text('Less Filter');
-      $('.more-filter').slideDown();
-      $(this).find('svg').removeClass('rotate-90').addClass('rotate-270');
-    }
-  });
+                if (label === 'Less Filter') {
+                  $(this).find('span').text('More Filter');
+                  $('.more-filter').slideUp();
+                  $(this).find('svg').removeClass('rotate-270').addClass('rotate-90');
+                } else {
+                  $(this).find('span').text('Less Filter');
+                  $('.more-filter').slideDown();
+                  $(this).find('svg').removeClass('rotate-90').addClass('rotate-270');
+                }
+              });
 
         // Get the select element
         var selectElement = document.getElementById('sort_order_products');
@@ -920,6 +939,7 @@
           hideResetButton();
         }
       });
-    </script>
+    </script> -->
+     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
 </body>
 </html>
