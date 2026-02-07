@@ -543,7 +543,7 @@ $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var min = parseFloat( $('#range_55_input_from').val().replace(/\$/g, ''), 10 );
         var max = parseFloat( $('#range_55_input_to').val().replace(/\$/g, ''), 10 );
-        var age = parseFloat( data[7].replace(/\$/g, '') ) || 0; // Use data for the age column
+        var age = parseFloat( data[10].replace(/\$/g, '') ) || 0; // Use data for the age column
 
         if ( ( isNaN( min ) && isNaN( max ) ) ||
             ( isNaN( min ) && age <= max ) ||
@@ -1559,7 +1559,7 @@ $range_fluor.ionRangeSlider({
     let selectedValues_str = selectedValues.toString();
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
-        table.columns(7).search('^(' + newStr + ')$', true, false, true).draw();
+        table.columns(9).search('^(' + newStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
    
@@ -1644,7 +1644,7 @@ $reset_btn.on("click", function () {
         $range_fluor.data("ionRangeSlider").update({ from: fluorIndexValues[0], to: fluorIndexValues[1] });
         const selectedfluorValues = fluor_arr.slice(fluorIndexValues[0],fluorIndexValues[1]);
         const fluorStr = selectedfluorValues.join("|");
-        table.columns(7).search('^(' + fluorStr + ')$', true, false, true).draw();
+        table.columns(9).search('^(' + fluorStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
 
@@ -1673,7 +1673,7 @@ $reset_btn.on("click", function () {
                 $range_fluor.data("ionRangeSlider").update({ from: fluorIndexValues[0], to: fluorIndexValues[1] });
                 const selectedFluorValues = fluor_arr.slice(fluorIndexValues[0], fluorIndexValues[1] + 1);
                 const fluorStr = selectedFluorValues.join('|');
-                table.columns(7).search('^(' + fluorStr + ')$', true, false, true).draw();
+                table.columns(9).search('^(' + fluorStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
                $(".grid-product__title").each(function() {
@@ -1746,7 +1746,7 @@ $range_sym.ionRangeSlider({
     let selectedValues_str = selectedValues.toString();
     var newStr = selectedValues_str.replaceAll(",", "|");
      // table.columns().search('"'+newStr+'"' ,true,true).draw();
-        table.columns(7).search('^(' + newStr + ')$', true, false, true).draw();
+        table.columns(8).search('^(' + newStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
    
@@ -1831,7 +1831,7 @@ $reset_btn.on("click", function () {
         $range_sym.data("ionRangeSlider").update({ from: symIndexValues[0], to: symIndexValues[1] });
         const selectedsymValues = sym_arr.slice(symIndexValues[0],symIndexValues[1]);
         const symStr = selectedsymValues.join("|");
-        table.columns(7).search('^(' + symStr + ')$', true, false, true).draw();
+        table.columns(8).search('^(' + symStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
 
@@ -1860,7 +1860,7 @@ $reset_btn.on("click", function () {
                 $range_sym.data("ionRangeSlider").update({ from: symIndexValues[0], to: symIndexValues[1] });
                 const selectedSymValues = sym_arr.slice(symIndexValues[0], symIndexValues[1] + 1);
                 const symStr = selectedSymValues.join('|');
-                table.columns(7).search('^(' + symStr + ')$', true, false, true).draw();
+                table.columns(8).search('^(' + symStr + ')$', true, false, true).draw();
         // filterGridView();
         // fetchDiamonds();
 
@@ -1920,7 +1920,7 @@ $reset_btn.on("click", function () {
 
   // STOCK FILTER.......S
   $("#stock").on("keyup", function () {
-    table.columns(0).search(this.value).draw();
+    table.columns(1).search(this.value).draw();
   });
 
 

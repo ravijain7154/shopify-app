@@ -40,16 +40,16 @@ function initMoreFilterToggle() {
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
-  const APP_URL = 'https://shopify-app-pndl.onrender.com';
+  const APP_URL = '';
 
   // 1️⃣ Load CSS explicitly
   const styles = [
-    `${APP_URL}/diamond-filter/assets/styles.css`,
-    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
-    `${APP_URL}/diamond-filter/assets/ring_builder.css`,
-    `${APP_URL}/diamond-filter/assets/diamond.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
+    `/apps/diamond-filter/assets/styles.css`,
+    `/apps/diamond-filter/assets/datatables.min.css`,
+    `/apps/diamond-filter/assets/ring_builder.css`,
+    `/apps/diamond-filter/assets/diamond.css`,
+    `/apps/diamond-filter/assets/ion.rangeSlider.css`,
+    `/apps/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
   ];
 
   styles.forEach(href => {
@@ -62,7 +62,7 @@ function initMoreFilterToggle() {
   });
 
   // 2️⃣ Inject HTML
-  fetch(`${APP_URL}/diamond-filter/index.html`)
+  fetch(`/apps/diamond-filter/index.html`)
     .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
@@ -70,12 +70,12 @@ function initMoreFilterToggle() {
     .then(() => {
       // 3️⃣ Load JS AFTER HTML exists
       const scripts = [
-        `${APP_URL}/diamond-filter/assets/jquery.min.js`,
-        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
-        `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
-        `${APP_URL}/diamond-filter/assets/app.js`,
-        `${APP_URL}/diamond-filter/script.js`,
-        `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
+        `/apps/diamond-filter/assets/jquery.min.js`,
+        `/apps/diamond-filter/assets/datatables.min.js`,
+        `/apps/diamond-filter/assets/ion.rangeSlider.js`,
+        `/apps/diamond-filter/assets/app.js`,
+        `/apps/diamond-filter/script.js`,
+        `/apps/diamond-filter/assets/manage_diamond.js`,
       ];
 
       scripts.reduce((p, src) => {
@@ -102,7 +102,7 @@ function initMoreFilterToggle() {
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
+        const response = await fetch('/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -293,8 +293,20 @@ if (colorMin && colorMax) {
   apiParams.color = `${colorMin};${colorMax}`;
 }
 
+if (symMin && symMax) {
+  apiParams.sym = `${symMin};${symMax}`;
+}
+if (polishMin && polishMax) {
+    apiParams.polish = `${polishMin};${polishMax}`;
+}
+if (fluorMin && fluorMax) {
+    apiParams.fluor = `${fluorMin};${fluorMax}`;
+}
+
+
+
 const params = new URLSearchParams(apiParams).toString();
-        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
+        const response = await fetch(`/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

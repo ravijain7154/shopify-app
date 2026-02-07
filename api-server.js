@@ -131,8 +131,8 @@ const staticCorsMiddleware = (req, res, next) => {
 };
 
 // Static files for diamond filter UI (CORS applied)
-app.use('/diamond-filter', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public')));
-app.get('/diamond-filter/diamond-detail', (req, res) => {
+app.use('/apps/diamond-filter', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public')));
+app.get('/apps/diamond-filter/diamond-detail', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'public', 'diamond-detail', 'diamond-detail.html'));
 });
 
@@ -142,7 +142,7 @@ app.use('/build', staticCorsMiddleware, express.static(path.join(process.cwd(), 
 // Custom static assets (CORS applied)
 app.use('/custom', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'custom')));
 
-app.use('/diamond-filter/assets', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'assets'), {
+app.use('/apps/diamond-filter/assets', staticCorsMiddleware, express.static(path.join(process.cwd(), 'public', 'assets'), {
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css');
