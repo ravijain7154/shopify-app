@@ -1920,7 +1920,7 @@ $reset_btn.on("click", function () {
 
   // STOCK FILTER.......S
   $("#stock").on("keyup", function () {
-    table.columns(1).search(this.value).draw();
+    table.columns(0).search(this.value).draw();
   });
 
 
