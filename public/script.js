@@ -203,6 +203,47 @@ async function fetchDiamonds(retry = true) {
             cutMax = parts[1] || '';
         }
 
+         // Get cut range from the URL (e.g., VG;FR)
+            const polishRange = queryParams.get('polish');
+            let polishMin = '';
+            let polishMax = '';
+            //    if (polishRange) {
+            //        [polishMin] = decodeURIComponent(polishRange).split(';');
+            //    }
+                if (polishRange && polishRange.includes(';')) {
+                    const parts = polishRange.split(';').map(v => v.trim());
+                    polishMin = parts[0] || '';
+                    polishMax = parts[1] || '';
+                }
+
+            // Get cut range from the URL (e.g., VG;FR)
+            const fluorRange = queryParams.get('fluor');
+            let fluorMin = '';
+            let fluorMax = '';
+            //    if (fluorRange) {
+            //        [fluorMin] = decodeURIComponent(fluorRange).split(';');
+            //    }
+                if (fluorRange && fluorRange.includes(';')) {
+                    const parts = fluorRange.split(';').map(v => v.trim());
+                    fluorMin = parts[0] || '';
+                    fluorMax = parts[1] || '';
+                }
+             
+             // Get sym  range from the URL (e.g., VG;FR)
+            const symRange = queryParams.get('sym');
+            let symMin = '';
+            let symMax = '';
+            //    if (symRange) {
+            //        [symMin] = decodeURIComponent(symRange).split(';');
+            //    }
+                if (symRange && symRange.includes(';')) {
+                    const parts = symRange.split(';').map(v => v.trim());
+                    symMin = parts[0] || '';
+                    symMax = parts[1] || '';
+                }
+             
+            
+
 
         // const params = new URLSearchParams({
         //     page: currentPage,

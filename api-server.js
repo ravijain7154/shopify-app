@@ -298,10 +298,78 @@ app.get('/api/products', async(req, res) => {
                 };
             }
         }
+
+        let polishMin = req.query.polish_min ? decodeURIComponent(req.query.polish_min) : undefined;
+        let polishMax = req.query.polish_max ? decodeURIComponent(req.query.polish_max) : undefined;
+        if (req.query.polish) {
+            const parts = decodeURIComponent(req.query.polish).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) polishMin = parts[0];
+            if (parts[1]) polishMax = parts[1];
+        }   
+                 // Apply polish filter if present
+        const POLISH_ORDER     = ["EX", "VG", "GD", "FR", "I"];
         
+        if (polishMin || polishMax) {
+            const start = POLISH_ORDER.indexOf(polishMin);
+            const end = POLISH_ORDER.indexOf(polishMax); 
+            if (start !== -1 && end !== -1) {
+                const allowedPolishes = POLISH_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+                filterCriteria.Polish = { 
+                    in: allowedPolishes
+                };
+            }
+        }
+        
+         let fluorMin = req.query.fluor_min ? decodeURIComponent(req.query.fluor_min) : undefined;
+        let fluorMax = req.query.fluor_max ? decodeURIComponent(req.query.fluor_max) : undefined;
+        if (req.query.fluor) {
+            const parts = decodeURIComponent(req.query.fluor).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) fluorMin = parts[0];
+            if (parts[1]) fluorMax = parts[1];
+        }   
+                 // Apply fluor filter if present
+        const FLUOR_ORDER     = ["EX", "VG", "GD", "FR", "I"];
+        
+        if (fluorMin || fluorMax) {
+            const start = FLUOR_ORDER.indexOf(fluorMin);
+            const end = FLUOR_ORDER.indexOf(fluorMax); 
+            if (start !== -1 && end !== -1) {
+                const allowedFluors = FLUOR_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+                filterCriteria.Fluorescence = { 
+                    in: allowedFluors
+                };
+            }
+        }
 
-
-
+         let symMin = req.query.sym_min ? decodeURIComponent(req.query.sym_min) : undefined;
+        let symMax = req.query.sym_max ? decodeURIComponent(req.query.sym_max) : undefined;
+        if (req.query.sym) {
+            const parts = decodeURIComponent(req.query.sym).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            if (parts[0]) symMin = parts[0];
+            if (parts[1]) symMax = parts[1];
+        }   
+                 // Apply symmetry filter if present
+        const SYM_ORDER     = ["EX", "VG", "GD", "FR", "I"];
+        
+        if (symMin || symMax) {
+            const start = SYM_ORDER.indexOf(symMin);
+            const end = SYM_ORDER.indexOf(symMax); 
+            if (start !== -1 && end !== -1) {
+                const allowedSymmetries = SYM_ORDER.slice(
+                    Math.min(start, end),
+                    Math.max(start, end) + 1
+                );
+                filterCriteria.Symmetry = { 
+                    in: allowedSymmetries
+                };
+            }
+        }
        
         // if (colorMin !== undefined && colorMax !== undefined) {
         //     filterCriteria.Color = { gte: colorMin, lte: colorMax };
