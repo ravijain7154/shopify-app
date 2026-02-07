@@ -1930,12 +1930,7 @@ function switchToGridView() {
         $('#grid-view-btn').addClass('active');
         $('#list-view-btn').removeClass('active');
          table.destroy();
-         table = $('#example').DataTable({
-        scrollX: true,
-        // scrollY: '500px',
-        paging: false,
-        autoWidth: true
-    });
+         table = $('#example')
         parsepriceFromURL();
         parseCaratFromURL();
         parseColorFromURL();
@@ -1958,12 +1953,7 @@ function switchToGridView() {
         $('#list-view-btn').addClass('active');
         $('#grid-view-btn').removeClass('active');
          table.destroy();
-         table = $('#example').DataTable({
-        scrollX: true,
-        // scrollY: '500px',
-        paging: false,
-        autoWidth: true
-    });
+         table = $('#example')
         parsepriceFromURL();
         parseCaratFromURL();
         parseColorFromURL();
