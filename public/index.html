@@ -713,22 +713,30 @@
 }
 
     </style>
+    <ul id="product-list" class="custom-products-container"></ul>
+
+    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
+
 
     <script>
-      $('.more_filter_btn').click(function () {
-        var lable = $('.more_filter_btn span').text().trim();
-        // alert(lable);
-        if (lable == 'Less Filter') {
-          $('.more_filter_btn span ').text('More Filter');
-          $('.more-filter').hide();
-          $('.more_filter_btn svg').removeClass('rotate-270').addClass('rotate-90');
-        } else {
-          $('.more_filter_btn span').text('Less Filter');
-          $('.more-filter').show();
-          $('.more_filter_btn svg').removeClass('rotate-90').addClass('rotate-270');
-        }
-      });
+
       document.addEventListener('DOMContentLoaded', function () {
+                $(document).on('click', '.more_filter_btn', function (e) {
+    e.preventDefault();
+
+    const label = $(this).find('span').text().trim();
+
+    if (label === 'Less Filter') {
+      $(this).find('span').text('More Filter');
+      $('.more-filter').slideUp();
+      $(this).find('svg').removeClass('rotate-270').addClass('rotate-90');
+    } else {
+      $(this).find('span').text('Less Filter');
+      $('.more-filter').slideDown();
+      $(this).find('svg').removeClass('rotate-90').addClass('rotate-270');
+    }
+  });
+
         // Get the select element
         var selectElement = document.getElementById('sort_order_products');
 
@@ -913,10 +921,5 @@
         }
       });
     </script>
-
-
-    <ul id="product-list" class="custom-products-container"></ul>
-
-    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
 </body>
 </html>
