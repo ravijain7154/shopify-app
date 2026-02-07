@@ -451,7 +451,12 @@ function find_range(range_from, range_to) {
 
 $(document).ready(function () {
   ///////////////////////////////////////////////////////////
-  var table = $("#example");
+  var table = $("#example").DataTable({
+      scrollX: true,
+      // scrollY: '500px',
+      paging: false,
+      autoWidth: true
+  });
 
 
 $.fn.dataTable.ext.search.push(
@@ -1925,7 +1930,12 @@ function switchToGridView() {
         $('#grid-view-btn').addClass('active');
         $('#list-view-btn').removeClass('active');
          table.destroy();
-         table = $('#example')
+         table = $('#example').DataTable({
+        scrollX: true,
+        // scrollY: '500px',
+        paging: false,
+        autoWidth: true
+    });
         parsepriceFromURL();
         parseCaratFromURL();
         parseColorFromURL();
@@ -1948,7 +1958,12 @@ function switchToGridView() {
         $('#list-view-btn').addClass('active');
         $('#grid-view-btn').removeClass('active');
          table.destroy();
-         table = $('#example')
+         table = $('#example').DataTable({
+        scrollX: true,
+        // scrollY: '500px',
+        paging: false,
+        autoWidth: true
+    });
         parsepriceFromURL();
         parseCaratFromURL();
         parseColorFromURL();
