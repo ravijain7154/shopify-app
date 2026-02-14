@@ -35,16 +35,12 @@ function initMoreFilterToggle() {
 }
 
 (function () {
-  if (!location.pathname.includes('/apps/diamond-filter')) return;
-  document.addEventListener("DOMContentLoaded", function () {
-      fetchDiamonds();
-      fetchAndApplyBackgroundColor();
-  });
+  if (!location.pathname.includes('/pages/diamond')) return;
 
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
-  const APP_URL = '/apps/diamond-filter';
+  const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
   // 1️⃣ Load CSS explicitly
   const styles = [
@@ -106,7 +102,7 @@ function initMoreFilterToggle() {
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch('/apps/diamond-filter/api/get-color');
+        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -310,7 +306,7 @@ if (fluorMin && fluorMax) {
 
 
 const params = new URLSearchParams(apiParams).toString();
-        const response = await fetch(`/apps/diamond-filter/api/products?${params}`);
+        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
