@@ -518,7 +518,7 @@ function renderGridView(diamonds) {
         gridImage.classList.add('grid__image-ratio');
         const imageLink = document.createElement('a');
         const img = document.createElement('img');
-        img.src = diamond.ImageLink || 'assets/images/default-image.jpg';
+        img.src = diamond.ImageLink || '/diamond-filter/assets/images/default-image.jpg';
         img.alt = `${diamond.Shape} diamond`;
         imageLink.appendChild(img);
         gridImage.appendChild(imageLink);
@@ -582,7 +582,7 @@ function renderTableView(diamonds) {
 
         const imageCell = document.createElement('td');
         const image = document.createElement('img');
-        image.src = diamond.ImageLink || 'assets/images/default-image.jpg';
+        image.src = diamond.ImageLink || '/diamond-filter/assets/images/default-image.jpg';
         image.alt = `${diamond.Shape} diamond`;
         image.style.width = '50px';
         image.style.height = '50px';
