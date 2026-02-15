@@ -35,74 +35,74 @@ function initMoreFilterToggle() {
 }
 
 (function () {
-  if (!location.pathname.includes('/pages/diamond')) return;
 
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
   const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
-  // 1️⃣ Load CSS explicitly
+  // ✅ Load CSS
   const styles = [
-    `${APP_URL}/diamond-filter/assets/styles.css`,
-    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
-    `${APP_URL}/diamond-filter/assets/ring_builder.css`,
-    `${APP_URL}/diamond-filter/assets/diamond.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
+    '/diamond-filter/assets/styles.css',
+    '/diamond-filter/assets/datatables.min.css',
+    '/diamond-filter/assets/ring_builder.css',
+    '/diamond-filter/assets/diamond.css',
+    '/diamond-filter/assets/ion.rangeSlider.css',
+    '/diamond-filter/assets/ion.rangeSlider.skinNice.css',
   ];
 
-  styles.forEach(href => {
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      document.head.appendChild(link);
-    }
+  styles.forEach(path => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = APP_URL + path;
+    document.head.appendChild(link);
   });
 
-  // 2️⃣ Inject HTML
-  fetch(`${APP_URL}/diamond-filter/index.html`)
+  // ✅ Load index.html inside container
+  fetch(APP_URL + '/diamond-filter/index.html')
     .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
+      return loadScripts();
     })
     .then(() => {
-      // 3️⃣ Load JS AFTER HTML exists
-      const scripts = [
-        `${APP_URL}/diamond-filter/assets/jquery.min.js`,
-        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
-        `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
-        `${APP_URL}/diamond-filter/assets/app.js`,
-        `${APP_URL}/diamond-filter/script.js`,
-        `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
-      ];
+      console.log("Diamond App Fully Loaded");
 
-      scripts.reduce((p, src) => {
-        return p.then(() => new Promise(resolve => {
-          const s = document.createElement('script');
-          s.src = src;
-          s.onload = resolve;
-          document.body.appendChild(s);
-        }));
-      }, Promise.resolve()).then(() => {
-        console.log('Diamond app loaded');
-        initMoreFilterToggle();
-        // Initialize the diamond UI after all scripts are loaded 
-        document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
-        document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
-        // Apply configured background color if available (safe to call)
-        fetchAndApplyBackgroundColor().catch(err => console.warn('fetch color failed', err));
-      });
+      initMoreFilterToggle();
+      attachViewSwitchEvents();
+      fetchAndApplyBackgroundColor();
+      fetchDiamonds();   // 🔥 NOW SAFE TO CALL
     })
-    .catch(err => console.error('Diamond app load error:', err));
+    .catch(err => console.error("App load error:", err));
+
+  // ✅ Load scripts in correct order
+  function loadScripts() {
+    const scripts = [
+      '/diamond-filter/assets/jquery.min.js',
+      '/diamond-filter/assets/datatables.min.js',
+      '/diamond-filter/assets/ion.rangeSlider.js',
+      '/diamond-filter/assets/app.js',
+      '/diamond-filter/assets/manage_diamond.js',
+    ];
+
+    return scripts.reduce((p, path) => {
+      return p.then(() => new Promise(resolve => {
+        const s = document.createElement('script');
+        s.src = APP_URL + path;
+        s.onload = resolve;
+        document.body.appendChild(s);
+      }));
+    }, Promise.resolve());
+  }
+
 })();
+
 
   
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch('https://shopify-app-pndl.onrender.com/api/get-color');
+        const response = await fetch('/apps/diamond-filter/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -306,7 +306,7 @@ if (fluorMin && fluorMax) {
 
 
 const params = new URLSearchParams(apiParams).toString();
-        const response = await fetch(`https://shopify-app-pndl.onrender.com/api/products?${params}`);
+        const response = await fetch(`/apps/diamond-filter/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -518,7 +518,7 @@ function renderGridView(diamonds) {
         gridImage.classList.add('grid__image-ratio');
         const imageLink = document.createElement('a');
         const img = document.createElement('img');
-        img.src = diamond.ImageLink || '/diamond-filter/assets/images/default-image.jpg';
+        img.src = diamond.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg';
         img.alt = `${diamond.Shape} diamond`;
         imageLink.appendChild(img);
         gridImage.appendChild(imageLink);
@@ -582,7 +582,7 @@ function renderTableView(diamonds) {
 
         const imageCell = document.createElement('td');
         const image = document.createElement('img');
-        image.src = diamond.ImageLink || '/diamond-filter/assets/images/default-image.jpg';
+        image.src = diamond.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg';
         image.alt = `${diamond.Shape} diamond`;
         image.style.width = '50px';
         image.style.height = '50px';
@@ -709,5 +709,5 @@ function switchToListView() {
 
 
 // Initialize the app
-fetchDiamonds();
+// fetchDiamonds();
 // fetchAndApplyBackgroundColor();
