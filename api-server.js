@@ -176,7 +176,7 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 
 
 // Endpoint to fetch products from the database
-app.get('/diamond-filter/api/products', async(req, res) => {
+app.get('/apps/diamond-filter/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
@@ -450,7 +450,7 @@ app.get('/diamond-filter/api/products', async(req, res) => {
     }
 });
 
-app.get('/diamond-filter/api/diamond-detail', async(req, res) => {
+app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
     try {
         const Stock_id = req.query.Stock_id;
                 // Add shape filter if present
@@ -477,7 +477,7 @@ app.get('/diamond-filter/api/diamond-detail', async(req, res) => {
 
 
 // Endpoint to save color to style.css
-app.get('/diamond-filter/api/get-color', async (req, res) => {
+app.get('/apps/diamond-filter/api/get-color', async (req, res) => {
     try {
         const colorSetting = await prisma.colorsetting.findFirst({
             orderBy: { createdAt: 'desc' },  // Get the most recent color setting

@@ -35,7 +35,7 @@ function initMoreFilterToggle() {
 }
 
 (function () {
-//   if (!location.pathname.includes('/diamond-filter')) return;
+//   if (!location.pathname.includes('/apps/diamond-filter')) return;
 
   const container = document.getElementById('diamond-app');
   if (!container) return;
@@ -102,7 +102,7 @@ function initMoreFilterToggle() {
 // Fetch and apply background color dynamically
 async function fetchAndApplyBackgroundColor() {
     try {
-        const response = await fetch('/diamond-filter/api/get-color');
+        const response = await fetch('/apps/diamond-filter/api/get-color');
         if (!response.ok) {
             throw new Error('Failed to fetch color');
         }
@@ -306,7 +306,7 @@ if (fluorMin && fluorMax) {
 
 
 const params = new URLSearchParams(apiParams).toString();
-        const response = await fetch(`/diamond-filter/api/products?${params}`);
+        const response = await fetch(`/apps/diamond-filter/api/products?${params}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

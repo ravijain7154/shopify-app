@@ -15,7 +15,75 @@
     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/assets/manage_diamond.js"></script> -->
 
     <!-- datatable end -->
-  
+   
+
+    <style>
+      .grid-view #example_wrapper,
+      .list-view .grid-view {
+        display: none !important;
+      }
+      .grid-view {
+        /* display: none; */
+        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-auto-rows: minmax(100px, auto);
+      }
+
+      .grid-view .list-view {
+        display: block;
+      }
+
+      #product-block {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      #product-block .product {
+        border: 1px solid #ddd;
+        padding: 10px;
+        width: 200px;
+        text-align: center;
+      }
+
+      #product-block .product img {
+        max-width: 100%;
+        height: auto;
+      }
+      /* Loader Styles */
+      div#table-container {
+    position: relative;
+}
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none; /* Initially hidden */
+}
+
+.spinner {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue color */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for spinning animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+    </style>
 
       <section class="" id="search_div" style="">
         <div class="custom-container">
@@ -637,74 +705,6 @@
 
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    -->
-    <style>
-      .grid-view #example_wrapper,
-      .list-view .grid-view {
-        display: none !important;
-      }
-      .grid-view {
-        /* display: none; */
-        gap: 10px;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        grid-auto-rows: minmax(100px, auto);
-      }
-
-      .grid-view .list-view {
-        display: block;
-      }
-
-      #product-block {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-
-      #product-block .product {
-        border: 1px solid #ddd;
-        padding: 10px;
-        width: 200px;
-        text-align: center;
-      }
-
-      #product-block .product img {
-        max-width: 100%;
-        height: auto;
-      }
-      /* Loader Styles */
-      div#table-container {
-    position: relative;
-}
-.loader {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    display: none; /* Initially hidden */
-}
-
-.spinner {
-    border: 4px solid #f3f3f3; /* Light grey */
-    border-top: 4px solid #3498db; /* Blue color */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-}
-
-/* Keyframes for spinning animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-    </style>
-
     <!-- <script>
 
       document.addEventListener('DOMContentLoaded', function () {

@@ -30,8 +30,8 @@ redirect_urls = [
 ]
 
 [app_proxy]
-url = "https://shopify-app-pndl.onrender.com/"
-subpath = "diamond-app"
+url = "https://shopify-app-pndl.onrender.com/apps/diamond-filter"
+subpath = "diamond-filter"
 prefix = "apps"
 
 [pos]
