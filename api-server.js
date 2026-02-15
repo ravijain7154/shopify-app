@@ -133,19 +133,20 @@ const staticCorsMiddleware = (req, res, next) => {
 // Static files for diamond filter UI (CORS applied)
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 app.get('/apps/diamond-filter', (req, res) => {
-  res.set('Content-Type', 'text/html');
+     res.json({ status: "ok" });
+//   res.set('Content-Type', 'text/html');
 
-  res.send(`
-    <div id="diamond-app"></div>
+//   res.send(`
+//     <div id="diamond-app"></div>
 
-    <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/styles.css">
+//     <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/styles.css">
 
-    <script>
-      window.SHOP_DOMAIN = "${req.query.shop || ''}";
-    </script>
+//     <script>
+//       window.SHOP_DOMAIN = "${req.query.shop || ''}";
+//     </script>
 
-    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
-  `);
+//     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
+//   `);
 });
 
 app.get('/diamond-filter/diamond-detail', (req, res) => {

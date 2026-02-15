@@ -37,7 +37,9 @@ function initMoreFilterToggle() {
 (function () {
 //   if (!location.pathname.includes('/apps/diamond-filter')) return;
 
-  const container = document.getElementById('diamond-app');
+//   const container = document.getElementById('diamond-app');
+  const container = document.querySelector("main");
+  
   if (!container) return;
 
   const APP_URL = 'https://shopify-app-pndl.onrender.com';
