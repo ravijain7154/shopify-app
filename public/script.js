@@ -35,68 +35,68 @@ function initMoreFilterToggle() {
 }
 
 (function () {
+//   if (!location.pathname.includes('/apps/diamond-filter')) return;
 
   const container = document.getElementById('diamond-app');
   if (!container) return;
 
   const APP_URL = 'https://shopify-app-pndl.onrender.com';
 
-  // ✅ Load CSS
+  // 1️⃣ Load CSS explicitly
   const styles = [
-    '/diamond-filter/assets/styles.css',
-    '/diamond-filter/assets/datatables.min.css',
-    '/diamond-filter/assets/ring_builder.css',
-    '/diamond-filter/assets/diamond.css',
-    '/diamond-filter/assets/ion.rangeSlider.css',
-    '/diamond-filter/assets/ion.rangeSlider.skinNice.css',
+    `${APP_URL}/diamond-filter/assets/styles.css`,
+    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
+    `${APP_URL}/diamond-filter/assets/ring_builder.css`,
+    `${APP_URL}/diamond-filter/assets/diamond.css`,
+    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
+    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
   ];
 
-  styles.forEach(path => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = APP_URL + path;
-    document.head.appendChild(link);
+  styles.forEach(href => {
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
   });
 
-  // ✅ Load index.html inside container
-  fetch(APP_URL + '/diamond-filter/index.html')
+  // 2️⃣ Inject HTML
+  fetch(`${APP_URL}/diamond-filter/index.html`)
     .then(r => r.text())
     .then(html => {
       container.innerHTML = html;
-      return loadScripts();
     })
     .then(() => {
-      console.log("Diamond App Fully Loaded");
+      // 3️⃣ Load JS AFTER HTML exists
+      const scripts = [
+        `${APP_URL}/diamond-filter/assets/jquery.min.js`,
+        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
+        `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
+        `${APP_URL}/diamond-filter/assets/app.js`,
+        `${APP_URL}/diamond-filter/script.js`,
+        `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
+      ];
 
-      initMoreFilterToggle();
-      attachViewSwitchEvents();
-      fetchAndApplyBackgroundColor();
-      fetchDiamonds();   // 🔥 NOW SAFE TO CALL
+      scripts.reduce((p, src) => {
+        return p.then(() => new Promise(resolve => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = resolve;
+          document.body.appendChild(s);
+        }));
+      }, Promise.resolve()).then(() => {
+        console.log('Diamond app loaded');
+        initMoreFilterToggle();
+        // Initialize the diamond UI after all scripts are loaded 
+        document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
+        document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
+        // Apply configured background color if available (safe to call)
+        fetchAndApplyBackgroundColor().catch(err => console.warn('fetch color failed', err));
+      });
     })
-    .catch(err => console.error("App load error:", err));
-
-  // ✅ Load scripts in correct order
-  function loadScripts() {
-    const scripts = [
-      '/diamond-filter/assets/jquery.min.js',
-      '/diamond-filter/assets/datatables.min.js',
-      '/diamond-filter/assets/ion.rangeSlider.js',
-      '/diamond-filter/assets/app.js',
-      '/diamond-filter/assets/manage_diamond.js',
-    ];
-
-    return scripts.reduce((p, path) => {
-      return p.then(() => new Promise(resolve => {
-        const s = document.createElement('script');
-        s.src = APP_URL + path;
-        s.onload = resolve;
-        document.body.appendChild(s);
-      }));
-    }, Promise.resolve());
-  }
-
+    .catch(err => console.error('Diamond app load error:', err));
 })();
-
 
   
 // Fetch and apply background color dynamically
@@ -709,5 +709,5 @@ function switchToListView() {
 
 
 // Initialize the app
-// fetchDiamonds();
+fetchDiamonds();
 // fetchAndApplyBackgroundColor();
