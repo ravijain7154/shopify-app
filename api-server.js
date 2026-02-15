@@ -11,6 +11,9 @@ import dotenv from 'dotenv';
 import { createRequestHandler } from "@remix-run/express";
 import {  fileURLToPath, pathToFileURL } from 'url';
 import "@shopify/shopify-app-remix/adapters/node";
+import crypto from "crypto";
+
+
 
 dotenv.config();
 
@@ -130,11 +133,34 @@ const staticCorsMiddleware = (req, res, next) => {
     next();
 };
 
+
+
+function verifyShopifyProxy(req, res, next) {
+  const { signature, ...query } = req.query;
+
+  const sorted = Object.keys(query)
+    .sort()
+    .map(key => `${key}=${Array.isArray(query[key]) ? query[key].join(',') : query[key]}`)
+    .join('');
+
+  const calculatedSignature = crypto
+    .createHmac('sha256', process.env.SHOPIFY_API_SECRET)
+    .update(sorted)
+    .digest('hex');
+
+  if (calculatedSignature !== signature) {
+    return res.status(403).send("Invalid proxy signature");
+  }
+
+  next();
+}
+
+
+
 // Static files for diamond filter UI (CORS applied)
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
-app.get('/apps/diamond-filter', (req, res) => {
-  res.set('Content-Type', 'text/html');
-
+app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
+  
   res.send(`
     <div id="diamond-app"></div>
 
