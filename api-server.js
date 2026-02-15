@@ -133,20 +133,19 @@ const staticCorsMiddleware = (req, res, next) => {
 // Static files for diamond filter UI (CORS applied)
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 app.get('/apps/diamond-filter', (req, res) => {
-     res.json({ status: "ok" });
-//   res.set('Content-Type', 'text/html');
+  res.set('Content-Type', 'text/html');
 
-//   res.send(`
-//     <div id="diamond-app"></div>
+  res.send(`
+    <div id="diamond-app"></div>
 
-//     <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/styles.css">
+    <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/styles.css">
 
-//     <script>
-//       window.SHOP_DOMAIN = "${req.query.shop || ''}";
-//     </script>
+    <script>
+      window.SHOP_DOMAIN = "${req.query.shop || ''}";
+    </script>
 
-//     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
-//   `);
+    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
+  `);
 });
 
 app.get('/diamond-filter/diamond-detail', (req, res) => {
@@ -177,7 +176,7 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 
 
 // Endpoint to fetch products from the database
-app.get('/apps/diamond-filter/api/products', async(req, res) => {
+app.get('/diamond-filter/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
@@ -451,7 +450,7 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
     }
 });
 
-app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
+app.get('/diamond-filter/api/diamond-detail', async(req, res) => {
     try {
         const Stock_id = req.query.Stock_id;
                 // Add shape filter if present
@@ -478,7 +477,7 @@ app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
 
 
 // Endpoint to save color to style.css
-app.get('/apps/diamond-filter/api/get-color', async (req, res) => {
+app.get('/diamond-filter/api/get-color', async (req, res) => {
     try {
         const colorSetting = await prisma.colorsetting.findFirst({
             orderBy: { createdAt: 'desc' },  // Get the most recent color setting
