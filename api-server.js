@@ -162,9 +162,7 @@ app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
   
   res.send(`
-    <div id="diamond-app"></div>
-
-    <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/styles.css">
+     <div id="diamond-app"></div>
 
     <script>
       window.SHOP_DOMAIN = "${req.query.shop || ''}";
