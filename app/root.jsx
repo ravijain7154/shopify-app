@@ -1,10 +1,11 @@
 // root.jsx
 import { json } from "@remix-run/node";
-import { useLoaderData, useRouteError, Links, Link, Meta, Outlet, Scripts, ScrollRestoration, useFetcher, useRevalidator, useLocation } from "@remix-run/react";
+import { useLoaderData, useRouteError, Links, Link, Meta, Outlet, Scripts, ScrollRestoration, useFetcher, useRevalidator } from "@remix-run/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
-import {AppProvider as PolarisAppProvider, Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
+// import { AppProvider } from "@shopify/shopify-app-remix/react"; 
+import {AppProvider, Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
+
 import { PrismaClient } from "@prisma/client";
 import React, { useState, useEffect } from 'react';
 
@@ -15,7 +16,7 @@ export const links = () => [
   { rel: "stylesheet", href: './custom/admin-style.css' }
 ];
 
-export const loader = async ({ request }) => {
+export const loader = async () => {
   // On app load, just fetch diamonds from DB (no auto-sync on every load)
   const fetchDiamondsFromDB = await prisma.diamond.findMany();
 
@@ -39,7 +40,6 @@ export default function App() {
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
   const revalidator = useRevalidator();
-  const location = useLocation();
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState(null);
 
@@ -50,8 +50,29 @@ export default function App() {
     syncCount: null
   };
 
-  // Check if accessing via app_proxy (storefront) - path starts with /apps/
-  const isAppProxy = location.pathname.startsWith('/apps/');
+  // // Update sync status when fetcher completes
+  // useEffect(() => {
+  //   if (fetcher.state === 'idle' && fetcher.data) {
+  //     setIsSyncing(false);
+  //     setSyncMessage(fetcher.data.message);
+  //     // Revalidate the root loader to refresh the products list
+  //     if (fetcher.data.success) {
+  //       revalidator.revalidate();
+  //     }
+  //     // Clear message after 5 seconds
+  //     const timer = setTimeout(() => setSyncMessage(null), 5000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [fetcher.state, fetcher.data, revalidator]);
+
+  // const handleSync = () => {
+  //   setIsSyncing(true);
+  //   setSyncMessage('Syncing diamonds...');
+  //   fetcher.submit(
+  //     { sync: 'true' },
+  //     { method: 'post', action: '/api/sync' }
+  //   );
+  // };
 
   if (!products || !Array.isArray(products)) {
     return (
@@ -70,36 +91,6 @@ export default function App() {
     );
   }
 
-  // For app_proxy (storefront access), use only PolarisAppProvider
-  // For embedded apps (admin access), use both AppProvider and PolarisAppProvider
-  const appContent = (
-    <div className="container">
-      <div className="admin_dash">
-        <Outlet />
-      </div>
-    </div>
-  );
-
-  const polarisConfig = {
-    i18n: {
-      Polaris: {
-        Avatar: {
-          label: 'Avatar',
-          labelWithInitials: 'Avatar with initials {initials}'
-        },
-        Button: {
-          loading: 'Loading...',
-        },
-        Card: {
-          title: 'Card',
-        },
-        Page: {
-          title: 'Page',
-        },
-      }
-    }
-  };
-
   return (
     <html>
       <head>
@@ -114,17 +105,38 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <PolarisAppProvider {...polarisConfig}>
-          {isAppProxy ? (
-            // For app_proxy (storefront), render without AppProvider
-            appContent
-          ) : (
-            // For embedded apps (admin), wrap with AppProvider
-            <AppProvider>
-              {appContent}
-            </AppProvider>
-          )}
-        </PolarisAppProvider>
+        <AppProvider>
+          <div className="container">
+            <div className="admin_dash">
+              {/* <h1 className="title">Diamonds Management</h1>
+              
+              <Card>
+                <BlockStack gap="300">
+                  <InlineStack align="space-between">
+                    <div>
+                      <h2>Database Status</h2>
+                      <p className="text">{message}</p>
+                      {syncMessage && (
+                        <Text as="p" variant="bodyMd" color={fetcher.data?.success ? 'success' : 'critical'}>
+                          {syncMessage}
+                        </Text>
+                      )}
+                    </div>
+                    <Button
+                      onClick={handleSync}
+                      disabled={isSyncing}
+                      variant="primary"
+                    >
+                      {isSyncing ? 'Syncing...' : 'Sync Diamonds'}
+                    </Button>
+                  </InlineStack>
+                </BlockStack>
+              </Card> */}
+
+              <Outlet />
+            </div>
+          </div>
+        </AppProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -135,14 +147,10 @@ export default function App() {
 export function ErrorBoundary() {
   const error = useRouteError();
   return (
-    <PolarisAppProvider i18n={{ Polaris: {} }}>
-      <AppProvider>
-        <div>
-          <h2>Something went wrong</h2>
-          <pre>{error.message}</pre>
-        </div>
-      </AppProvider>
-    </PolarisAppProvider>
+    <div>
+      <h2>Something went wrong</h2>
+      <pre>{error.message}</pre>
+    </div>
   );
 }
 
