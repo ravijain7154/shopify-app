@@ -11,8 +11,7 @@ import dotenv from 'dotenv';
 import { createRequestHandler } from "@remix-run/express";
 import {  fileURLToPath, pathToFileURL } from 'url';
 import "@shopify/shopify-app-remix/adapters/node";
-// import crypto from "crypto";
-const crypto = require("crypto");
+import crypto from "crypto";
 
 
 
