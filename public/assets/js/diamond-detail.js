@@ -1,77 +1,41 @@
-document.addEventListener("DOMContentLoaded", async () => {
+(function () {
+
+  const root = document.getElementById("diamond-detail-root");
+  if (!root) return;
 
   const stockId = window.STOCK_ID;
-  const root = document.getElementById("diamond-detail-root");
-
   if (!stockId) {
     root.innerHTML = "<h2>Invalid Diamond ID</h2>";
     return;
   }
 
-  try {
+  fetch(`/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(stockId)}`)
+    .then(res => res.json())
+    .then(data => {
 
-    const res = await fetch(
-      `/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(stockId)}`
-    );
+      const d = data?.diamond?.[0];
+      if (!d) {
+        root.innerHTML = "<h2>Diamond Not Found</h2>";
+        return;
+      }
 
-    const data = await res.json();
-    const d = data?.diamond?.[0];
-
-    if (!d) {
-      root.innerHTML = "<h2>Diamond Not Found</h2>";
-      return;
-    }
-
-    root.innerHTML = `
-      <div class="diamond-container">
-
-        <div class="diamond-left">
-          <img src="${d.Image_URL || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
-               alt="Diamond">
-        </div>
-
-        <div class="diamond-right">
-          <h1>Diamond ${d.Stock_No || ''}</h1>
-          <div class="price">
-            ${d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : '-'}
+      root.innerHTML = `
+        <div class="diamond-container">
+          <div class="diamond-left">
+            <img src="${d.Image_URL || ''}" alt="Diamond">
           </div>
-
-          <table class="diamond-specs">
-            <tbody>
-              ${renderRow("Stock No", d.Stock_No)}
-              ${renderRow("Shape", d.Shape)}
-              ${renderRow("Carat", d.Weight)}
-              ${renderRow("Color", d.Color)}
-              ${renderRow("Clarity", d.Clarity)}
-              ${renderRow("Cut", d.Cut_Grade)}
-              ${renderRow("Polish", d.Polish)}
-              ${renderRow("Symmetry", d.Symmetry)}
-              ${renderRow("Fluorescence", d.FluoIntensity)}
-              ${renderRow("Certificate", d.CertificateNumber)}
-            </tbody>
-          </table>
-
-          <div class="actions">
-            <button class="btn primary">Request Price</button>
-            <button class="btn">Add to Wishlist</button>
+          <div class="diamond-right">
+            <h1>Diamond ${d.Stock_No || ''}</h1>
+            <div class="price">
+              ${d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : '-'}
+            </div>
           </div>
         </div>
+      `;
+    })
+    .catch(err => {
+      console.error(err);
+      root.innerHTML = "<h2>Error loading diamond details</h2>";
+    });
 
-      </div>
-    `;
-
-  } catch (err) {
-    console.error(err);
-    root.innerHTML = "<h2>Error loading diamond details</h2>";
-  }
-
-});
-
-function renderRow(label, value) {
-  return `
-    <tr>
-      <th>${label}</th>
-      <td>${value ?? "-"}</td>
-    </tr>
-  `;
-}
+})();
