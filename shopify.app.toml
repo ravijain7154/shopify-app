@@ -33,6 +33,5 @@ redirect_urls = [
 url = "https://shopify-app-pndl.onrender.com/apps/diamond-filter"
 subpath = "diamond-filter"
 prefix = "apps"
-
 [pos]
 embedded = false

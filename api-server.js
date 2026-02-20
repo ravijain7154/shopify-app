@@ -161,6 +161,7 @@ function verifyShopifyProxy(req, res, next) {
 app.use('/diamond-filter', express.static(path.join(process.cwd(), 'public')));
 app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
   
+  res.set("Content-Type" :"application/liquid");
   res.send(`
      <div id="diamond-app"></div>
 

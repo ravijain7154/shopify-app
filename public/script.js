@@ -262,9 +262,9 @@ async function fetchDiamonds(retry = true) {
         // }).toString();
 
         const apiParams = {
-  page: currentPage,
-  perPage: pageSize,
-};
+            page: currentPage,
+            perPage: pageSize,
+        };
 
 if (selectedShapes.length) apiParams.Shape = selectedShapes.join(',');
 // if (priceMin) apiParams.price_min = priceMin;
