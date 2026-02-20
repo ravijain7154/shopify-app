@@ -1,56 +1,77 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(window.location.search);
-  const Stock_id = params.get("Stock_id");
-  const container = document.querySelector(".diamond-container");
 
-  if (!Stock_id) {
-    if(container) container.innerHTML = "<h2>Invalid Diamond ID</h2>";
+  const stockId = window.STOCK_ID;
+  const root = document.getElementById("diamond-detail-root");
+
+  if (!stockId) {
+    root.innerHTML = "<h2>Invalid Diamond ID</h2>";
     return;
   }
 
   try {
-    const apiUrl = `https://shopify-app-pndl.onrender.com`;
-    const res = await fetch(`${apiUrl}/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
-    const data = await res.json();
 
-    // Fix: Your backend sends { diamond: [ [Object] ] } because of findMany + []
-    // Let's flatten it to be safe
-    let d = Array.isArray(data.diamond) ? data.diamond[0] : null;
-    if (Array.isArray(d)) d = d[0]; // Handles the double nesting [[{}]]
+    const res = await fetch(
+      `/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(stockId)}`
+    );
+
+    const data = await res.json();
+    const d = data?.diamond?.[0];
 
     if (!d) {
-      document.getElementById("diamond-title").innerText = "Diamond Not Found";
+      root.innerHTML = "<h2>Diamond Not Found</h2>";
       return;
     }
 
-    // Mapping fields
-    document.getElementById("diamond-title").innerText = `Diamond ${d.Stock_No || ''}`;
-    document.getElementById("diamond-image").src = d.Image_URL || "https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg";
-    document.getElementById("diamond-price").innerText = d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : "-";
+    root.innerHTML = `
+      <div class="diamond-container">
 
-    const fields = {
-      "Stock No": d.Stock_No,
-      "Shape": d.Shape,
-      "Carat": d.Weight,
-      "Color": d.Color,
-      "Clarity": d.Clarity,
-      "Cut": d.Cut_Grade,
-      "Polish": d.Polish,
-      "Symmetry": d.Symmetry,
-      "Fluorescence": d.FluoIntensity,
-      "Measurements": `${d.MeasLength || ''} × ${d.MeasWidth || ''} × ${d.MeasDepth || ''}`,
-      "Certificate": d.CertificateNumber
-    };
+        <div class="diamond-left">
+          <img src="${d.Image_URL || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
+               alt="Diamond">
+        </div>
 
-    const table = document.getElementById("diamond-details");
-    table.innerHTML = Object.entries(fields)
-      .map(([key, value]) => `<tr><th>${key}</th><td>${value ?? "-"}</td></tr>`)
-      .join("");
+        <div class="diamond-right">
+          <h1>Diamond ${d.Stock_No || ''}</h1>
+          <div class="price">
+            ${d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : '-'}
+          </div>
+
+          <table class="diamond-specs">
+            <tbody>
+              ${renderRow("Stock No", d.Stock_No)}
+              ${renderRow("Shape", d.Shape)}
+              ${renderRow("Carat", d.Weight)}
+              ${renderRow("Color", d.Color)}
+              ${renderRow("Clarity", d.Clarity)}
+              ${renderRow("Cut", d.Cut_Grade)}
+              ${renderRow("Polish", d.Polish)}
+              ${renderRow("Symmetry", d.Symmetry)}
+              ${renderRow("Fluorescence", d.FluoIntensity)}
+              ${renderRow("Certificate", d.CertificateNumber)}
+            </tbody>
+          </table>
+
+          <div class="actions">
+            <button class="btn primary">Request Price</button>
+            <button class="btn">Add to Wishlist</button>
+          </div>
+        </div>
+
+      </div>
+    `;
 
   } catch (err) {
-    console.error("Error:", err);
-    // Don't use document.body.innerHTML here or you destroy the Shopify Header/Footer
-    const title = document.getElementById("diamond-title");
-    if(title) title.innerText = "Error loading diamond details";
+    console.error(err);
+    root.innerHTML = "<h2>Error loading diamond details</h2>";
   }
+
 });
+
+function renderRow(label, value) {
+  return `
+    <tr>
+      <th>${label}</th>
+      <td>${value ?? "-"}</td>
+    </tr>
+  `;
+}
