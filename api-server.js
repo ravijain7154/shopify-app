@@ -188,7 +188,7 @@ app.get('/apps/diamond-filter/diamond-detail', verifyShopifyProxy, (req, res) =>
       window.STOCK_ID = "${req.query.Stock_id || ''}";
     </script>
 
-    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/assets/js/diamond-details.js"></script>
+    <script src="https://shopify-app-pndl.onrender.com/diamond-filter/assets/js/diamond-detail.js"></script>
   `);
 });
 
