@@ -495,12 +495,12 @@ function renderPagination() {
   paginationContainer.appendChild(nextButton);
 
   // Add ellipses after the last page if necessary
-  // if (endPage < totalPages - 1) {
-  //     const dotsButton = document.createElement('button');
-  //     dotsButton.textContent = '...';
-  //     dotsButton.disabled = true;
-  //     paginationContainer.appendChild(dotsButton);
-  // }
+  if (endPage < totalPages - 1) {
+      const dotsButton = document.createElement('button');
+      dotsButton.textContent = '...';
+      dotsButton.disabled = true;
+      paginationContainer.appendChild(dotsButton);
+  }
 }
 
 // Render diamonds in grid view
