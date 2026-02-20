@@ -481,7 +481,7 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
     }
 });
 
-app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
+app.get('/apps/diamond-filter/api/diamond-detail', verifyShopifyProxy, async(req, res) => {
     try {
         const Stock_id = req.query.Stock_id;
                 // Add shape filter if present
@@ -489,15 +489,15 @@ app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
             return res.status(400).json({ message: 'Stock_id query parameter is required' });
         }
 
-        const diamond = await prisma.diamond.findMany({
+        const diamondData = await prisma.diamond.findMany({
             where: { Stock_No: Stock_id },
         }); 
 
-        if (!diamond || diamond.length === 0) {
+        if (!diamondData || diamondData.length === 0) {
             return res.status(404).json({ message: 'Diamond not found' });
         }
 
-        res.json({ diamond }); // Send products as JSON
+        res.json({ diamond: [diamondData] }); // Send products as JSON
 
     } catch (error) {
         

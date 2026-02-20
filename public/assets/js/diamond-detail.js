@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
+    const apiUrl = `https://shopify-app-pndl.onrender.com/`;
+    const res = await fetch(`${apiUrl}/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
     const data = await res.json();
     console.log("Diamond details:", data);
 
