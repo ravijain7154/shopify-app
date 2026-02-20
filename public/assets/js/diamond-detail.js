@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = await res.json();
     const d = data?.diamond?.[0];
-
+    console.log("Fetched diamond data:", d);
     if (!d) {
       root.innerHTML = "<h2>Diamond Not Found</h2>";
       return;
