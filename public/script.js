@@ -411,98 +411,89 @@ function getSelectedShapes() {
 // Render pagination controls dynamically based on total pages and current page
 function renderPagination() {
   const paginationContainer = document.getElementById('pagination');
-  paginationContainer.innerHTML = '';  // Clear previous pagination
+  paginationContainer.innerHTML = '';
 
-  // Create a container for product count info
+  // ----- Product Count -----
   const productCountContainer = document.createElement('div');
   productCountContainer.classList.add('product-count');
+
   if (totalCount === 0) {
-      productCountContainer.textContent = 'No products found';
+    productCountContainer.textContent = 'No products found';
   } else {
-      const startIndex = ((currentPage - 1) * pageSize) + 1;
-      const endIndex = Math.min(currentPage * pageSize, totalCount);
-      productCountContainer.textContent = `Showing ${startIndex} - ${endIndex} of ${totalCount} products`;
+    const startIndex = ((currentPage - 1) * pageSize) + 1;
+    const endIndex = Math.min(currentPage * pageSize, totalCount);
+    productCountContainer.textContent =
+      `Showing ${startIndex} - ${endIndex} of ${totalCount} products`;
   }
+
   paginationContainer.appendChild(productCountContainer);
 
-  // Create First Page Button (<<)
-  const firstPageButton = document.createElement('button');
-  firstPageButton.textContent = '<<';
-  firstPageButton.disabled = currentPage === 1;
-  firstPageButton.addEventListener('click', () => {
-      currentPage = 1;
-      fetchDiamonds();  // Fetch new data when page changes
-  });
-  paginationContainer.appendChild(firstPageButton);
+  // ----- Helper to create button -----
+  function createButton(label, page, disabled = false, active = false) {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.disabled = disabled;
+    if (active) btn.classList.add('active');
 
-  // Create Previous Button
-  const prevButton = document.createElement('button');
-  prevButton.textContent = 'Previous';
-  prevButton.disabled = currentPage === 1;
-  prevButton.addEventListener('click', () => {
-      if (currentPage > 1) {
-          currentPage--;
-          fetchDiamonds();  // Fetch new data when page changes
-      }
-  });
-  paginationContainer.appendChild(prevButton);
+    btn.addEventListener('click', () => {
+      currentPage = page;
+      fetchDiamonds();
+    });
 
-  // Create range of page buttons (current, next, previous pages)
-  const displayRange = 3;  // Show up to 3 page buttons at a time
-  const startPage = Math.max(1, currentPage - 1); // Starting page for the range
-  const endPage = Math.min(totalPages, currentPage + 1); // Ending page for the range (show neighbor page)
-
-  // Add current page and neighboring pages
-  for (let page = startPage; page <= endPage; page++) {
-      const pageButton = document.createElement('button');
-      pageButton.textContent = page;
-      pageButton.classList.toggle('active', page === currentPage);
-      pageButton.addEventListener('click', () => {
-          currentPage = page;
-          fetchDiamonds();  // Fetch new data when page is clicked
-      });
-      paginationContainer.appendChild(pageButton);
+    return btn;
   }
 
-  // Add ellipses before the start page if necessary
+  if (totalPages <= 1) return;
+
+  const range = 2; // pages around current page
+
+  // ----- First Page -----
+  if (currentPage > 1) {
+    paginationContainer.appendChild(
+      createButton('<<', 1)
+    );
+  }
+
+  // ----- Previous -----
+  paginationContainer.appendChild(
+    createButton('Previous', currentPage - 1, currentPage === 1)
+  );
+
+  // ----- Page Window Logic -----
+  let startPage = Math.max(1, currentPage - range);
+  let endPage = Math.min(totalPages, currentPage + range);
+
   if (startPage > 1) {
-      const dotsButton = document.createElement('button');
-      dotsButton.textContent = '...';
-      dotsButton.disabled = true;
-      paginationContainer.appendChild(dotsButton);
+    paginationContainer.appendChild(createButton(1, 1));
+    if (startPage > 2) {
+      const dots = document.createElement('span');
+      dots.textContent = '...';
+      paginationContainer.appendChild(dots);
+    }
   }
 
-  // Add Last Page Button
-  const lastPageButton = document.createElement('button');
-  lastPageButton.textContent = totalPages;
-  lastPageButton.disabled = currentPage === totalPages;
-  lastPageButton.addEventListener('click', () => {
-      currentPage = totalPages;
-      fetchDiamonds();  // Fetch new data when last page is clicked
-  });
-  paginationContainer.appendChild(lastPageButton);
-
-  // Add Next Button
-  const nextButton = document.createElement('button');
-  nextButton.textContent = 'Next';
-  nextButton.disabled = currentPage === totalPages;
-  nextButton.addEventListener('click', () => {
-      if (currentPage < totalPages) {
-          currentPage++;
-          fetchDiamonds();  // Fetch new data when page changes
-      }
-  });
-  paginationContainer.appendChild(nextButton);
-
-  // Add ellipses after the last page if necessary
-  if (endPage < totalPages - 1) {
-      const dotsButton = document.createElement('button');
-      dotsButton.textContent = '...';
-      dotsButton.disabled = true;
-      paginationContainer.appendChild(dotsButton);
+  for (let i = startPage; i <= endPage; i++) {
+    paginationContainer.appendChild(
+      createButton(i, i, false, i === currentPage)
+    );
   }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      const dots = document.createElement('span');
+      dots.textContent = '...';
+      paginationContainer.appendChild(dots);
+    }
+    paginationContainer.appendChild(
+      createButton(totalPages, totalPages)
+    );
+  }
+
+  // ----- Next -----
+  paginationContainer.appendChild(
+    createButton('Next', currentPage + 1, currentPage === totalPages)
+  );
 }
-
 // Render diamonds in grid view
 function renderGridView(diamonds) {
     const gridView = document.getElementById('grid-view');
@@ -527,7 +518,7 @@ function renderGridView(diamonds) {
         const gridContent = document.createElement('div');
         gridContent.classList.add('grid-item__content');
         const gridLink = document.createElement('a');
-        gridLink.href = `diamond-detail?product_id=${diamond.Stock_No}`;
+        gridLink.href = `/diamond-detail?product_id=${diamond.Stock_No}`;
         gridLink.classList.add('grid-item__link');
 
         const gridMeta = document.createElement('div');
