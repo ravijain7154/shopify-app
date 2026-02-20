@@ -489,7 +489,7 @@ app.get('/apps/diamond-filter/api/diamond-detail', verifyShopifyProxy, async(req
             return res.status(400).json({ message: 'Stock_id query parameter is required' });
         }
 
-        const diamondData = await prisma.diamond.findMany({
+        const diamondData = await prisma.diamond.findFirst({
             where: { Stock_No: Stock_id },
         }); 
 
