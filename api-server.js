@@ -173,8 +173,14 @@ app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
   `);
 });
 
-app.get('/diamond-filter/diamond-detail', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'public', 'diamond-detail', 'diamond-detail.html'));
+// 1. Detail Route (Move this to use the proxy path)
+app.get('/apps/diamond-filter/diamond-detail', verifyShopifyProxy, (req, res) => {
+    // Set Liquid content type so Shopify wraps it in the theme
+    res.set("Content-Type", "application/liquid");
+    
+    // Use sendFile, but ensure the HTML file inside doesn't have <html> or <body> tags
+    // if you want it to sit perfectly inside the Shopify Store theme.
+    res.sendFile(path.join(process.cwd(), 'public', 'diamond-detail', 'diamond-detail.html'));
 });
 
 // Static build assets (CORS applied)

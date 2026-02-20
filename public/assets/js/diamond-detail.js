@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
+    const res = await fetch(`/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
     const data = await res.json();
 
     if (!data.diamond || data.diamond.length === 0) {
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Left image (fallback image)
     document.getElementById("diamond-image").src =
-      d.Image_URL || "/diamond-filter/default-image.jpg";
+      d.Image_URL || "/apps/diamond-filter/default-image.jpg";
 
     // Price
     document.getElementById("diamond-price").innerText =
