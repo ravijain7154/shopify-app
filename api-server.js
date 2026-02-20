@@ -481,7 +481,7 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
     }
 });
 
-app.get('/apps/diamond-filter/api/diamond-detail', verifyShopifyProxy, async(req, res) => {
+app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
     try {
         const Stock_id = req.query.Stock_id;
                 // Add shape filter if present
