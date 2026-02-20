@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const res = await fetch(`/apps/diamond-filter/api/diamond-detail?Stock_id=${encodeURIComponent(Stock_id)}`);
     const data = await res.json();
+    console.log("Diamond details:", data);
 
     if (!data.diamond || data.diamond.length === 0) {
       document.body.innerHTML = "<h2>Diamond Not Found</h2>";
