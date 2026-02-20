@@ -518,7 +518,7 @@ function renderGridView(diamonds) {
         const gridContent = document.createElement('div');
         gridContent.classList.add('grid-item__content');
         const gridLink = document.createElement('a');
-        gridLink.href = `/diamond-detail?product_id=${diamond.Stock_No}`;
+        gridLink.href = `diamond-filter/diamond-detail?Stock_id=${diamond.Stock_No}`;
         gridLink.classList.add('grid-item__link');
 
         const gridMeta = document.createElement('div');
@@ -618,7 +618,7 @@ function renderTableView(diamonds) {
 
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
-        actionLink.href = `diamond-detail?Stock_id=${diamond.Stock_No}`;
+        actionLink.href = `diamond-filter/diamond-detail?Stock_id=${diamond.Stock_No}`;
         actionLink.textContent = "View Details";
         actionCell.appendChild(actionLink);
 
