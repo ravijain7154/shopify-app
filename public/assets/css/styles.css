@@ -2,7 +2,7 @@
   --card-bg-color: #ffffff; 
 }
 
-.custom-products-container {
+#diamond-app .custom-products-container {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -10,7 +10,7 @@
     list-style: none;
   }
   
-  .product-card {
+  #diamond-app .product-card {
     border: 1px solid #ddd;
     padding: 16px;
     border-radius: 8px;
@@ -21,17 +21,17 @@
     background-color: var(--card-bg-color)
 }
   
-  .product-card img {
+  #diamond-app .product-card img {
     max-width: 100%;
     height: auto;
   }
   
-  .product-card h2 {
+  #diamond-app .product-card h2 {
     font-size: 1.5rem;
     margin: 10px 0;
   }
   
-  .product-card p {
+  #diamond-app .product-card p {
     margin: 5px 0;
   }
   

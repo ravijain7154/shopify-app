@@ -19,35 +19,35 @@
    
 
     <style>
-      .grid-view #example_wrapper,
-      .list-view .grid-view {
+     #diamond-app .grid-view #example_wrapper,
+     #diamond-app .list-view .grid-view {
         display: none !important;
       }
-      .grid-view {
+     #diamond-app .grid-view {
         /* display: none; */
         gap: 10px;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         grid-auto-rows: minmax(100px, auto);
       }
    
-      .grid-view .list-view {
+      #diamond-app .grid-view .list-view {
         display: block;
       }
 
-      #product-block {
+     #diamond-app #product-block {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
       }
 
-      #product-block .product {
+     #diamond-app #product-block .product {
         border: 1px solid #ddd;
         padding: 10px;
         width: 200px;
         text-align: center;
       }
 
-      #product-block .product img {
+     #diamond-app #product-block .product img {
         max-width: 100%;
         height: auto;
       }
@@ -55,7 +55,7 @@
       div#table-container {
     position: relative;
 }
-.loader {
+#diamond-app .loader {
     position: absolute;
     top: 0;
     left: 0;
@@ -69,7 +69,7 @@
     display: none; /* Initially hidden */
 }
 
-.spinner {
+#diamond-app .spinner {
     border: 4px solid #f3f3f3; /* Light grey */
     border-top: 4px solid #3498db; /* Blue color */
     border-radius: 50%;
