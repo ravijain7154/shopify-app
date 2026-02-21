@@ -1,4 +1,4 @@
-// let currentPage = 1; // Track the current page
+let currentPage = 1; // Track the current page
 let pageSize = 25;   // Default number of diamonds per page
 let diamonds = [];    // Store fetched diamonds data
 let totalPages = 1;   // Total pages (from the API response)
@@ -115,12 +115,6 @@ async function fetchAndApplyBackgroundColor() {
     }
 }
 
-// document.getElementById('productsPerPage').addEventListener('change', function() {
-//     pageSize = parseInt(this.value, 25);  
-//     currentPage = 1;  
-//     // updateURL(); 
-//     fetchDiamonds();
-// });
 const productsPerPageEl = document.getElementById('productsPerPage');
 if (productsPerPageEl) {
   productsPerPageEl.addEventListener('change', function() {
@@ -352,6 +346,7 @@ function hideLoader() {
   const loader = document.getElementById('loader');
   if (loader) loader.style.display = 'none';
 }
+
 // function updateURL() {
 //     const selectedShapes = getSelectedShapes(); 
 //     const priceMin = document.getElementById('range_55_input_from').value || '';  // Get from price input
