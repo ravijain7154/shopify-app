@@ -44,12 +44,12 @@ function initMoreFilterToggle() {
 
   // 1️⃣ Load CSS explicitly
   const styles = [
-    `${APP_URL}/diamond-filter/assets/styles.css`,
-    `${APP_URL}/diamond-filter/assets/datatables.min.css`,
+    `${APP_URL}/diamond-filter/assets/css/styles.css`,
+    `${APP_URL}/diamond-filter/assets/css/datatables.min.css`,
     `${APP_URL}/diamond-filter/assets/ring_builder.css`,
-    `${APP_URL}/diamond-filter/assets/diamond.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.css`,
-    `${APP_URL}/diamond-filter/assets/ion.rangeSlider.skinNice.css`,
+    `${APP_URL}/diamond-filter/assets/css/diamond.css`,
+    `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.css`,
+    `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.skinNice.css`,
   ];
 
   styles.forEach(href => {
@@ -70,12 +70,12 @@ function initMoreFilterToggle() {
     .then(() => {
       // 3️⃣ Load JS AFTER HTML exists
       const scripts = [
-        `${APP_URL}/diamond-filter/assets/jquery.min.js`,
-        `${APP_URL}/diamond-filter/assets/datatables.min.js`,
-        `${APP_URL}/diamond-filter/assets/ion.rangeSlider.js`,
-        `${APP_URL}/diamond-filter/assets/app.js`,
+        `${APP_URL}/diamond-filter/assets/js/jquery.min.js`,
+        `${APP_URL}/diamond-filter/assets/js/datatables.min.js`,
+        `${APP_URL}/diamond-filter/assets/js/ion.rangeSlider.js`,
+        `${APP_URL}/diamond-filter/assets/js/app.js`,
         `${APP_URL}/diamond-filter/script.js`,
-        `${APP_URL}/diamond-filter/assets/manage_diamond.js`,
+        `${APP_URL}/diamond-filter/assets/js/manage_diamond.js`,
       ];
 
       scripts.reduce((p, src) => {

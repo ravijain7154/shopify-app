@@ -26,14 +26,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="diamond-container">
 
         <div class="diamond-left">
-          <img src="${d.Image_URL || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
+          <img src="${d.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
                alt="Diamond">
+               
         </div>
 
         <div class="diamond-right">
           <h1>Diamond ${d.Stock_No || ''}</h1>
           <div class="price">
-            ${d.Buy_Price ? `₹ ${Number(d.Buy_Price).toLocaleString()}` : '-'}
+            ${d.Buy_Price ? `$${Number(d.Buy_Price).toLocaleString()}` : '-'}
           </div>
 
           <table class="diamond-specs">
