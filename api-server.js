@@ -13,8 +13,6 @@ import {  fileURLToPath, pathToFileURL } from 'url';
 import "@shopify/shopify-app-remix/adapters/node";
 import crypto from "crypto";
 
-
-
 dotenv.config();
 
 const { PrismaClient } = pkg;

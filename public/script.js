@@ -1,4 +1,4 @@
-let currentPage = 1; // Track the current page
+// let currentPage = 1; // Track the current page
 let pageSize = 25;   // Default number of diamonds per page
 let diamonds = [];    // Store fetched diamonds data
 let totalPages = 1;   // Total pages (from the API response)
@@ -46,7 +46,7 @@ function initMoreFilterToggle() {
   const styles = [
     `${APP_URL}/diamond-filter/assets/css/styles.css`,
     `${APP_URL}/diamond-filter/assets/css/datatables.min.css`,
-    `${APP_URL}/diamond-filter/assets/ring_builder.css`,
+    `${APP_URL}/diamond-filter/assets/css/ring_builder.css`,
     `${APP_URL}/diamond-filter/assets/css/diamond.css`,
     `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.css`,
     `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.skinNice.css`,
