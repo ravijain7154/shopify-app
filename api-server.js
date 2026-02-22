@@ -218,12 +218,13 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const perPage = parseInt(req.query.perPage) || 25;
-                // Calculate the pagination range
         const skip = (page - 1) * perPage;
         const take = perPage;
 
         const filterCriteria = {};
-
+        
+        let minPrice = 0;
+        let maxPrice = 999999999;
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
                 // Add shape filter if present
         if (shapes.length > 0) {
@@ -235,9 +236,11 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
         let priceMin = req.query.price_min ? parseFloat(req.query.price_min) : undefined;
         let priceMax = req.query.price_max ? parseFloat(req.query.price_max) : undefined;
          if (req.query.price) {
-            const parts = decodeURIComponent(req.query.price).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) priceMin = parts[0];
-            if (parts[1]) priceMax = parts[1];
+            const parts = decodeURIComponent(req.query.price).split(/[;,]/).map(p => parseFloat(p.trim())).filter(v => !isNaN(v));
+            // if (parts[0]) priceMin = parts[0];
+            // if (parts[1]) priceMax = parts[1];
+            if (parts.length > 0) priceMin = parts[0];
+            if (parts.length > 1) priceMax = parts[1];
         }
          // Filter by price range (if provided)
          if (priceMin !== undefined && priceMax !== undefined) {
@@ -260,9 +263,16 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
         let caratMin = req.query.carat_min ? parseFloat(req.query.carat_min) : undefined;
         let caratMax = req.query.carat_max ? parseFloat(req.query.carat_max) : undefined;
             if (req.query.carat) {
-            const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
-            if (parts[0]) caratMin = parts[0];
-            if (parts[1]) caratMax = parts[1];
+            // const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
+            const parts = decodeURIComponent(req.query.carat)
+      .split(/[;,]/)
+      .map(p => parseFloat(p.trim()))
+      .filter(v => !isNaN(v));
+            // if (parts[0]) caratMin = parts[0];
+            // if (parts[1]) caratMax = parts[1];
+
+    if (parts.length > 0) caratMin = parts[0];
+    if (parts.length > 1) caratMax = parts[1];
         }
              // Apply carat (weight) filter if present
         if (caratMin !== undefined && caratMax !== undefined) {
