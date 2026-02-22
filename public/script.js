@@ -93,6 +93,7 @@ function initMoreFilterToggle() {
         document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
         // Apply configured background color if available (safe to call)
         fetchAndApplyBackgroundColor().catch(err => console.warn('fetch color failed', err));
+        fetchDiamonds();
       });
     })
     .catch(err => console.error('Diamond app load error:', err));
@@ -425,7 +426,7 @@ function renderPagination() {
 
   // ----- Product Count -----
   const productBtnContainer = document.createElement('div');
-  productBtnContainer.classList.add('product-count');
+  productBtnContainer.classList.add('product-viewas-btns');
 
 
   // ----- Helper to create button -----
@@ -666,6 +667,7 @@ document.querySelectorAll('.sortable').forEach((header) => {
 
 // Render diamonds based on the selected view (grid or table)
 function renderDiamonds() {
+    if (!document.getElementById('grid-view')) return;
     const selectedView = localStorage.getItem('selectedView') || 'grid';
     if (selectedView === 'grid') {
         renderGridView(diamonds);
@@ -703,5 +705,5 @@ function switchToListView() {
 
 
 // Initialize the app
-fetchDiamonds();
+// fetchDiamonds();
 // fetchAndApplyBackgroundColor();
