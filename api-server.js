@@ -223,8 +223,6 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
 
         const filterCriteria = {};
         
-        let minPrice = 0;
-        let maxPrice = 999999999;
         const shapes = req.query.Shape ? decodeURIComponent(req.query.Shape).split(',') : [];
                 // Add shape filter if present
         if (shapes.length > 0) {

@@ -455,7 +455,9 @@ $(document).ready(function () {
       scrollX: true,
       // scrollY: '500px',
       paging: false,
-      autoWidth: true
+      autoWidth: true,
+            lengthChange: false,
+        info: false
   });
 
 
@@ -1934,7 +1936,9 @@ function switchToGridView() {
         scrollX: true,
         // scrollY: '500px',
         paging: false,
-        autoWidth: true
+        autoWidth: true,
+        lengthChange: false,
+        info: false
     });
         parsepriceFromURL();
         parseCaratFromURL();
@@ -1962,7 +1966,9 @@ function switchToGridView() {
         scrollX: true,
         // scrollY: '500px',
         paging: false,
-        autoWidth: true
+        autoWidth: true,
+              lengthChange: false,
+        info: false
     });
         parsepriceFromURL();
         parseCaratFromURL();
