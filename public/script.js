@@ -46,6 +46,7 @@ function initMoreFilterToggle() {
   const styles = [
     `${APP_URL}/diamond-filter/assets/css/styles.css`,
     //`${APP_URL}/diamond-filter/assets/css/datatables.min.css`,
+    `https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css`,
     `${APP_URL}/diamond-filter/assets/css/ring_builder.css`,
     `${APP_URL}/diamond-filter/assets/css/diamond.css`,
     `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.css`,
