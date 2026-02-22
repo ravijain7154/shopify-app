@@ -45,7 +45,7 @@ function initMoreFilterToggle() {
   // 1️⃣ Load CSS explicitly
   const styles = [
     `${APP_URL}/diamond-filter/assets/css/styles.css`,
-    `${APP_URL}/diamond-filter/assets/css/datatables.min.css`,
+    //`${APP_URL}/diamond-filter/assets/css/datatables.min.css`,
     `${APP_URL}/diamond-filter/assets/css/ring_builder.css`,
     `${APP_URL}/diamond-filter/assets/css/diamond.css`,
     `${APP_URL}/diamond-filter/assets/css/ion.rangeSlider.css`,

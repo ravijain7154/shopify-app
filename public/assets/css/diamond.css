@@ -25,7 +25,7 @@ a{
     color:#333;
 }
 
-  .text-red {
+.text-red {
     color: #fb0202;
   }
 
@@ -43,14 +43,14 @@ a{
 
 /* common datatable css block  */
 
-.container {
+#diamond-app .container {
     width: 100%!Important;
 }
 
   
   /*DIAMOND*/
-.dataTable th,
-.dataTable td {
+#diamond-app .dataTable th,
+#diamond-app .dataTable td {
     min-width: 160px !important;
     text-align: center !important;
 }
@@ -98,8 +98,8 @@ a{
   }
 
 
-  input[type="checkbox"],
-  input[type="radio"] {
+#diamond-app input[type="checkbox"],
+#diamond-app input[type="radio"] {
     margin: 0px 0 0;
     margin-top: 1px\9;
     line-height: normal;
@@ -737,7 +737,7 @@ label.active1 .img_shape img {
 
   .border-right {border-color: transparent !important;}
 
-label {
+#diamond-app label {
     vertical-align: middle;
     position: relative;
     width: 100%;
