@@ -914,8 +914,12 @@ section#search_div a:hover,
 /* ----------------------------------------------------table css---------------------------------- */
 
 /* Style the table */
-.container_table {
-  /* margin: 20px; */
+
+#example_wrapper .dt-scroll-headInner {
+    width: 100% !important;
+}
+#example_wrapper  table.table.nowrap.display.dataTable {
+    width: 100% !important;
 }
 
 table {
@@ -923,6 +927,7 @@ table {
   border-collapse: separate; 
   border-spacing: 0; 
 }
+
 
 #search_div {
     padding-bottom: 20px;
