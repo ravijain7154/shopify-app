@@ -118,7 +118,7 @@ async function fetchAndApplyBackgroundColor() {
 const productsPerPageEl = document.getElementById('productsPerPage');
 if (productsPerPageEl) {
   productsPerPageEl.addEventListener('change', function() {
-    pageSize = parseInt(this.value) || 25; // radix 10 + fallback
+    pageSize = parseInt(this.value, 10) || 25; // radix 10 + fallback
     currentPage = 1;
     fetchDiamonds();
   });
@@ -423,6 +423,11 @@ function renderPagination() {
 
   paginationContainer.appendChild(productCountContainer);
 
+  // ----- Product Count -----
+  const productBtnContainer = document.createElement('div');
+  productBtnContainer.classList.add('product-count');
+
+
   // ----- Helper to create button -----
   function createButton(label, page, disabled = false, active = false) {
     const btn = document.createElement('button');
@@ -444,13 +449,13 @@ function renderPagination() {
 
   // ----- First Page -----
   if (currentPage > 1) {
-    paginationContainer.appendChild(
+    productBtnContainer.appendChild(
       createButton('<<', 1)
     );
   }
 
   // ----- Previous -----
-  paginationContainer.appendChild(
+  productBtnContainer.appendChild(
     createButton('Previous', currentPage - 1, currentPage === 1)
   );
 
@@ -459,16 +464,16 @@ function renderPagination() {
   let endPage = Math.min(totalPages, currentPage + range);
 
   if (startPage > 1) {
-    paginationContainer.appendChild(createButton(1, 1));
+    productBtnContainer.appendChild(createButton(1, 1));
     if (startPage > 2) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      paginationContainer.appendChild(dots);
+      productBtnContainer.appendChild(dots);
     }
   }
 
   for (let i = startPage; i <= endPage; i++) {
-    paginationContainer.appendChild(
+    productBtnContainer.appendChild(
       createButton(i, i, false, i === currentPage)
     );
   }
@@ -477,17 +482,20 @@ function renderPagination() {
     if (endPage < totalPages - 1) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      paginationContainer.appendChild(dots);
+      productBtnContainer.appendChild(dots);
     }
-    paginationContainer.appendChild(
+    productBtnContainer.appendChild(
       createButton(totalPages, totalPages)
     );
   }
 
   // ----- Next -----
-  paginationContainer.appendChild(
+  productBtnContainer.appendChild(
     createButton('Next', currentPage + 1, currentPage === totalPages)
   );
+  
+  paginationContainer.appendChild(productBtnContainer);
+
 }
 // Render diamonds in grid view
 function renderGridView(diamonds) {
