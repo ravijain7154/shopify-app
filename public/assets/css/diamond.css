@@ -817,7 +817,7 @@ label.active1 .img_shape img {
 div#productsContainer a:focus,
 section#search_div a:focus,
 div#productsContainer a:hover,
-section#search_div a:hover,
+section#search_div a:hover
 {
   text-decoration: none;
 }

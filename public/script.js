@@ -118,7 +118,7 @@ async function fetchAndApplyBackgroundColor() {
 const productsPerPageEl = document.getElementById('productsPerPage');
 if (productsPerPageEl) {
   productsPerPageEl.addEventListener('change', function() {
-    pageSize = parseInt(this.value, 10) || 25; // radix 10 + fallback
+    pageSize = parseInt(this.value) || 25; // radix 10 + fallback
     currentPage = 1;
     fetchDiamonds();
   });
