@@ -26,41 +26,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="diamond-container">
 
         <div class="diamond-left">
-        <div class="gallery_block">
-        <div class="main-image-container">
-          <img src="${d.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
-               alt="Diamond">
-               ${d.VideoLink ? `
-          <div class="video-thumbnail">
-            <video controls>
-              <source src="${d.VideoLink}" type="video/mp4">
-            </video>
+          <div class="gallery_block">
+            <div class="main-image-container">
+              <img src="${d.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
+                  alt="Diamond">
+            </div>
+            <div class="thumbnail-container">
+            </div>
           </div>
-          ` : ''}
-          ${d.CertificateLink ? `
-          <div class="certificate-thumbnail">
-            <a href="${d.CertificateLink}" target="_blank">View Certificate</a>
-          </div>
-          ` : ''}
-        </div>
-        <div class="thumbnail-container">
-      ${d.VideoLink ? `
-          <div class="video-thumbnail">
-            <video controls>
-              <source src="${d.VideoLink}" type="video/mp4">
-            </video>
-          </div>
-          ` : ''}
-          ${d.CertificateLink ? `
-          <div class="certificate-thumbnail">
-            <a href="${d.CertificateLink}" target="_blank">View Certificate</a>
-          </div>
-          ` : ''}
-          ${[d.ImageLink].map((img) => `
-            <img src="${img || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}" alt="Thumbnail">
-          `).join('')}
-        </div>
-        </div>
         </div>
 
         <div class="diamond-right">
@@ -81,6 +54,16 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${renderRow("Symmetry", d.Symmetry)}
               ${renderRow("Fluorescence", d.FluoIntensity)}
               ${renderRow("Certificate", d.CertificateNumber)}
+              ${renderRow("Lab", d.Lab)}
+              ${renderRow("Depth %", d.DEPTH_PER)}
+              ${renderRow("Table %", d.TABLE_PER)}
+              ${renderRow("Girdle", d.Girdle_Condition)}
+              ${renderRow("Culet", d.Culet)}
+              ${renderRow("Measurements", d.Measurements)}
+             ${renderRow("Ratio", d.Ratio ? d.Ratio.toFixed(2) : '-')}
+             ${renderRow("Buy Price", d.Buy_Price ? `$${Number(d.Buy_Price).toLocaleString()}` : '-')}
+             ${renderRow("Rap Price", d.Rap_Price ? `$${Number(d.Rap_Price).toLocaleString()}` : '-')}
+             ${renderRow("Price/Carat", d.Price_Per_Carat ? `$${Number(d.Price_Per_Carat).toLocaleString()}` : '-')}
             </tbody>
           </table>
 
