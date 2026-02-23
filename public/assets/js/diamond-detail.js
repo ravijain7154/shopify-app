@@ -42,8 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ${d.Buy_Price ? `$${Number(d.Buy_Price).toLocaleString()}` : '-'}
           </div>
 
-          <table class="diamond-specs">
-            <tbody>
+          <ul class="diamond-specs">
               ${renderRow("Stock No", d.Stock_No)}
               ${renderRow("Shape", d.Shape)}
               ${renderRow("Carat", d.Weight)}
@@ -63,9 +62,9 @@ document.addEventListener("DOMContentLoaded", async () => {
              ${renderRow("Ratio", d.Ratio ? d.Ratio.toFixed(2) : '-')}
              ${renderRow("Buy Price", d.Buy_Price ? `$${Number(d.Buy_Price).toLocaleString()}` : '-')}
              ${renderRow("Rap Price", d.Rap_Price ? `$${Number(d.Rap_Price).toLocaleString()}` : '-')}
-             ${renderRow("Price/Carat", d.Price_Per_Carat ? `$${Number(d.Price_Per_Carat).toLocaleString()}` : '-')}
-            </tbody>
-          </table>
+              ${renderRow("Price/Carat", d.Price_Per_Carat ? `$${Number(d.Price_Per_Carat).toLocaleString()}` : '-')}
+           
+          </ul>
 
           <div class="actions">
             <button class="btn primary">Request Price</button>
@@ -85,9 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function renderRow(label, value) {
   return `
-    <tr>
-      <th>${label}</th>
-      <td>${value ?? "-"}</td>
-    </tr>
+    <li>
+      <span class="label">${label}</span>
+      <span class="value">${value ?? "-"}</span>
+    </li>
   `;
 }
