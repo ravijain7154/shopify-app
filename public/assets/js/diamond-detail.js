@@ -26,9 +26,41 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="diamond-container">
 
         <div class="diamond-left">
+        <div class="gallery_block">
+        <div class="main-image-container">
           <img src="${d.ImageLink || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}"
                alt="Diamond">
-               
+               ${d.VideoLink ? `
+          <div class="video-thumbnail">
+            <video controls>
+              <source src="${d.VideoLink}" type="video/mp4">
+            </video>
+          </div>
+          ` : ''}
+          ${d.CertificateLink ? `
+          <div class="certificate-thumbnail">
+            <a href="${d.CertificateLink}" target="_blank">View Certificate</a>
+          </div>
+          ` : ''}
+        </div>
+        <div class="thumbnail-container">
+      ${d.VideoLink ? `
+          <div class="video-thumbnail">
+            <video controls>
+              <source src="${d.VideoLink}" type="video/mp4">
+            </video>
+          </div>
+          ` : ''}
+          ${d.CertificateLink ? `
+          <div class="certificate-thumbnail">
+            <a href="${d.CertificateLink}" target="_blank">View Certificate</a>
+          </div>
+          ` : ''}
+          ${[d.ImageLink].map((img) => `
+            <img src="${img || 'https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/default-image.jpg'}" alt="Thumbnail">
+          `).join('')}
+        </div>
+        </div>
         </div>
 
         <div class="diamond-right">

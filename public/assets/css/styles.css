@@ -35,3 +35,9 @@
     margin: 5px 0;
   }
   
+  #diamond-app div#pagination {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

@@ -338,7 +338,7 @@ a{
   
   .active-label {
     background-color: #f3f9ff;
-    color: #2c374602f !important;
+    color: #2c374602 !important;
     font-weight: 400 !important;
     border: 2px solid #2c3746 !important;
     outline: none;
@@ -811,7 +811,7 @@ label.active1 .img_shape img {
 .background-black img
 {
   background-color : white;
-  filter : gray
+  filter : gray;
 }
 
 div#productsContainer a:focus,
