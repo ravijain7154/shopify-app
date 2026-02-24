@@ -1,10 +1,4 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #fff;
-  margin: 0;
-}
-
-.diamond-container {
+#diamond-detail-root .diamond-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
@@ -13,45 +7,44 @@ body {
   margin: auto;
 }
 
-.diamond-left img {
+#diamond-detail-root .diamond-left img {
   width: 100%;
   border: 1px solid #eee;
   padding: 10px;
 }
 
-.diamond-right h1 {
+#diamond-detail-root .diamond-right h1 {
   margin: 0 0 10px;
   font-size: 26px;
 }
 
-.price {
+#diamond-detail-root .price {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
-.diamond-specs {
-  width: 100%;
-  border-collapse: collapse;
+#diamond-detail-root .diamond-specs {
+    width: 100%;
+    border-collapse: collapse;
+    column-count: 2;
+    list-style: none;
+    padding: 0;
 }
 
-.diamond-specs th,
-.diamond-specs td {
+#diamond-detail-root.diamond-specs ul li{
   padding: 10px;
   border-bottom: 1px solid #eee;
   text-align: left;
 }
 
-.diamond-specs th {
-  width: 40%;
-  color: #666;
-}
 
-.actions {
+
+#diamond-detail-root .actions {
   margin-top: 30px;
 }
 
-.btn {
+#diamond-detail-root .btn {
   padding: 12px 20px;
   margin-right: 10px;
   border: 1px solid #000;
@@ -59,7 +52,7 @@ body {
   cursor: pointer;
 }
 
-.btn.primary {
+#diamond-detail-root .btn.primary {
   background: #000;
   color: #fff;
 }

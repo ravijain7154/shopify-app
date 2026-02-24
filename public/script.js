@@ -110,7 +110,8 @@ async function fetchAndApplyBackgroundColor() {
         const data = await response.json();
         const cardBgColor = data.color || '#ffffff';
         console.log(cardBgColor);
-        document.documentElement.style.setProperty('--card-bg-color', cardBgColor);
+        const root = document.getElementById('diamond-app') ;
+        root.style.setProperty('--card-bg-color', cardBgColor);
     } catch (error) {
         console.error('Error applying background color:', error);
     }

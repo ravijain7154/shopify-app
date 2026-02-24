@@ -47,8 +47,9 @@ export const action = async ({ request }) => {
       }
 
       const data = await response.json();
+      console.log('[app action] API response data:', data);
       let diamonds = data.Stock || [];
-      diamonds = diamonds.slice(0, LIMIT);
+      // diamonds = diamonds.slice(0, LIMIT);
 
       if (!Array.isArray(diamonds) || diamonds.length === 0) {
         throw new Error('No diamonds data received from API');

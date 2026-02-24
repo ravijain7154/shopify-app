@@ -7,6 +7,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     root.innerHTML = "<h2>Invalid Diamond ID</h2>";
     return;
   }
+  const APP_URL = 'https://shopify-app-pndl.onrender.com';
+
+  // 1️⃣ Load CSS explicitly
+  const styles = [
+    `${APP_URL}/diamond-filter/assets/css/styles.css`,
+  ];
+
+  styles.forEach(href => {
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+  });
 
   try {
 
@@ -60,9 +75,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${renderRow("Culet", d.Culet)}
               ${renderRow("Measurements", d.Measurements)}
              ${renderRow("Ratio", d.Ratio ? d.Ratio.toFixed(2) : '-')}
-             ${renderRow("Buy Price", d.Buy_Price ? `$${Number(d.Buy_Price).toLocaleString()}` : '-')}
-             ${renderRow("Rap Price", d.Rap_Price ? `$${Number(d.Rap_Price).toLocaleString()}` : '-')}
-              ${renderRow("Price/Carat", d.Price_Per_Carat ? `$${Number(d.Price_Per_Carat).toLocaleString()}` : '-')}
            
           </ul>
 
@@ -85,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function renderRow(label, value) {
   return `
     <li>
-      <span class="label">${label}</span>
+      <span class="label">${label}:</span>
       <span class="value">${value ?? "-"}</span>
     </li>
   `;

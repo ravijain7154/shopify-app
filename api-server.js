@@ -161,6 +161,7 @@ app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
   
   res.set("Content-Type", "application/liquid");
   res.send(`
+    <div>
      <div id="diamond-app"></div>
 
     <script>
@@ -168,6 +169,7 @@ app.get('/apps/diamond-filter', verifyShopifyProxy, (req, res) => {
     </script>
 
     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/script.js"></script>
+    </div>
   `);
 });
 
@@ -177,16 +179,18 @@ app.get('/apps/diamond-filter/diamond-detail', verifyShopifyProxy, (req, res) =>
   res.set("Content-Type", "application/liquid");
 
   res.send(`
-    <div id="diamond-detail-root"></div>
-
-    <link rel="stylesheet"
-      href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/css/diamond-detail.css">
+    <div>
+    <div id="diamond-app">
+      <div id="diamond-detail-root"></div>
+    </div>
+    <link rel="stylesheet" href="https://shopify-app-pndl.onrender.com/diamond-filter/assets/css/diamond-detail.css">
 
     <script>
       window.STOCK_ID = "${req.query.Stock_id || ''}";
     </script>
 
     <script src="https://shopify-app-pndl.onrender.com/diamond-filter/assets/js/diamond-detail.js"></script>
+    </div>
   `);
 });
 
