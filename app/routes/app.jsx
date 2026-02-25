@@ -9,10 +9,8 @@ import {
   InlineStack
 } from "@shopify/polaris";
 import React, { useState, useEffect } from "react";
-import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
-
-const prisma = new PrismaClient();
+import prisma from "../db.server";
 
 export const loader = async () => {
   try {
@@ -39,7 +37,7 @@ export const action = async ({ request }) => {
     if (actionType === 'sync') {
       console.log('[app action] Syncing diamonds...');
       const apiUrl = 'https://belgiumdia.com/api/DeveloperAPI?APIKEY=134981956a7be967bf4a198e5bfccf4059085cf9dd4d';
-      const LIMIT = 1500; // Limit to 100 records for free tier
+      const LIMIT = Number(process.env.DIAMOND_SYNC_LIMIT || 1500);
 
       const response = await fetch(apiUrl);
       if (!response.ok) {
@@ -47,9 +45,9 @@ export const action = async ({ request }) => {
       }
 
       const data = await response.json();
-      console.log('[app action] API response data:', data);
       let diamonds = data.Stock || [];
-      // diamonds = diamonds.slice(0, LIMIT);
+      diamonds = diamonds.slice(0, LIMIT);
+      console.log(`[app action] Received ${data?.Stock?.length || 0} records, processing ${diamonds.length}`);
  
       if (!Array.isArray(diamonds) || diamonds.length === 0) {
         throw new Error('No diamonds data received from API');

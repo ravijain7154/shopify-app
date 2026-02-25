@@ -11,11 +11,17 @@ services:
     # Run migrations separately during pre-deploy so DB migrations don't interfere
     # with the build step. We run Prisma via its node entrypoint to avoid wrapper issues.
     preDeployCommand: node ./node_modules/prisma/build/index.js generate && node ./node_modules/prisma/build/index.js migrate deploy
-    startCommand: node ./node_modules/@remix-run/serve/dist/cli.js ./build/index.js
+    startCommand: npm run start:api
     plan: free
     envVars:
       - key: NODE_ENV
         value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DIAMOND_SYNC_LIMIT
+        value: 1500
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=384
 
 # Optional: If you want a separate background service for the standalone API process,
 # uncomment and customize the following block and push it as well.

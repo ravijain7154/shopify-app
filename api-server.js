@@ -89,7 +89,10 @@ app.use(express.json()); // This line should be active for JSON parsing
 
 // Logging middleware to debug incoming requests
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
+    // Reduce noisy health/probe logs in production.
+    if (!(process.env.NODE_ENV === 'production' && req.method === 'HEAD' && req.path === '/')) {
+      console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
+    }
     next();
 });
 
@@ -221,8 +224,8 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 // Endpoint to fetch products from the database
 app.get('/apps/diamond-filter/api/products', async(req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const perPage = parseInt(req.query.perPage) || 25;
+        const page = Math.max(parseInt(req.query.page) || 1, 1);
+        const perPage = Math.min(Math.max(parseInt(req.query.perPage) || 25, 1), 100);
         const skip = (page - 1) * perPage;
         const take = perPage;
 
