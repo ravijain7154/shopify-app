@@ -19,7 +19,8 @@ const { PrismaClient } = pkg;
 const app = express();
 const prisma = new PrismaClient();
 
-const PORT = process.env.PORT || 3000; // Port for your API server
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 app.use(bodyParser.json());
 
 
@@ -614,6 +615,6 @@ if (fs.existsSync(BUILD_PATH)) {
 }
 
 // Start the API server
-app.listen(PORT, () => {
-    console.log(`API server is running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+    console.log(`API server is running on http://${HOST}:${PORT}`);
 });
