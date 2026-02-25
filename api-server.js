@@ -89,10 +89,7 @@ app.use(express.json()); // This line should be active for JSON parsing
 
 // Logging middleware to debug incoming requests
 app.use((req, res, next) => {
-    // Reduce noisy health/probe logs in production.
-    if (!(process.env.NODE_ENV === 'production' && req.method === 'HEAD' && req.path === '/')) {
-      console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
-    }
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origin: ${req.get('origin')}`);
     next();
 });
 
@@ -224,8 +221,8 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 // Endpoint to fetch products from the database
 app.get('/apps/diamond-filter/api/products', async(req, res) => {
     try {
-        const page = Math.max(parseInt(req.query.page) || 1, 1);
-        const perPage = Math.min(Math.max(parseInt(req.query.perPage) || 25, 1), 100);
+        const page = parseInt(req.query.page) || 1;
+        const perPage = parseInt(req.query.perPage) || 25;
         const skip = (page - 1) * perPage;
         const take = perPage;
 
@@ -271,24 +268,24 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
             if (req.query.carat) {
             // const parts = decodeURIComponent(req.query.carat).split(/[;,]/).map(p => p.trim()).filter(Boolean);
             const parts = decodeURIComponent(req.query.carat)
-      .split(/[;,]/)
-      .map(p => parseFloat(p.trim()))
-      .filter(v => !isNaN(v));
+                        .split(/[;,]/)
+                        .map(p => parseFloat(p.trim()))
+                        .filter(v => !isNaN(v));
             // if (parts[0]) caratMin = parts[0];
             // if (parts[1]) caratMax = parts[1];
 
-    if (parts.length > 0) caratMin = parts[0];
-    if (parts.length > 1) caratMax = parts[1];
-        }
-             // Apply carat (weight) filter if present
-        if (caratMin !== undefined && caratMax !== undefined) {
-            filterCriteria.Weight = { gte: caratMin, lte: caratMax };
-        } else if (caratMin !== undefined) {
-            filterCriteria.Weight = { gte: caratMin };
-        } else if (caratMax !== undefined) {
-            filterCriteria.Weight = { lte: caratMax };
-        }
-        
+            if (parts.length > 0) caratMin = parts[0];
+            if (parts.length > 1) caratMax = parts[1];
+                }
+                    // Apply carat (weight) filter if present
+                if (caratMin !== undefined && caratMax !== undefined) {
+                    filterCriteria.Weight = { gte: caratMin, lte: caratMax };
+                } else if (caratMin !== undefined) {
+                    filterCriteria.Weight = { gte: caratMin };
+                } else if (caratMax !== undefined) {
+                    filterCriteria.Weight = { lte: caratMax };
+                }
+                
 
 
         // Parsing the color range from the URL
