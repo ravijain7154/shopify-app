@@ -1,13 +1,7 @@
 // app/routes/app.js
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useActionData, Form,   useFetcher } from "@remix-run/react";
-import {
-  Button,
-  Card,
-  BlockStack,
-  Text,
-  InlineStack
-} from "@shopify/polaris";
+import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import React, { useState, useEffect } from "react";
 import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
