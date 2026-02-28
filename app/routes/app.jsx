@@ -3,10 +3,13 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData, useActionData, Form,   useFetcher } from "@remix-run/react";
 import { Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import React, { useState, useEffect } from "react";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 import { NavMenu } from "@shopify/app-bridge-react";
+import prisma from "../db.server";
 
-const prisma = new PrismaClient();
+
+
+// const prisma = new PrismaClient();
 
 export const loader = async () => {
   try {

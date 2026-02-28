@@ -6,10 +6,11 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import {AppProvider, Button, Card, BlockStack, Text, InlineStack } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 import React, { useState, useEffect } from 'react';
+// import prisma from "./db.server";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export const links = () => [ 
   { rel: "stylesheet", href: polarisStyles }, 
@@ -17,21 +18,26 @@ export const links = () => [
 ];
 
 export const loader = async () => {
-  // On app load, just fetch diamonds from DB (no auto-sync on every load)
-  const fetchDiamondsFromDB = await prisma.diamond.findMany();
+  // OLD (heavy)
+  // const fetchDiamondsFromDB = await prisma.diamond.findMany();
+  // let colorSetting = await prisma.colorsetting.findFirst();
+  // if (!colorSetting) {
+  //   colorSetting = await prisma.colorsetting.create({
+  //     data: { color: '#ffffff' }
+  //   });
+  // }
+  // return json({
+  //   products: fetchDiamondsFromDB,
+  //   color: colorSetting.color,
+  //   message: `Total diamonds in database: ${fetchDiamondsFromDB.length}`,
+  //   syncCount: null
+  // });
 
-  // Get or create color setting
-  let colorSetting = await prisma.colorsetting.findFirst();
-  if (!colorSetting) {
-    colorSetting = await prisma.colorsetting.create({
-      data: { color: '#ffffff' }
-    });
-  }
-
+  // NEW (lightweight root loader)
   return json({
-    products: fetchDiamondsFromDB,
-    color: colorSetting.color,
-    message: `Total diamonds in database: ${fetchDiamondsFromDB.length}`,
+    products: [],
+    color: '#ffffff',
+    message: 'Admin shell loaded',
     syncCount: null
   });
 };
@@ -49,30 +55,6 @@ export default function App() {
     color: '#ffffff',
     syncCount: null
   };
-
-  // // Update sync status when fetcher completes
-  // useEffect(() => {
-  //   if (fetcher.state === 'idle' && fetcher.data) {
-  //     setIsSyncing(false);
-  //     setSyncMessage(fetcher.data.message);
-  //     // Revalidate the root loader to refresh the products list
-  //     if (fetcher.data.success) {
-  //       revalidator.revalidate();
-  //     }
-  //     // Clear message after 5 seconds
-  //     const timer = setTimeout(() => setSyncMessage(null), 5000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [fetcher.state, fetcher.data, revalidator]);
-
-  // const handleSync = () => {
-  //   setIsSyncing(true);
-  //   setSyncMessage('Syncing diamonds...');
-  //   fetcher.submit(
-  //     { sync: 'true' },
-  //     { method: 'post', action: '/api/sync' }
-  //   );
-  // };
 
   if (!products || !Array.isArray(products)) {
     return (
@@ -108,31 +90,6 @@ export default function App() {
         <AppProvider>
           <div className="container">
             <div className="admin_dash">
-              {/* <h1 className="title">Diamonds Management</h1>
-              
-              <Card>
-                <BlockStack gap="300">
-                  <InlineStack align="space-between">
-                    <div>
-                      <h2>Database Status</h2>
-                      <p className="text">{message}</p>
-                      {syncMessage && (
-                        <Text as="p" variant="bodyMd" color={fetcher.data?.success ? 'success' : 'critical'}>
-                          {syncMessage}
-                        </Text>
-                      )}
-                    </div>
-                    <Button
-                      onClick={handleSync}
-                      disabled={isSyncing}
-                      variant="primary"
-                    >
-                      {isSyncing ? 'Syncing...' : 'Sync Diamonds'}
-                    </Button>
-                  </InlineStack>
-                </BlockStack>
-              </Card> */}
-
               <Outlet />
             </div>
           </div>

@@ -21,6 +21,8 @@ const prisma = new PrismaClient();
 
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
+const DEFAULT_PER_PAGE = 25;
+const MAX_PER_PAGE = 100;
 app.use(bodyParser.json());
 
 
@@ -221,8 +223,16 @@ app.use('/diamond-filter/assets', express.static(path.join(process.cwd(), 'publi
 // Endpoint to fetch products from the database
 app.get('/apps/diamond-filter/api/products', async(req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const perPage = parseInt(req.query.perPage) || 25;
+        // OLD
+        // const page = parseInt(req.query.page) || 1;
+        // const perPage = parseInt(req.query.perPage) || 25;
+        // NEW
+        const pageRaw = Number.parseInt(req.query.page, 10);
+        const perPageRaw = Number.parseInt(req.query.perPage, 10);
+        const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+        const perPage = Number.isFinite(perPageRaw)
+            ? Math.min(Math.max(perPageRaw, 1), MAX_PER_PAGE)
+            : DEFAULT_PER_PAGE;
         const skip = (page - 1) * perPage;
         const take = perPage;
 
@@ -408,7 +418,7 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
                     Math.min(start, end),
                     Math.max(start, end) + 1
                 );
-                filterCriteria.Fluorescence = { 
+                filterCriteria.Fluorescence_Intensity = { 
                     in: allowedFluors
                 };
             }
@@ -472,17 +482,37 @@ app.get('/apps/diamond-filter/api/products', async(req, res) => {
 
         
         // console.log('filterCriteria', filterCriteria);
+        // OLD
+        // const products = await prisma.diamond.findMany({
+        //     where: filterCriteria,
+        //     skip: skip,
+        //     take: take
+        // });
+        // NEW
         const products = await prisma.diamond.findMany({
             where: filterCriteria,
-            skip: skip,  
-            take: take   
-        }); 
+            skip: skip,
+            take: take,
+            select: {
+                Stock_No: true,
+                Shape: true,
+                Weight: true,
+                Color: true,
+                Clarity: true,
+                Cut_Grade: true,
+                Buy_Price: true,
+                ImageLink: true
+            }
+        });
          // Get the total number of products in the database for pagination metadata
          const totalCount = await prisma.diamond.count({
             where: filterCriteria
         });
 
-        const totalPages = Math.ceil(totalCount / perPage);
+        // OLD
+        // const totalPages = Math.ceil(totalCount / perPage);
+        // NEW
+        const totalPages = perPage > 0 ? Math.ceil(totalCount / perPage) : 0;
          
         // console.log(products);
         res.json({
@@ -509,9 +539,35 @@ app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
             return res.status(400).json({ message: 'Stock_id query parameter is required' });
         }
 
+        // OLD
+        // const diamondData = await prisma.diamond.findFirst({
+        //     where: { Stock_No: Stock_id },
+        // });
+        // NEW
         const diamondData = await prisma.diamond.findFirst({
             where: { Stock_No: Stock_id },
-        }); 
+            select: {
+                Stock_No: true,
+                Shape: true,
+                Weight: true,
+                Color: true,
+                Clarity: true,
+                Cut_Grade: true,
+                Polish: true,
+                Symmetry: true,
+                Fluorescence_Intensity: true,
+                Certificate: true,
+                Lab: true,
+                DEPTH_PER: true,
+                TABLE_PER: true,
+                Girdle_Condition: true,
+                Culet_Size: true,
+                Measurements: true,
+                Ratio: true,
+                Buy_Price: true,
+                ImageLink: true
+            }
+        });
 
         if (!diamondData || diamondData.length === 0) {
             return res.status(404).json({ message: 'Diamond not found' });
