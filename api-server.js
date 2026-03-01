@@ -630,9 +630,6 @@ app.use('/cdn', (req, res) => {
     return res.redirect(`https://${shop}${req.originalUrl}`);
 });
 // ===== REMIX ADMIN OR FALLBACK 404 =====
-// Try to import the Remix server build and let it handle all other routes.
-// const buildPath = path.join(process.cwd(), 'build', 'index.js');
-
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BUILD_PATH = path.join(process.cwd(), "build", "index.js");

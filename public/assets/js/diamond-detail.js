@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${renderRow("Cut", d.Cut_Grade)}
               ${renderRow("Polish", d.Polish)}
               ${renderRow("Symmetry", d.Symmetry)}
-              ${renderRow("Fluorescence", d.FluoIntensity)}
+              ${renderRow("Fluorescence", d.Fluorescence_Intensity)}
               ${renderRow("Certificate", d.CertificateNumber)}
               ${renderRow("Lab", d.Lab)}
               ${renderRow("Depth %", d.DEPTH_PER)}
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${renderRow("Girdle", d.Girdle_Condition)}
               ${renderRow("Culet", d.Culet)}
               ${renderRow("Measurements", d.Measurements)}
-             ${renderRow("Ratio", d.Ratio ? d.Ratio.toFixed(2) : '-')}
+              ${renderRow("Ratio", d.Ratio ? d.Ratio.toFixed(2) : '-')}
            
           </ul>
 
