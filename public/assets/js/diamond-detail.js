@@ -173,11 +173,11 @@ function renderThumb(item, isActive) {
     `;
   }
 
-  const icon = item.type === "video" ? "▶" : "📄";
+  const icon = item.type === "video" ? "https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/vdobig.png" : "https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/notebook.svg";
   return `
     <button type="button" class="media-thumb media-thumb-icon${activeClass}" data-media-type="${item.type}" data-media-url="${item.url}">
       <span aria-hidden="true">${icon}</span>
-      <span>${item.label}</span>
+      // <span>${item.label}</span>
     </button>
   `;
 }
