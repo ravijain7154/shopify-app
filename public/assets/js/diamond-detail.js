@@ -152,7 +152,7 @@ function renderMainMedia(item) {
     if (isEmbed) {
       return `<iframe src="${item.url}" title="Diamond Video" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;min-height:420px;"></iframe>`;
     }
-    return `<video controls playsinline style="width:100%;" src="${item.url}"></video>`;
+    return `<video playsinline autoplay loop style="width:100%;" src="${item.url}"></video>`;
   }
 
   if (item.type === "certificate") {
@@ -176,8 +176,7 @@ function renderThumb(item, isActive) {
   const icon = item.type === "video" ? "https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/vdobig.png" : "https://shopify-app-pndl.onrender.com/diamond-filter/assets/images/notebook.svg";
   return `
     <button type="button" class="media-thumb media-thumb-icon${activeClass}" data-media-type="${item.type}" data-media-url="${item.url}">
-      <span aria-hidden="true">${icon}</span>
-      // <span>${item.label}</span>
+     <img src="${icon}" alt="Image thumbnail" />
     </button>
   `;
 }
