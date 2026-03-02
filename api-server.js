@@ -565,7 +565,10 @@ app.get('/apps/diamond-filter/api/diamond-detail', async(req, res) => {
                 Measurements: true,
                 Ratio: true,
                 Buy_Price: true,
-                ImageLink: true
+                ImageLink: true,
+                VideoLink: true,
+                Video_HTML: true,
+                CertificateLink: true
             }
         });
 
