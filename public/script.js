@@ -88,6 +88,16 @@ function initMoreFilterToggle() {
       }, Promise.resolve()).then(() => {
         console.log('Diamond app loaded');
         initMoreFilterToggle();
+       const resetBtn = document.getElementById('reset_btn');
+
+        resetBtn.addEventListener('click', function () {
+          localStorage.clear();
+
+          // current url without query
+          const cleanUrl = window.location.origin + window.location.pathname;
+
+          window.location.href = cleanUrl;
+        });
         // Initialize the diamond UI after all scripts are loaded 
         document.getElementById('grid-view-btn')?.addEventListener('click', switchToGridView); 
         document.getElementById('list-view-btn')?.addEventListener('click', switchToListView);
